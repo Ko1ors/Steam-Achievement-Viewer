@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AchievementTest.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,25 +25,19 @@ namespace AchievementTest
         public MainWindow()
         {
             InitializeComponent();
-            //XmlDocument doc = GetRequest.XmlRequest("https://steamcommunity.com/id/Ko1ors/stats/1174180/achievements/?xml=1");
-            //XmlNode xRoot = doc.DocumentElement;
-            //XmlNode GameNode = xRoot.SelectSingleNode("game");
-            
-            //TextBlock testText = new TextBlock();
-            //testText.Text = GameNode.SelectSingleNode("gameName").InnerText;
-            //GamesList.Children.Add(testText);
-            //foreach (XmlNode n in GameNode.ChildNodes)
-            //{
-            //    TextBlock testText = new TextBlock();
-            //    testText.Text = n.Name;
-            //    GamesList.Children.Add(testText);
-            //}
         }
-
-
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void MainButton_clicked(object sender, RoutedEventArgs e)
+        {
+            Information.Content = new MainPage();
+        }
+        private void LastAchievedButton_clicked(object sender, RoutedEventArgs e)
+        {
+            Information.Content = new LastAchievedPage();
         }
     }
 }
