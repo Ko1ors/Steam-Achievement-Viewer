@@ -3,11 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AchievementTest"
+        xmlns:local="clr-namespace:AchievementTest" xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         mc:Ignorable="d"
-        Title="Achievements" Height="450" Width="800" ResizeMode="NoResize" ShowInTaskbar="False" WindowStartupLocation="CenterScreen">
+        Title="Steam Achievement Viewer" Height="450" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome
+
+            ResizeBorderThickness="5"
+
+            CaptionHeight="15"
+
+            CornerRadius="25,25,10,10"
+
+            GlassFrameThickness="0">
+        </shell:WindowChrome>
+    </shell:WindowChrome.WindowChrome>
     <Window.Resources>
-        <Style TargetType="Button">
+        <Style TargetType="Button" x:Key="OverButtonStyle">
             <Setter Property="Background" Value="#14141f"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Height" Value="auto"/>
@@ -32,26 +44,42 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="Button" x:Key="FlatButtonStyle">
+            <Setter Property="Background" Value="DarkCyan"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Width" Value="75"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="0"
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <DockPanel LastChildFill="True">
-            <Grid Margin="0,5,0,0" x:Name="NavBar" Height="60" DockPanel.Dock="Top" Background="#14141f">
+
+            <Grid Margin="0,20,0,0" x:Name="NavBar" Height="60" DockPanel.Dock="Top" Background="#171A21">
                 <StackPanel Orientation="Horizontal">
-                <Button  Content="Главная"/>
-                    <Button>
-                        <TextBlock HorizontalAlignment="Center">
+                    <Button  Content="Главная" Style="{StaticResource OverButtonStyle}"/>
+                    <Button Style="{StaticResource OverButtonStyle}">
+                        <TextBlock HorizontalAlignment="Center" >
                             Последние
                             <LineBreak/>
                             Полученные
                         </TextBlock>
                     </Button>
-                <Button  Content="3"/>
-                <Button  Content="3"/>
                 </StackPanel>
-                <Border BorderBrush="White" BorderThickness="3"/>
+                <Border BorderThickness="5"/>
                 <Image  Stretch="Fill"  Width="50" Height="50" HorizontalAlignment="Right" Margin="0,5,10,5"/>
             </Grid>
-            <Grid x:Name="Information" Height="auto" Background="#FF030B23" >
+            <Grid x:Name="Information" Height="auto" Background="#1B2838" >
                 <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" BorderBrush="White" BorderThickness="3">
                     <StackPanel >
                         <TextBlock TextAlignment="Center" Foreground="White">Информация</TextBlock>
@@ -59,5 +87,6 @@
                 </ScrollViewer>
             </Grid>
         </DockPanel>
+        <shell:Button Content="X" Style="{StaticResource FlatButtonStyle}" HorizontalAlignment="Left" Margin="775,2,0,0" VerticalAlignment="Top" Width="17" Height="17" Background="#FFCB1E26"/>
     </Grid>
 </Window>
