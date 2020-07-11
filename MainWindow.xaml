@@ -19,7 +19,8 @@
         </shell:WindowChrome>
     </shell:WindowChrome.WindowChrome>
     <Window.Resources>
-        <Style TargetType="Button" x:Key="OverButtonStyle">
+        <Style TargetType="Button" x:Key="MainButtonStyle">
+            <Setter Property="FontFamily" Value="Arial Black"/>
             <Setter Property="Background" Value="#14141f"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Height" Value="auto"/>
@@ -28,7 +29,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Grid>
-                            <Border x:Name="NavButton" CornerRadius="10" BorderBrush="White" BorderThickness="3" Height="auto" Width="100"/>
+                            <Border x:Name="NavButton" CornerRadius="10" BorderBrush="White" BorderThickness="0" Height="auto" Width="100"/>
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Grid>
                         <ControlTemplate.Triggers>
@@ -74,12 +75,12 @@
 
             <Grid Margin="0,20,0,0" x:Name="NavBar" Height="60" DockPanel.Dock="Top" Background="#171A21">
                 <StackPanel Orientation="Horizontal">
-                    <Button  Content="Главная" Style="{StaticResource OverButtonStyle}"/>
-                    <Button Style="{StaticResource OverButtonStyle}">
+                    <Button  Content="ГЛАВНАЯ"   Style="{StaticResource MainButtonStyle}"/>
+                    <Button Style="{StaticResource MainButtonStyle}">
                         <TextBlock HorizontalAlignment="Center" >
-                            Последние
+                            ПОСЛЕДНИЕ
                             <LineBreak/>
-                            Полученные
+                            ПОЛУЧЕННЫЕ
                         </TextBlock>
                     </Button>
                 </StackPanel>
