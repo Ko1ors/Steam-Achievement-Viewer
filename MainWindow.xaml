@@ -13,7 +13,7 @@
 
             CaptionHeight="15"
 
-            CornerRadius="25,25,10,10"
+            CornerRadius="25,25,15,15"
 
             GlassFrameThickness="0">
         </shell:WindowChrome>
@@ -45,18 +45,25 @@
             </Setter>
         </Style>
         <Style TargetType="Button" x:Key="FlatButtonStyle">
-            <Setter Property="Background" Value="DarkCyan"/>
-            <Setter Property="Foreground" Value="White"/>
             <Setter Property="Width" Value="75"/>
             <Setter Property="Height" Value="35"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border BorderThickness="0"
+                        <Border  x:Name="NavButton"  BorderThickness="0"
                         Background="{TemplateBinding Background}"
                         CornerRadius="4">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="NavButton" Property="BorderBrush" Value="#FFE6DDDD"/>
+                                <Setter TargetName="NavButton" Property="Background" Value="Gray"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="NavButton" Property="Background" Value="#232423"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -87,6 +94,7 @@
                 </ScrollViewer>
             </Grid>
         </DockPanel>
-        <shell:Button Content="X" Style="{StaticResource FlatButtonStyle}" HorizontalAlignment="Left" Margin="775,2,0,0" VerticalAlignment="Top" Width="17" Height="17" Background="#FFCB1E26"/>
+        <Button Content="X" WindowChrome.IsHitTestVisibleInChrome="True" x:Name="CloseButton" Click="CloseButton_Click" Style="{StaticResource FlatButtonStyle}" HorizontalAlignment="Left" Margin="775,2,0,0" VerticalAlignment="Top" Width="17" Height="17" Background="#FFCB1E26"/>
+        <TextBlock Text="Steam Achievement Viewer"  VerticalAlignment="Top" HorizontalAlignment="Left"  Margin="5,4,0,0" Foreground="White" FontFamily="Arial Black"/>
     </Grid>
 </Window>

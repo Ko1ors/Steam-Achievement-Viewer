@@ -38,5 +38,11 @@ namespace AchievementTest
             //    GamesList.Children.Add(testText);
             //}
         }
+
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }
