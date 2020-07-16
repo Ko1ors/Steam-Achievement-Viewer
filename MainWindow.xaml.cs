@@ -22,10 +22,33 @@ namespace AchievementTest
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static Dictionary<string, Page> pagesDictionary = new Dictionary<string, Page>();
         public MainWindow()
         {
             InitializeComponent();
         }
+
+        public static Page GetPageObject(string type)
+        {
+            if (!pagesDictionary.TryGetValue(type, out Page page))
+            {
+                switch (type)
+                {
+                    case "MainPage":
+                        page = new MainPage();
+                        break;
+                    case "LastAchievedPage":
+                        page = new LastAchievedPage();
+                        break;
+                    default:
+                        new Exception("Page type does not exist");
+                        break;
+                }
+                pagesDictionary.Add(type, page);
+            }
+            return page;
+        }
+
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
@@ -33,11 +56,11 @@ namespace AchievementTest
 
         private void MainButton_clicked(object sender, RoutedEventArgs e)
         {
-            Information.Content = new MainPage();
+            Information.Content = GetPageObject("MainPage");
         }
         private void LastAchievedButton_clicked(object sender, RoutedEventArgs e)
         {
-            Information.Content = new LastAchievedPage();
+            Information.Content = GetPageObject("LastAchievedPage");
         }
     }
 }
