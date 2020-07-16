@@ -20,6 +20,32 @@
         </shell:WindowChrome>
     </shell:WindowChrome.WindowChrome>
     <Window.Resources>
+        <Style TargetType="Button" x:Key="MainButtonStyle">
+            <Setter Property="FontFamily" Value="Arial Black"/>
+            <Setter Property="Background" Value="#14141f"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Height" Value="auto"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Border x:Name="NavButton" CornerRadius="10" BorderBrush="White" BorderThickness="0" Height="auto" Width="100"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="NavButton" Property="BorderBrush" Value="#FFE6DDDD"/>
+                                <Setter TargetName="NavButton" Property="Background" Value="Gray"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="NavButton" Property="Background" Value="#232423"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style TargetType="Button" x:Key="FlatButtonStyle">
             <Setter Property="Width" Value="75"/>
             <Setter Property="Height" Value="35"/>
@@ -52,9 +78,9 @@
                     <Button  Content="Главная" Style="{StaticResource OverButtonStyle}" Click="MainButton_clicked"/>
                     <Button Style="{StaticResource OverButtonStyle}" Click="LastAchievedButton_clicked" >
                         <TextBlock HorizontalAlignment="Center" >
-                            Последние
+                            ПОСЛЕДНИЕ
                             <LineBreak/>
-                            Полученные
+                            ПОЛУЧЕННЫЕ
                         </TextBlock>
                     </Button>
                 </StackPanel>
