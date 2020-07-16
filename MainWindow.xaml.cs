@@ -22,22 +22,22 @@ namespace AchievementTest
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static Dictionary<string, Page> pagesDictionary = new Dictionary<string, Page>();
+        private static Dictionary<Type, Page> pagesDictionary = new Dictionary<Type, Page>();
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        public static Page GetPageObject(string type)
+        public static Page GetPageObject(Type type)
         {
             if (!pagesDictionary.TryGetValue(type, out Page page))
             {
-                switch (type)
+                switch (type.Name)
                 {
-                    case "MainPage":
+                    case nameof(MainPage):
                         page = new MainPage();
                         break;
-                    case "LastAchievedPage":
+                    case nameof(LastAchievedPage):
                         page = new LastAchievedPage();
                         break;
                     default:
@@ -56,11 +56,11 @@ namespace AchievementTest
 
         private void MainButton_clicked(object sender, RoutedEventArgs e)
         {
-            Information.Content = GetPageObject("MainPage");
+            Information.Content = GetPageObject(typeof(MainPage));
         }
         private void LastAchievedButton_clicked(object sender, RoutedEventArgs e)
         {
-            Information.Content = GetPageObject("LastAchievedPage");
+            Information.Content = GetPageObject(typeof(LastAchievedPage));
         }
     }
 }
