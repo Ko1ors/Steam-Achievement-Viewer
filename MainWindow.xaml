@@ -75,8 +75,8 @@
         <DockPanel LastChildFill="True">
             <Grid Margin="0,20,0,0" x:Name="NavBar" Height="60" DockPanel.Dock="Top" Background="#171A21">
                 <StackPanel Orientation="Horizontal">
-                    <Button  Content="Главная" Style="{StaticResource OverButtonStyle}" Click="MainButton_clicked"/>
-                    <Button Style="{StaticResource OverButtonStyle}" Click="LastAchievedButton_clicked" >
+                    <Button  Content="ГЛАВНАЯ" Style="{StaticResource MainButtonStyle}" Click="MainButton_clicked"/>
+                    <Button Style="{StaticResource MainButtonStyle}" Click="LastAchievedButton_clicked" >
                         <TextBlock HorizontalAlignment="Center" >
                             ПОСЛЕДНИЕ
                             <LineBreak/>
