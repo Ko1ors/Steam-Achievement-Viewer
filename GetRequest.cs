@@ -11,6 +11,8 @@ namespace AchievementTest
     {
         public static XmlDocument XmlRequest(string RequestUrl) {
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(RequestUrl);
+            request.Method = "POST";
+            request.ContentType = "text/xml";
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
                 XmlDocument doc = new XmlDocument();
