@@ -28,23 +28,12 @@ namespace AchievementTest
             InitializeComponent();
         }
 
-        public static Page GetPageObject(Type type)
+        public static Page GetPageObject<T>() where T : Page, new()
         {
-            if (!pagesDictionary.TryGetValue(type, out Page page))
+            if (!pagesDictionary.TryGetValue(typeof(T), out Page page))
             {
-                switch (type.Name)
-                {
-                    case nameof(MainPage):
-                        page = new MainPage();
-                        break;
-                    case nameof(LastAchievedPage):
-                        page = new LastAchievedPage();
-                        break;
-                    default:
-                        new Exception("Page type does not exist");
-                        break;
-                }
-                pagesDictionary.Add(type, page);
+                page = new T();
+                pagesDictionary.Add(typeof(T), page);
             }
             return page;
         }
@@ -56,11 +45,11 @@ namespace AchievementTest
 
         private void MainButton_clicked(object sender, RoutedEventArgs e)
         {
-            Information.Content = GetPageObject(typeof(MainPage));
+            Information.Content = GetPageObject<MainPage>();
         }
         private void LastAchievedButton_clicked(object sender, RoutedEventArgs e)
         {
-            Information.Content = GetPageObject(typeof(LastAchievedPage));
+            Information.Content = GetPageObject<LastAchievedPage>();
         }
     }
 }
