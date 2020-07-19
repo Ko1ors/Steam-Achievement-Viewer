@@ -20,6 +20,11 @@ namespace AchievementTest
             {
                 profile = (Profile)serializer.Deserialize(reader);
             }
+            if (profile.PrivacyState != "public")
+            {
+                profile = null;
+                return false;
+            }
             return true;
         }
     }
