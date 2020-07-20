@@ -73,7 +73,28 @@ namespace AchievementTest
                 gamesList = null;
                 return false;
             }
+            SaveGames();
             return true;
+        }
+
+        public static void SaveGames()
+        {
+            if (!System.IO.Directory.Exists(directoryPath + profile.SteamID64))
+                Directory.CreateDirectory(directoryPath + profile.SteamID64);
+            XmlSerializer serializer = new XmlSerializer(typeof(GamesList));
+            System.IO.FileStream file = System.IO.File.Create(directoryPath + profile.SteamID64 + "\\gameslist.xml");
+            serializer.Serialize(file, gamesList);
+        }
+
+        public static void LoadGames()
+        {
+            if (File.Exists(directoryPath + profile.SteamID64 + "\\gameslist.xml"))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(GamesList));
+                System.IO.StreamReader file = new System.IO.StreamReader(directoryPath + profile.SteamID + "\\gameslist.xml");
+                gamesList = (GamesList)serializer.Deserialize(file);
+                file.Close();
+            }
         }
     }
 }
