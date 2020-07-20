@@ -32,6 +32,11 @@ namespace AchievementTest.Pages
 
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
         {
+            GetUserInformation();
+        }
+
+        private void GetUserInformation()
+        {
             string steamID = textBoxSteamID.Text;
             UpdateStatusLabel("Получаю данные о профиле");
             Task.Run(new Action(() =>
@@ -45,7 +50,9 @@ namespace AchievementTest.Pages
                 {
                     UpdateStatusLabel("Не удалось получить данные о профиле. Подождите и попробуйте позже");
                 }
-          }));
+                Thread.Sleep(1000);
+                UpdateStatusLabel("Не удалось получить данн");
+            }));
         }
 
 
