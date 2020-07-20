@@ -10,6 +10,7 @@ namespace AchievementTest
     public static class Manager
     {
         public static Profile profile;
+        public static GamesList gamesList;
         private static readonly string xmlProfileError = "The specified profile could not be found.";
         private static readonly string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -55,6 +56,24 @@ namespace AchievementTest
                 profile = (Profile)serializer.Deserialize(file);
                 file.Close();
             }
+        }
+
+        public static bool GetGames()
+        {
+            var response = GetRequest.XmlRequest("https://steamcommunity.com/profiles/" + profile.SteamID64 + "/games?tab=all&xml=1");
+            if (response.InnerText == xmlProfileError)
+                return false;
+            XmlSerializer serializer = new XmlSerializer(typeof(GamesList));
+            using (XmlReader reader = new XmlNodeReader(response))
+            {
+                gamesList = (GamesList)serializer.Deserialize(reader);
+            }
+            if(gamesList.Games.Game.Count == 0)
+            {
+                gamesList = null;
+                return false;
+            }
+            return true;
         }
     }
 }

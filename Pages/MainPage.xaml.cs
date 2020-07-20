@@ -38,9 +38,9 @@ namespace AchievementTest.Pages
         private void GetUserInformation()
         {
             string steamID = textBoxSteamID.Text;
-            UpdateStatusLabel("Получаю данные о профиле");
             Task.Run(new Action(() =>
             {
+                UpdateStatusLabel("Получаю данные о профиле");
                 Thread.Sleep(1000);
                 if (Manager.GetProfile(steamID))
                 {
@@ -49,9 +49,20 @@ namespace AchievementTest.Pages
                 else
                 {
                     UpdateStatusLabel("Не удалось получить данные о профиле. Подождите и попробуйте позже");
+                    return;
                 }
                 Thread.Sleep(1000);
-                UpdateStatusLabel("Не удалось получить данн");
+                UpdateStatusLabel("Получаю список игр");
+                Thread.Sleep(1000);
+                if (Manager.GetGames())
+                {
+                    UpdateStatusLabel("Список игр был успешно получен");
+                }
+                else
+                {
+                    UpdateStatusLabel("Не удалось получить список игр. Подождите и попробуйте позже");
+                    return;
+                }
             }));
         }
 
