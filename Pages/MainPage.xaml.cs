@@ -60,7 +60,9 @@ namespace AchievementTest.Pages
                 {
                     while(Manager.currentGameRetrieve < Manager.gamesList.Games.Game.Count)
                     {
-                        UpdateStatusLabel("Получаю список достижений " + Manager.currentGameRetrieve + "/" + Manager.gamesList.Games.Game.Count);
+                        UpdateStatusLabel("Получаю список достижений "
+                            + Manager.currentGameRetrieve + "/" + Manager.gamesList.Games.Game.Count
+                            + "\t" + Manager.gamesList.Games.Game[Manager.currentGameRetrieve].Name);
                         Thread.Sleep(1000);
                     }
 
