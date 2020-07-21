@@ -65,8 +65,6 @@ namespace AchievementTest.Pages
                 }
             }));
         }
-
-
         private void UpdateStatusLabel(string message)
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Background, (SendOrPostCallback)delegate
