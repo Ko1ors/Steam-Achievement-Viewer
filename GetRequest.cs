@@ -16,7 +16,14 @@ namespace AchievementTest
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load(new StreamReader(response.GetResponseStream(), Encoding.UTF8));
+                try
+                {
+                    doc.Load(new StreamReader(response.GetResponseStream(), Encoding.UTF8));
+                }
+                catch
+                {
+
+                }
                 return doc;
             }
         }

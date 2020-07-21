@@ -41,5 +41,7 @@ namespace AchievementTest
         public string StatsLink { get; set; }
         [XmlElement(ElementName = "globalStatsLink")]
         public string GlobalStatsLink { get; set; }
+        [XmlElement(ElementName = "achievements")]
+        public Achievements Achievements { get; set; }
     }
 }
