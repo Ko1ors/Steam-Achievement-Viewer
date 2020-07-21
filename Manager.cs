@@ -11,6 +11,7 @@ namespace AchievementTest
     {
         public static Profile profile;
         public static GamesList gamesList;
+        public static int currentGameRetrieve;
         private static readonly string xmlProfileError = "The specified profile could not be found.";
         private static readonly string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
 
@@ -38,7 +39,7 @@ namespace AchievementTest
             return true;
         }
 
-        public static void SaveProfile()
+        private static void SaveProfile()
         {
             if(!System.IO.Directory.Exists(directoryPath + profile.SteamID64))
                 Directory.CreateDirectory(directoryPath + profile.SteamID64);
@@ -47,7 +48,7 @@ namespace AchievementTest
             serializer.Serialize(file,profile);
         }
 
-        public static void LoadProfile()
+        private static void LoadProfile()
         {
             if (File.Exists(directoryPath + profile.SteamID64 + "\\profile.xml"))
             {
@@ -73,11 +74,17 @@ namespace AchievementTest
                 gamesList = null;
                 return false;
             }
+            CheckGamesForAchievement();
             SaveGames();
             return true;
         }
 
-        public static void SaveGames()
+        private static void CheckGamesForAchievement()
+        {
+            gamesList.Games.Game.RemoveAll(e => e.GlobalStatsLink == null || e.StatsLink == null);
+        }
+
+        private static void SaveGames()
         {
             if (!System.IO.Directory.Exists(directoryPath + profile.SteamID64))
                 Directory.CreateDirectory(directoryPath + profile.SteamID64);
@@ -86,7 +93,7 @@ namespace AchievementTest
             serializer.Serialize(file, gamesList);
         }
 
-        public static void LoadGames()
+        private static void LoadGames()
         {
             if (File.Exists(directoryPath + profile.SteamID64 + "\\gameslist.xml"))
             {
@@ -95,6 +102,26 @@ namespace AchievementTest
                 gamesList = (GamesList)serializer.Deserialize(file);
                 file.Close();
             }
+        }
+
+        public static bool GetAchievements()
+        {
+            currentGameRetrieve = 0;
+            XmlSerializer serializer = new XmlSerializer(typeof(Achievements));
+            foreach (Game game in gamesList.Games.Game)
+            {
+                currentGameRetrieve++;
+                var response = GetRequest.XmlRequest(game.StatsLink + "/?xml=1");
+                if (response.InnerText == xmlProfileError || response.InnerText == "")
+                    continue;
+                using (XmlReader reader = new XmlNodeReader(response))
+                {
+                    reader.ReadToDescendant("achievements");
+                    game.Achievements = (Achievements)serializer.Deserialize(reader);
+                }
+            }
+            SaveGames();
+            return true;
         }
     }
 }

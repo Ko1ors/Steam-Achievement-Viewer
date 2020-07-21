@@ -1,22 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Xml;
-using System.Xml.Serialization;
 
 namespace AchievementTest.Pages
 {
@@ -42,6 +29,7 @@ namespace AchievementTest.Pages
             {
                 UpdateStatusLabel("Получаю данные о профиле");
                 Thread.Sleep(1000);
+
                 if (Manager.GetProfile(steamID))
                 {
                     UpdateStatusLabel("Данные о профиле были успешно получены");
@@ -54,6 +42,7 @@ namespace AchievementTest.Pages
                 Thread.Sleep(1000);
                 UpdateStatusLabel("Получаю список игр");
                 Thread.Sleep(1000);
+
                 if (Manager.GetGames())
                 {
                     UpdateStatusLabel("Список игр был успешно получен");
@@ -61,6 +50,29 @@ namespace AchievementTest.Pages
                 else
                 {
                     UpdateStatusLabel("Не удалось получить список игр. Подождите и попробуйте позже");
+                    return;
+                }
+
+                Thread.Sleep(1000);
+                UpdateStatusLabel("Получаю список достижений");
+
+                Task.Run(new Action(() =>
+                {
+                    while(Manager.currentGameRetrieve < Manager.gamesList.Games.Game.Count)
+                    {
+                        UpdateStatusLabel("Получаю список достижений " + Manager.currentGameRetrieve + "/" + Manager.gamesList.Games.Game.Count);
+                        Thread.Sleep(1000);
+                    }
+
+                }));
+
+                if (Manager.GetAchievements())
+                {
+                    UpdateStatusLabel("Список достижений был успешно получен");
+                }
+                else
+                {
+                    UpdateStatusLabel("Не удалось получить список достижений. Подождите и попробуйте позже");
                     return;
                 }
             }));
