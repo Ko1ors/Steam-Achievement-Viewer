@@ -84,6 +84,11 @@ namespace AchievementTest
             gamesList.Games.Game.RemoveAll(e => e.GlobalStatsLink == null || e.StatsLink == null);
         }
 
+        private static void CheckAchievementsNull()
+        {
+            gamesList.Games.Game.RemoveAll(e => e.Achievements == null);
+        }
+
         private static void SaveGames()
         {
             if (!System.IO.Directory.Exists(directoryPath + profile.SteamID64))
@@ -119,6 +124,8 @@ namespace AchievementTest
                     reader.ReadToDescendant("achievements");
                     game.Achievements = (Achievements)serializer.Deserialize(reader);
                 }
+                if (game.Achievements == null)
+                    continue;
                 Achievements achievements = GetGlobalAchievementPercentages(game.AppID);
                 if(achievements != null)
                 {
@@ -132,6 +139,7 @@ namespace AchievementTest
                     }
                 }
             }
+            CheckAchievementsNull();
             SaveGames();
             return true;
         }
