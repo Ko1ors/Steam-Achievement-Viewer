@@ -74,12 +74,12 @@ namespace AchievementTest
                 gamesList = null;
                 return false;
             }
-            CheckGamesForAchievement();
+            CheckGamesForAchievements();
             SaveGames();
             return true;
         }
 
-        private static void CheckGamesForAchievement()
+        private static void CheckGamesForAchievements()
         {
             gamesList.Games.Game.RemoveAll(e => e.GlobalStatsLink == null || e.StatsLink == null);
         }
@@ -119,9 +119,34 @@ namespace AchievementTest
                     reader.ReadToDescendant("achievements");
                     game.Achievements = (Achievements)serializer.Deserialize(reader);
                 }
+                Achievements achievements = GetGlobalAchievementPercentages(game.AppID);
+                if(achievements != null)
+                {
+                    foreach(Achievement achievement in game.Achievements.Achievement)
+                    {
+                        var achv = achievements.Achievement.Find(e => e.Name.ToLower() == achievement.Apiname.ToLower());
+                        if (achv != null)
+                            achievement.Percent = achv.Percent;
+                        else
+                            throw new Exception();
+                    }
+                }
             }
             SaveGames();
             return true;
+        }
+
+        public static Achievements GetGlobalAchievementPercentages(string appid)
+        {
+            Achievements achievements = null;
+            var response = GetRequest.XmlRequest("https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid=" + appid + "&format=xml");
+            using (XmlReader reader = new XmlNodeReader(response))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(Achievements));
+                reader.ReadToDescendant("achievements");
+                achievements = (Achievements)serializer.Deserialize(reader);
+            }
+            return achievements;
         }
     }
 }

@@ -26,10 +26,10 @@ namespace AchievementTest
 		[XmlElement(ElementName = "description")]
 		public string Description { get; set; }
 		[XmlElement(ElementName = "unlockTimestamp")]
-		public string UnlockTimestamp { get; set; }
+		public int UnlockTimestamp { get; set; }
 		[XmlAttribute(AttributeName = "closed")]
 		public string Closed { get; set; }
 		[XmlElement(ElementName = "percent")]
-		public string Percent { get; set; }
+		public float Percent { get; set; }
 	}
 }
