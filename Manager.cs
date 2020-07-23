@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -139,6 +140,41 @@ namespace AchievementTest
                     }
                 }
             }
+            CheckAchievementsNull();
+            SaveGames();
+            return true;
+        }
+
+        public static bool GetAchievementsParallel()
+        {
+            currentGameRetrieve = 0;
+            XmlSerializer serializer = new XmlSerializer(typeof(Achievements));
+            Parallel.ForEach(gamesList.Games.Game, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 } , game =>
+            {
+                currentGameRetrieve++;
+                var response = GetRequest.XmlRequest(game.StatsLink + "/?xml=1");
+                if (response.InnerText == xmlProfileError || response.InnerText == "")
+                    return;
+                using (XmlReader reader = new XmlNodeReader(response))
+                {
+                    reader.ReadToDescendant("achievements");
+                    game.Achievements = (Achievements)serializer.Deserialize(reader);
+                }
+                if (game.Achievements == null)
+                    return;
+                Achievements achievements = GetGlobalAchievementPercentages(game.AppID);
+                if (achievements != null)
+                {
+                    foreach (Achievement achievement in game.Achievements.Achievement)
+                    {
+                        var achv = achievements.Achievement.Find(e => e.Name.ToLower() == achievement.Apiname.ToLower());
+                        if (achv != null)
+                            achievement.Percent = achv.Percent;
+                        else
+                            achievement.Percent = -1;
+                    }
+                }
+            });
             CheckAchievementsNull();
             SaveGames();
             return true;

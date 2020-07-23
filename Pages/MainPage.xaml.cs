@@ -68,7 +68,7 @@ namespace AchievementTest.Pages
 
                 }));
 
-                if (Manager.GetAchievements())
+                if (Manager.GetAchievementsParallel())
                 {
                     UpdateStatusLabel("Список достижений был успешно получен");
                 }
