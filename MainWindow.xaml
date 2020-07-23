@@ -75,7 +75,11 @@
     <Grid>
         <DockPanel LastChildFill="True">
             <Grid Margin="0,20,0,0" x:Name="NavBar" Height="60" DockPanel.Dock="Top" Background="#171A21">
-                <StackPanel Orientation="Horizontal">
+                <shell:Grid.ColumnDefinitions>
+                    <shell:ColumnDefinition Width="13*"/>
+                    <shell:ColumnDefinition Width="787*"/>
+                </shell:Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" shell:Grid.ColumnSpan="2">
                     <Button  Content="ГЛАВНАЯ" Style="{StaticResource MainButtonStyle}" Click="MainButton_clicked"/>
                     <Button Style="{StaticResource MainButtonStyle}" Click="LastAchievedButton_clicked" >
                         <TextBlock HorizontalAlignment="Center" >
@@ -85,14 +89,14 @@
                         </TextBlock>
                     </Button>
                 </StackPanel>
-                <Border BorderThickness="5"/>
-                <Image  Stretch="Fill"  Width="50" Height="50" HorizontalAlignment="Right" Margin="0,5,10,5"/>
+                <Border BorderThickness="5" shell:Grid.ColumnSpan="2"/>
+                <Image  Stretch="Fill"  Width="50" Height="50" HorizontalAlignment="Left" Margin="727,5,0,5" shell:Grid.Column="1"/>
             </Grid>
             <Grid x:Name="InformationPages" Height="auto" Background="#1B2838" >
                 <Frame x:Name="Information" NavigationUIVisibility="Hidden"/>
+                <Image HorizontalAlignment="Left" Height="30" Margin="5,-84,0,0" VerticalAlignment="Top" Width="55" Source="/Logo_2.png" Stretch="Uniform" StretchDirection="Both" SnapsToDevicePixels="True"/>
             </Grid>
         </DockPanel>
         <Button Content="X" WindowChrome.IsHitTestVisibleInChrome="True" x:Name="CloseButton" Click="CloseButton_Click" Style="{StaticResource FlatButtonStyle}" HorizontalAlignment="Left" Margin="775,2,0,0" VerticalAlignment="Top" Width="17" Height="17" Background="#FFCB1E26"/>
-        <TextBlock Text="Steam Achievement Viewer"  VerticalAlignment="Top" HorizontalAlignment="Left"  Margin="5,4,0,0" Foreground="White" FontFamily="Arial Black"/>
     </Grid>
 </Window>
