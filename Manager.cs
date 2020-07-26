@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -74,14 +75,19 @@ namespace AchievementTest
                 gamesList = null;
                 return false;
             }
-            CheckGamesForAchievement();
+            CheckGamesForAchievements();
             SaveGames();
             return true;
         }
 
-        private static void CheckGamesForAchievement()
+        private static void CheckGamesForAchievements()
         {
             gamesList.Games.Game.RemoveAll(e => e.GlobalStatsLink == null || e.StatsLink == null);
+        }
+
+        private static void CheckAchievementsNull()
+        {
+            gamesList.Games.Game.RemoveAll(e => e.Achievements == null);
         }
 
         private static void SaveGames()
@@ -119,9 +125,72 @@ namespace AchievementTest
                     reader.ReadToDescendant("achievements");
                     game.Achievements = (Achievements)serializer.Deserialize(reader);
                 }
+                if (game.Achievements == null)
+                    continue;
+                Achievements achievements = GetGlobalAchievementPercentages(game.AppID);
+                if(achievements != null)
+                {
+                    foreach(Achievement achievement in game.Achievements.Achievement)
+                    {
+                        var achv = achievements.Achievement.Find(e => e.Name.ToLower() == achievement.Apiname.ToLower());
+                        if (achv != null)
+                            achievement.Percent = achv.Percent;
+                        else
+                            throw new Exception();
+                    }
+                }
             }
+            CheckAchievementsNull();
             SaveGames();
             return true;
+        }
+
+        public static bool GetAchievementsParallel()
+        {
+            currentGameRetrieve = 0;
+            XmlSerializer serializer = new XmlSerializer(typeof(Achievements));
+            Parallel.ForEach(gamesList.Games.Game, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 } , game =>
+            {
+                currentGameRetrieve++;
+                var response = GetRequest.XmlRequest(game.StatsLink + "/?xml=1");
+                if (response.InnerText == xmlProfileError || response.InnerText == "")
+                    return;
+                using (XmlReader reader = new XmlNodeReader(response))
+                {
+                    reader.ReadToDescendant("achievements");
+                    game.Achievements = (Achievements)serializer.Deserialize(reader);
+                }
+                if (game.Achievements == null)
+                    return;
+                Achievements achievements = GetGlobalAchievementPercentages(game.AppID);
+                if (achievements != null)
+                {
+                    foreach (Achievement achievement in game.Achievements.Achievement)
+                    {
+                        var achv = achievements.Achievement.Find(e => e.Name.ToLower() == achievement.Apiname.ToLower());
+                        if (achv != null)
+                            achievement.Percent = achv.Percent;
+                        else
+                            achievement.Percent = -1;
+                    }
+                }
+            });
+            CheckAchievementsNull();
+            SaveGames();
+            return true;
+        }
+
+        public static Achievements GetGlobalAchievementPercentages(string appid)
+        {
+            Achievements achievements = null;
+            var response = GetRequest.XmlRequest("https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid=" + appid + "&format=xml");
+            using (XmlReader reader = new XmlNodeReader(response))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(Achievements));
+                reader.ReadToDescendant("achievements");
+                achievements = (Achievements)serializer.Deserialize(reader);
+            }
+            return achievements;
         }
     }
 }
