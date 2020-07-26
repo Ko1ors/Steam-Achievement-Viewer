@@ -18,7 +18,6 @@
                         <TextBlock Foreground="WhiteSmoke" FontSize="20" TextWrapping="Wrap" Text="{Binding Path=AchievementDesctiption}"/>
                         <TextBlock Foreground="White" FontWeight="Bold" FontSize="20" Text="{Binding Path=AchievementDate}"/>
                     </StackPanel>
-                        <Image Margin="5" Width="100" Height="75" HorizontalAlignment="Right" Source="{Binding Path=GameLogoPath}"/>
                 </DockPanel>
             </Grid>
         </DataTemplate>

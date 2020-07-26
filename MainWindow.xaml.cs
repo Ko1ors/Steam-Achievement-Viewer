@@ -51,5 +51,10 @@ namespace AchievementTest
         {
             Information.Content = GetPageObject<LastAchievedPage>();
         }
+
+        private void CloseAchievementButton_clicked(object sender, RoutedEventArgs e)
+        {
+            Information.Content = GetPageObject<CloseAchievements>();
+        }
     }
 }

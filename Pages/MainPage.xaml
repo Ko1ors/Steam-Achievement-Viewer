@@ -1,9 +1,10 @@
-﻿<Page x:Class="AchievementTest.Pages.MainPage"
+﻿<Page
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AchievementTest.Pages"
+      xmlns:AchievementTest="clr-namespace:AchievementTest" x:Class="AchievementTest.Pages.MainPage"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage">
@@ -11,8 +12,9 @@
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="Enter your Steam ID" FontSize="30" Foreground="White"/>
             <StackPanel Height="60" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
-            <TextBox FontSize="25" x:Name="textBoxSteamID" Height="40" BorderBrush="White" BorderThickness="3" Width="400"/>
+                <TextBox FontSize="25" x:Name="textBoxSteamID" Height="40" BorderBrush="White" BorderThickness="3" Width="400"/>
                 <Button Content="Enter" Style="{StaticResource OverButtonStyle}" Click="ButtonEnter_Click"/>
+                <AchievementTest:RadialProgressBar x:Name="CircleProgressBar" HorizontalAlignment="Center" VerticalAlignment="Center" Height="50" Width="50" IndicatorBrush="#FFDFDEE8"/>
             </StackPanel>
             <Label HorizontalAlignment="Center" x:Name="statusLabel" VerticalAlignment="Center" Content="" FontSize="15" FontFamily="Arial Black" Foreground="White"/>
         </StackPanel>

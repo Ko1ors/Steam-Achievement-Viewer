@@ -20,6 +20,7 @@ namespace AchievementTest.Pages
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
         {
             GetUserInformation();
+            UpdateProgressBar(0);
         }
 
         private void GetUserInformation()
@@ -63,9 +64,9 @@ namespace AchievementTest.Pages
                         UpdateStatusLabel("Получаю список достижений "
                             + Manager.currentGameRetrieve + "/" + Manager.gamesList.Games.Game.Count
                             + "\t" + Manager.gamesList.Games.Game[Manager.currentGameRetrieve].Name);
+                        UpdateProgressBar((Manager.currentGameRetrieve * 100)/Manager.gamesList.Games.Game.Count);
                         Thread.Sleep(1000);
                     }
-
                 }));
 
                 if (Manager.GetAchievements())
@@ -78,6 +79,13 @@ namespace AchievementTest.Pages
                     return;
                 }
             }));
+        }
+        private void UpdateProgressBar(int Progress) 
+        {
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, (SendOrPostCallback)delegate
+            {
+                CircleProgressBar.Value = Progress;
+            }, null);
         }
         private void UpdateStatusLabel(string message)
         {

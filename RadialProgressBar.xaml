@@ -12,8 +12,8 @@
         <local:ValueToAngle x:Key="valueToAngle"/>
     </UserControl.Resources>
     <Grid>
-        <Ellipse x:Name="Background" Fill="{Binding ElementName=_this, Path=BackgroundBrush}" Stroke="Black" Margin="0"/>
+        <Ellipse x:Name="Background" Fill="{Binding ElementName=_this, Path=BackgroundBrush}" Margin="0"/>
         <ed:Arc x:Name="Indicator" ArcThickness="10" ArcThicknessUnit="Pixel" EndAngle="{Binding Converter={StaticResource valueToAngle}, ElementName=_this, Path=Value}" Fill="{Binding ElementName=_this, Path=IndicatorBrush}" Stretch="None" StartAngle="0"/>
-        <Ellipse x:Name="Border" Fill="{Binding ElementName=_this, Path=ProgressBorderBrush}" Margin="10" Stroke="Blue"/>
+        <Ellipse x:Name="Border" Fill="{Binding ElementName=_this, Path=ProgressBorderBrush}" Margin="10"/>
     </Grid>
 </UserControl>
