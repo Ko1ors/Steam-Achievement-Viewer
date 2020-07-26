@@ -88,6 +88,7 @@
                             ПОЛУЧЕННЫЕ
                         </TextBlock>
                     </Button>
+                    <Button  Content="БЛИЖАЙШИЕ" Style="{StaticResource MainButtonStyle}" Click="CloseAchievementButton_clicked"/>
                 </StackPanel>
                 <Border BorderThickness="5" shell:Grid.ColumnSpan="2"/>
                 <Image  Stretch="Fill"  Width="50" Height="50" HorizontalAlignment="Left" Margin="727,5,0,5" shell:Grid.Column="1"/>
