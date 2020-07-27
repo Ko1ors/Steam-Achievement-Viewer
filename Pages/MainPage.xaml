@@ -14,9 +14,9 @@
             <StackPanel Height="60" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
                 <TextBox FontSize="25" x:Name="textBoxSteamID" Height="40" BorderBrush="White" BorderThickness="3" Width="400"/>
                 <Button Content="Enter" Style="{StaticResource OverButtonStyle}" Click="ButtonEnter_Click"/>
-                <AchievementTest:RadialProgressBar x:Name="CircleProgressBar" HorizontalAlignment="Center" VerticalAlignment="Center" Height="50" Width="50" IndicatorBrush="#FFDFDEE8"/>
             </StackPanel>
             <Label HorizontalAlignment="Center" x:Name="statusLabel" VerticalAlignment="Center" Content="" FontSize="15" FontFamily="Arial Black" Foreground="White"/>
+            <AchievementTest:RadialProgressBar x:Name="CircleProgressBar" Height="100" Width="100" IndicatorBrush="#FFDFDEE8"/>
         </StackPanel>
     </Grid>
 </Page>
