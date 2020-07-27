@@ -67,6 +67,7 @@ namespace AchievementTest.Pages
                         UpdateProgressBar((Manager.currentGameRetrieve * 100)/Manager.gamesList.Games.Game.Count);
                         Thread.Sleep(1000);
                     }
+                    UpdateProgressBar((Manager.currentGameRetrieve * 100) / Manager.gamesList.Games.Game.Count);
                 }));
 
                 if (Manager.GetAchievementsParallel())
