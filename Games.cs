@@ -29,8 +29,12 @@ namespace AchievementTest
         public string AppID { get; set; }
         [XmlElement(ElementName = "name")]
         public string Name { get; set; }
+        [XmlElement(ElementName = "gameIcon")]
+        public string GameIcon { get; set; }
         [XmlElement(ElementName = "logo")]
         public string Logo { get; set; }
+        [XmlElement(ElementName = "gameLogoSmall")]
+        public string GameLogoSmall { get; set; }
         [XmlElement(ElementName = "storeLink")]
         public string StoreLink { get; set; }
         [XmlElement(ElementName = "hoursLast2Weeks")]

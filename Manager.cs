@@ -148,7 +148,6 @@ namespace AchievementTest
         public static bool GetAchievementsParallel()
         {
             currentGameRetrieve = 0;
-            XmlSerializer serializer = new XmlSerializer(typeof(Achievements));
             Parallel.ForEach(gamesList.Games.Game, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 } , game =>
             {
                 currentGameRetrieve++;
@@ -157,8 +156,14 @@ namespace AchievementTest
                     return;
                 using (XmlReader reader = new XmlNodeReader(response))
                 {
-                    reader.ReadToDescendant("achievements");
+                    XmlSerializer serializer = new XmlSerializer(typeof(Game));
+                    reader.ReadToDescendant("game");
+                    var game_ = (Game)serializer.Deserialize(reader);
+                    serializer = new XmlSerializer(typeof(Achievements));
+                    reader.ReadToNextSibling("achievements");
                     game.Achievements = (Achievements)serializer.Deserialize(reader);
+                    game.GameLogoSmall = game_.GameLogoSmall;
+                    game.GameIcon = game_.GameIcon;
                 }
                 if (game.Achievements == null)
                     return;
