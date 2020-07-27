@@ -23,8 +23,8 @@
         </DataTemplate>
     </Page.Resources>
     <Grid>
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-        <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="AchievementList" ItemTemplate="{StaticResource AchievementInfo}" Background="#1B2838"/>
+        <ScrollViewer BorderThickness="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="AchievementList" ItemTemplate="{StaticResource AchievementInfo}" Background="#1B2838"/>
         </ScrollViewer>
     </Grid>
 </Page>

@@ -10,9 +10,9 @@
     <Page.Resources>
         <DataTemplate x:Key="ShortGameInfo">
             <StackPanel>
-                <StackPanel Margin="5" Orientation="Vertical">
-                    <Image Margin="0,0,5,0" Width="50" Height="50" Stretch="UniformToFill" Source="{Binding Path=GameIcon}"/>
-                    <TextBlock MaxWidth="125" Foreground="White" FontWeight="Bold" FontSize="15" TextWrapping="Wrap" Text="{Binding Path=Name}"/>
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <Image Margin="0,0,5,0" Width="16" Height="16" Stretch="UniformToFill" Source="{Binding Path=GameIcon}"/>
+                    <TextBlock MaxWidth="100" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontSize="10" TextWrapping="Wrap" Text="{Binding Path=Name}"/>
                 </StackPanel>
             </StackPanel>
         </DataTemplate>
@@ -35,7 +35,7 @@
     </Page.Resources>
     <Grid Background="#1B2838" Margin="10">
         <DockPanel LastChildFill="True">
-            <Grid x:Name="Games" HorizontalAlignment="Left" Background="Black" Width="150">
+            <Grid x:Name="Games" HorizontalAlignment="Left" Background="Black" Width="160">
                 <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                     <ListBox x:Name="GameList" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource ShortGameInfo}" Background="#FF171A21" SelectionChanged="GameSelected"/>
                 </ScrollViewer>
