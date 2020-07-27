@@ -201,8 +201,10 @@ namespace AchievementTest
 
         public static Achievements GetClosestAchievements(string appid)
         {
-            Achievements achievements = new Achievements();
-            achievements.Achievement = gamesList.Games.Game.Find(e => e.AppID == appid)?.Achievements.Achievement.Where(e => e.Closed == "0").OrderByDescending(e => e.Percent).ToList();
+            Achievements achievements = new Achievements
+            {
+                Achievement = gamesList.Games.Game.Find(e => e.AppID == appid)?.Achievements.Achievement.Where(e => e.Closed == "0").OrderByDescending(e => e.Percent).ToList()
+            };
             return achievements;      
         }
     }
