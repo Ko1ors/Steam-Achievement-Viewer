@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -196,6 +197,13 @@ namespace AchievementTest
                 achievements = (Achievements)serializer.Deserialize(reader);
             }
             return achievements;
+        }
+
+        public static Achievements GetClosestAchievements(string appid)
+        {
+            Achievements achievements = new Achievements();
+            achievements.Achievement = gamesList.Games.Game.Find(e => e.AppID == appid)?.Achievements.Achievement.Where(e => e.Closed == "0").OrderByDescending(e => e.Percent).ToList();
+            return achievements;      
         }
     }
 }

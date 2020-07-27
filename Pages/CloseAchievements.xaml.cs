@@ -27,7 +27,7 @@ namespace AchievementTest.Pages
 
         private void GameSelected(object sender, SelectionChangedEventArgs e)
         {
-            AchievementList.ItemsSource = Manager.gamesList.Games.Game[GameList.SelectedIndex].Achievements.Achievement;
+            AchievementList.ItemsSource = Manager.GetClosestAchievements(Manager.gamesList.Games.Game[GameList.SelectedIndex].AppID).Achievement;
         }
     }
 }
