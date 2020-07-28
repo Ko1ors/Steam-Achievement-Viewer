@@ -91,7 +91,7 @@
                     <Button  Content="БЛИЖАЙШИЕ" Style="{StaticResource MainButtonStyle}" Click="CloseAchievementButton_clicked"/>
                 </StackPanel>
                 <Border BorderThickness="5" shell:Grid.ColumnSpan="2"/>
-                <Image  Stretch="Fill"  Width="50" Height="50" HorizontalAlignment="Left" Margin="727,5,0,5" shell:Grid.Column="1"/>
+                <Image x:Name="ProfileAvatar" Stretch="Fill"  Width="50" Height="50" HorizontalAlignment="Left" Margin="727,5,0,5" shell:Grid.Column="1"/>
             </Grid>
             <Grid x:Name="InformationPages" Height="auto" Background="#1B2838" >
                 <Frame x:Name="Information" NavigationUIVisibility="Hidden"/>

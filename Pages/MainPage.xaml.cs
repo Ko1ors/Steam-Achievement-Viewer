@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace AchievementTest.Pages
@@ -33,6 +35,7 @@ namespace AchievementTest.Pages
 
                 if (Manager.GetProfile(steamID))
                 {
+                    UpdateAvatarImage(Manager.profile.AvatarFull);
                     UpdateStatusLabel("Данные о профиле были успешно получены");
                 }
                 else
@@ -80,6 +83,13 @@ namespace AchievementTest.Pages
                     return;
                 }
             }));
+        }
+        private void UpdateAvatarImage(string IconPath)
+        {
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, (SendOrPostCallback)delegate
+            {
+                ((MainWindow)System.Windows.Application.Current.MainWindow).ProfileAvatar.Source = new BitmapImage(new Uri(IconPath));
+            }, null);
         }
         private void UpdateProgressBar(int Progress) 
         {
