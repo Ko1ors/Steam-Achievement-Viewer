@@ -19,20 +19,10 @@ namespace AchievementTest.Pages
     /// </summary>
     public partial class LastAchievedPage : Page
     {
-        public ObservableCollection <AchievementInfo> Achievements  { get; set; }
+        ObservableCollection<Achievement> Achievements = new ObservableCollection<Achievement>();
         public LastAchievedPage()
         {
             InitializeComponent();
-            Achievements = new ObservableCollection<AchievementInfo>
-        {
-                new AchievementInfo {ImagePath = "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1174180/3f5b6b4295a58d39b7619e5723f94b8f475dd81e.jpg", GameLogoPath = "https://steamcdn-a.akamaihd.net/steam/apps/1174180/capsule_184x69.jpg", AchievementName = "Back in the Mud", AchievementDesctiption = "Complete Chapter 1", AchievementDate = "12.12.12" },
-                new AchievementInfo {ImagePath = "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1174180/3f5b6b4295a58d39b7619e5723f94b8f475dd81e.jpg", GameLogoPath = "https://steamcdn-a.akamaihd.net/steam/apps/1174180/capsule_184x69.jpg", AchievementName = "Back in the Mud", AchievementDesctiption = "Complete Chapter 1", AchievementDate = "12.12.12" },
-                new AchievementInfo {ImagePath = "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1174180/3f5b6b4295a58d39b7619e5723f94b8f475dd81e.jpg", GameLogoPath = "https://steamcdn-a.akamaihd.net/steam/apps/1174180/capsule_184x69.jpg", AchievementName = "Back in the Mud", AchievementDesctiption = "Complete Chapter 1", AchievementDate = "12.12.12" },
-                new AchievementInfo {ImagePath = "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1174180/3f5b6b4295a58d39b7619e5723f94b8f475dd81e.jpg", GameLogoPath = "https://steamcdn-a.akamaihd.net/steam/apps/1174180/capsule_184x69.jpg", AchievementName = "Back in the Mud", AchievementDesctiption = "Complete Chapter 1", AchievementDate = "12.12.12" },
-                new AchievementInfo {ImagePath = "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1174180/3f5b6b4295a58d39b7619e5723f94b8f475dd81e.jpg", GameLogoPath = "https://steamcdn-a.akamaihd.net/steam/apps/1174180/capsule_184x69.jpg", AchievementName = "Back in the Mud", AchievementDesctiption = "Complete Chapter 1", AchievementDate = "12.12.12" },
-                new AchievementInfo {ImagePath = "https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/1174180/3f5b6b4295a58d39b7619e5723f94b8f475dd81e.jpg", GameLogoPath = "https://steamcdn-a.akamaihd.net/steam/apps/1174180/capsule_184x69.jpg", AchievementName = "Back in the Mud", AchievementDesctiption = "Complete Chapter 1", AchievementDate = "12.12.12" }
-        };
-            AchievementList.ItemsSource = Achievements;
         }
     }
 }

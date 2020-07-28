@@ -35,13 +35,22 @@
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Grid>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
+                            <!--<Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="NavButton" Property="BorderBrush" Value="#FFE6DDDD"/>
                                 <Setter TargetName="NavButton" Property="Background" Value="Gray"/>
+                                <Setter TargetName="NavButton" Property="Control.Foreground" Value="Gray"/>
+                            </Trigger>-->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Control.Foreground" Value="Gray" />
+                                <Setter Property="Control.FontWeight" Value="Bold" />
+                                <Setter Property="BorderBrush" Value="GhostWhite" />
+                            </Trigger>
+                            <!--<Trigger Property="IsFocused" Value="True">
+                                <Setter Property="Control.Foreground" Value="Gray"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="NavButton" Property="Background" Value="#232423"/>
-                            </Trigger>
+                            </Trigger>-->
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -79,17 +88,20 @@
                     <shell:ColumnDefinition Width="13*"/>
                     <shell:ColumnDefinition Width="787*"/>
                 </shell:Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" shell:Grid.ColumnSpan="2">
-                    <Button  Content="ГЛАВНАЯ" Style="{StaticResource MainButtonStyle}" Click="MainButton_clicked"/>
-                    <Button Style="{StaticResource MainButtonStyle}" Click="LastAchievedButton_clicked" >
-                        <TextBlock HorizontalAlignment="Center" >
+                <ScrollViewer Grid.Column="3" MaxWidth="700" Height="auto" HorizontalAlignment="Left" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+                    <StackPanel Orientation="Horizontal" shell:Grid.ColumnSpan="2">
+                        <Button  Content="ГЛАВНАЯ" Style="{StaticResource MainButtonStyle}" Click="MainButton_clicked"/>
+                        <Button Style="{StaticResource MainButtonStyle}" Click="LastAchievedButton_clicked" >
+                            <TextBlock HorizontalAlignment="Center" >
                             ПОСЛЕДНИЕ
                             <LineBreak/>
                             ПОЛУЧЕННЫЕ
-                        </TextBlock>
-                    </Button>
-                    <Button  Content="БЛИЖАЙШИЕ" Style="{StaticResource MainButtonStyle}" Click="CloseAchievementButton_clicked"/>
-                </StackPanel>
+                            </TextBlock>
+                        </Button>
+                        <Button  Content="БЛИЖАЙШИЕ" Style="{StaticResource MainButtonStyle}" Click="CloseAchievementButton_clicked"/>
+                        <Button  Content="РЕДКИЕ" Style="{StaticResource MainButtonStyle}" Click="RareAchievementButton_clicked"/>
+                    </StackPanel>
+                </ScrollViewer>
                 <Border BorderThickness="5" shell:Grid.ColumnSpan="2"/>
                 <Image x:Name="ProfileAvatar" Stretch="Fill"  Width="50" Height="50" HorizontalAlignment="Left" Margin="727,5,0,5" shell:Grid.Column="1"/>
             </Grid>

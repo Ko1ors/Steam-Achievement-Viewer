@@ -57,5 +57,10 @@ namespace AchievementTest
             
             Information.Content = GetPageObject<CloseAchievements>();
         }
+
+        private void RareAchievementButton_clicked(object sender, RoutedEventArgs e)
+        {
+            Information.Content = GetPageObject<RareAchievements>();
+        }
     }
 }

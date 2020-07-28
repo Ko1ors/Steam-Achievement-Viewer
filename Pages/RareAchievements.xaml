@@ -1,0 +1,35 @@
+﻿<Page x:Class="AchievementTest.Pages.RareAchievements"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:AchievementTest.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="RareAchievements">
+    <Page.Resources>
+        <DataTemplate x:Key="AchievementInfo">
+            <Grid Background="#1B2838"  Width="180" Height="180">
+                <StackPanel Margin="5">
+                    <Image  Margin="0,0,5,0" Width="45" Height="45" Stretch="UniformToFill" VerticalAlignment="Top" HorizontalAlignment="Center" Source="{Binding Path=GameImagePath}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="16" Height="16" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0" Source="{Binding Path=ImagePath}"/>
+                        <TextBlock MaxWidth="120" MaxHeight="120" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontSize="10" Text="{Binding Path=AchievementName}" TextWrapping="WrapWithOverflow">
+                            <TextBlock.ToolTip>
+                                <ToolTip >
+                                    <TextBlock MaxWidth="250" TextWrapping="Wrap" Text="{Binding AchievementName}"/>
+                                </ToolTip>
+                            </TextBlock.ToolTip>
+                    </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+        <ItemsPanelTemplate x:Key="listPanelTemplate">
+            <WrapPanel />
+        </ItemsPanelTemplate>
+    </Page.Resources>
+    <Grid x:Name="AchievementsTableList">
+        <ListBox x:Name="AchievementTable" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource AchievementInfo}" ItemsPanel="{StaticResource listPanelTemplate}" Background="#FF171A21" />
+    </Grid>
+</Page>

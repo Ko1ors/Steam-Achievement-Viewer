@@ -10,7 +10,7 @@
     <Page.Resources>
         <DataTemplate x:Key="AchievementInfo">
             <Grid Background="#1B2838" Width="750" Margin="10">
-                <Border BorderBrush="White" BorderThickness="3" CornerRadius="4"/>
+                <Border BorderBrush="White" BorderThickness="0" CornerRadius="4"/>
                 <DockPanel Margin="10" LastChildFill="True">
                     <Image Width="100" Height="75" Source="{Binding Path=ImagePath}"/>
                     <StackPanel Margin="5">
@@ -22,9 +22,7 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    <Grid>
-        <ScrollViewer BorderThickness="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="AchievementList" ItemTemplate="{StaticResource AchievementInfo}" Background="#1B2838"/>
-        </ScrollViewer>
+    <Grid x:Name="LastAchievements" Margin="10">
+        <ListBox  VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="AchievementList" ItemTemplate="{StaticResource AchievementInfo}" Background="#171A21"/>
     </Grid>
 </Page>
