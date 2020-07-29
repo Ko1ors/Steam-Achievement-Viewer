@@ -19,10 +19,17 @@ namespace AchievementTest.Pages
     /// </summary>
     public partial class RareAchievements : Page
     {
-        ObservableCollection<AchievementInfo> Achievemetns = new ObservableCollection<AchievementInfo>();
+        ObservableCollection<Achievement> Achievemetns = new ObservableCollection<Achievement>();
         public RareAchievements()
         {
             InitializeComponent();
+            foreach(Game g in Manager.gamesList.Games.Game)
+            {
+                foreach (Achievement a in g.Achievements.Achievement)
+                {
+                    Achievemetns.Add(a);
+                }
+            }
             AchievementTable.ItemsSource = Achievemetns;
         }
     }

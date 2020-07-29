@@ -10,14 +10,15 @@
     <Page.Resources>
         <DataTemplate x:Key="AchievementInfo">
             <Grid Background="#1B2838"  Width="750" Height="60" Margin="10">
-                <Image Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Source="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/218620/544df59059853491170562bf03b7bbb7954dd16a.jpg"/>
+                <Image x:Name="GameIcon" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top"/>
                 <StackPanel Margin="5" Orientation="Horizontal">
-                    <Image Width="25" Height="25" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0" Source="{Binding Path=ImagePath}"/>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock MaxWidth="600" MaxHeight="120" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontSize="10" Text="{Binding Path=AchievementName}" TextWrapping="WrapWithOverflow">
+                    <Image Width="25" Height="25" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0" Source="{Binding Path=IconOpen}"/>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <TextBlock MaxWidth="600" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16" TextWrapping="Wrap" Text="{Binding Path=Name}"/>
+                        <TextBlock MaxWidth="600" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontSize="10" Text="{Binding Path=Description}" TextWrapping="WrapWithOverflow">
                             <TextBlock.ToolTip>
                                 <ToolTip Background="#1B2838" Foreground="White">
-                                    <TextBlock MaxWidth="250" TextWrapping="Wrap" Text="{Binding AchievementName}"/>
+                                    <TextBlock MaxWidth="250" TextWrapping="Wrap" Text="{Binding Description}"/>
                                 </ToolTip>
                             </TextBlock.ToolTip>
                     </TextBlock>
