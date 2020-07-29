@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -32,7 +31,7 @@ namespace AchievementTest
             {
                 profile = (Profile)serializer.Deserialize(reader);
             }
-            if (profile.PrivacyState != "public")
+            if (profile?.PrivacyState != "public")
             {
                 profile = null;
                 return false;
@@ -43,11 +42,11 @@ namespace AchievementTest
 
         private static void SaveProfile()
         {
-            if(!System.IO.Directory.Exists(directoryPath + profile.SteamID64))
+            if (!System.IO.Directory.Exists(directoryPath + profile.SteamID64))
                 Directory.CreateDirectory(directoryPath + profile.SteamID64);
             XmlSerializer serializer = new XmlSerializer(typeof(Profile));
             System.IO.FileStream file = System.IO.File.Create(directoryPath + profile.SteamID64 + "\\profile.xml");
-            serializer.Serialize(file,profile);
+            serializer.Serialize(file, profile);
         }
 
         private static void LoadProfile()
@@ -71,7 +70,7 @@ namespace AchievementTest
             {
                 gamesList = (GamesList)serializer.Deserialize(reader);
             }
-            if(gamesList.Games.Game.Count == 0)
+            if (gamesList?.Games.Game.Count == 0)
             {
                 gamesList = null;
                 return false;
@@ -129,9 +128,9 @@ namespace AchievementTest
                 if (game.Achievements == null)
                     continue;
                 Achievements achievements = GetGlobalAchievementPercentages(game.AppID);
-                if(achievements != null)
+                if (achievements != null)
                 {
-                    foreach(Achievement achievement in game.Achievements.Achievement)
+                    foreach (Achievement achievement in game.Achievements.Achievement)
                     {
                         var achv = achievements.Achievement.Find(e => e.Name.ToLower() == achievement.Apiname.ToLower());
                         if (achv != null)
@@ -143,44 +142,45 @@ namespace AchievementTest
             }
             CheckAchievementsNull();
             SaveGames();
+
             return true;
         }
 
         public static bool GetAchievementsParallel()
         {
             currentGameRetrieve = 0;
-            Parallel.ForEach(gamesList.Games.Game, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 } , game =>
-            {
-                currentGameRetrieve++;
-                var response = GetRequest.XmlRequest(game.StatsLink + "/?xml=1");
-                if (response.InnerText == xmlProfileError || response.InnerText == "")
-                    return;
-                using (XmlReader reader = new XmlNodeReader(response))
-                {
-                    XmlSerializer serializer = new XmlSerializer(typeof(Game));
-                    reader.ReadToDescendant("game");
-                    var game_ = (Game)serializer.Deserialize(reader);
-                    serializer = new XmlSerializer(typeof(Achievements));
-                    reader.ReadToNextSibling("achievements");
-                    game.Achievements = (Achievements)serializer.Deserialize(reader);
-                    game.GameLogoSmall = game_.GameLogoSmall;
-                    game.GameIcon = game_.GameIcon;
-                }
-                if (game.Achievements == null)
-                    return;
-                Achievements achievements = GetGlobalAchievementPercentages(game.AppID);
-                if (achievements != null)
-                {
-                    foreach (Achievement achievement in game.Achievements.Achievement)
-                    {
-                        var achv = achievements.Achievement.Find(e => e.Name.ToLower() == achievement.Apiname.ToLower());
-                        if (achv != null)
-                            achievement.Percent = achv.Percent;
-                        else
-                            achievement.Percent = -1;
-                    }
-                }
-            });
+            Parallel.ForEach(gamesList.Games.Game, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 }, game =>
+           {
+               currentGameRetrieve++;
+               var response = GetRequest.XmlRequest(game.StatsLink + "/?xml=1");
+               if (response.InnerText == xmlProfileError || response.InnerText == "")
+                   return;
+               using (XmlReader reader = new XmlNodeReader(response))
+               {
+                   XmlSerializer serializer = new XmlSerializer(typeof(Game));
+                   reader.ReadToDescendant("game");
+                   var game_ = (Game)serializer.Deserialize(reader);
+                   serializer = new XmlSerializer(typeof(Achievements));
+                   reader.ReadToNextSibling("achievements");
+                   game.Achievements = (Achievements)serializer.Deserialize(reader);
+                   game.GameLogoSmall = game_.GameLogoSmall;
+                   game.GameIcon = game_.GameIcon;
+               }
+               if (game.Achievements == null)
+                   return;
+               Achievements achievements = GetGlobalAchievementPercentages(game.AppID);
+               if (achievements != null)
+               {
+                   foreach (Achievement achievement in game.Achievements.Achievement)
+                   {
+                       var achv = achievements.Achievement.Find(e => e.Name.ToLower() == achievement.Apiname.ToLower());
+                       if (achv != null)
+                           achievement.Percent = achv.Percent;
+                       else
+                           achievement.Percent = -1;
+                   }
+               }
+           });
             CheckAchievementsNull();
             SaveGames();
             return true;
@@ -205,7 +205,24 @@ namespace AchievementTest
             {
                 Achievement = gamesList.Games.Game.Find(e => e.AppID == appid)?.Achievements.Achievement.Where(e => e.Closed == "0").OrderByDescending(e => e.Percent).ToList()
             };
-            return achievements;      
+            return achievements;
+        }
+
+        public static List<Achievement> GetAllAchievementsList()
+        {
+            List<Achievement> achList = new List<Achievement>();
+            gamesList.Games.Game.ForEach(e =>achList.AddRange(e.Achievements.Achievement));
+            return achList;
+        }
+
+        public static List<Achievement> GetRarestAchievements()
+        {
+            return GetAllAchievementsList().OrderBy(e => e.Percent).Where(e => e.Closed == "0").ToList();
+        }
+
+        public static List<Achievement> GetRarestAchievements(int count)
+        {
+            return GetAllAchievementsList().OrderBy(e => e.Percent).Where(e => e.Closed == "0").Take(count).ToList();
         }
     }
 }
