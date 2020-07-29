@@ -9,14 +9,14 @@
       Title="RareAchievements">
     <Page.Resources>
         <DataTemplate x:Key="AchievementInfo">
-            <Grid Background="#1B2838"  Width="180" Height="180">
-                <StackPanel Margin="5">
-                    <Image  Margin="0,0,5,0" Width="45" Height="45" Stretch="UniformToFill" VerticalAlignment="Top" HorizontalAlignment="Center" Source="{Binding Path=GameImagePath}"/>
+            <Grid Background="#1B2838"  Width="750" Height="60" Margin="10">
+                <Image Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Source="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/apps/218620/544df59059853491170562bf03b7bbb7954dd16a.jpg"/>
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <Image Width="25" Height="25" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0" Source="{Binding Path=ImagePath}"/>
                     <StackPanel Orientation="Horizontal">
-                        <Image Width="16" Height="16" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0" Source="{Binding Path=ImagePath}"/>
-                        <TextBlock MaxWidth="120" MaxHeight="120" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontSize="10" Text="{Binding Path=AchievementName}" TextWrapping="WrapWithOverflow">
+                        <TextBlock MaxWidth="600" MaxHeight="120" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontSize="10" Text="{Binding Path=AchievementName}" TextWrapping="WrapWithOverflow">
                             <TextBlock.ToolTip>
-                                <ToolTip >
+                                <ToolTip Background="#1B2838" Foreground="White">
                                     <TextBlock MaxWidth="250" TextWrapping="Wrap" Text="{Binding AchievementName}"/>
                                 </ToolTip>
                             </TextBlock.ToolTip>
@@ -25,11 +25,8 @@
                 </StackPanel>
             </Grid>
         </DataTemplate>
-        <ItemsPanelTemplate x:Key="listPanelTemplate">
-            <WrapPanel />
-        </ItemsPanelTemplate>
     </Page.Resources>
     <Grid x:Name="AchievementsTableList">
-        <ListBox x:Name="AchievementTable" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource AchievementInfo}" ItemsPanel="{StaticResource listPanelTemplate}" Background="#FF171A21" />
+        <ListBox x:Name="AchievementTable" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource AchievementInfo}" Background="#FF171A21" />
     </Grid>
 </Page>
