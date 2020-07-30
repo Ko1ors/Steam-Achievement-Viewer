@@ -25,14 +25,24 @@ namespace AchievementTest
 		public string Apiname { get; set; }
 		[XmlElement(ElementName = "description")]
 		public string Description { get; set; }
-		[XmlElement(ElementName = "unlockTimestamp")]
-		public int UnlockTimestamp { get; set; }
+		[XmlIgnore]
+		private DateTime unlockTime { get; set; }
 		[XmlAttribute(AttributeName = "closed")]
 		public string Closed { get; set; }
 		[XmlElement(ElementName = "percent")]
 		public float Percent { get; set; }
-	}
 
+		[XmlElement(ElementName = "unlockTimestamp")]
+		public string UnlockTime
+        {
+            get { return unlockTime.ToString("yyyy-MM-dd HH:mm"); }
+            set { if (DateTime.TryParse(value, out var res))
+					unlockTime = res;
+				else
+					unlockTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Double.Parse(value));
+			}
+        }
+	}
 	public class AchievementWithGameInfo : Achievement
 	{
 		public string GameName { get; set; }
@@ -45,7 +55,7 @@ namespace AchievementTest
 			Name = a.Name;
 			Apiname = a.Apiname;
 			Description = a.Description;
-			UnlockTimestamp = a.UnlockTimestamp;
+			UnlockTime = a.UnlockTime;
 			Closed = a.Closed;
 			Percent = a.Percent;
         }

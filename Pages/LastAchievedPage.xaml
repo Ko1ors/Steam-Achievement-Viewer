@@ -24,6 +24,7 @@
                             </TextBlock.ToolTip>
                     </TextBlock>
                         <TextBlock MaxWidth="600" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="10" TextWrapping="Wrap" FontFamily="Arial Black" Text="{Binding Percent, StringFormat='{}{0}%'}"/>
+                        <TextBlock MaxWidth="600" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="10" TextWrapping="Wrap" FontFamily="Arial Black" Text="{Binding Path=UnlockTime}"/>
                     </StackPanel>
                 </StackPanel>
             </Grid>
