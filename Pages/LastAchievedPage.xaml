@@ -9,16 +9,23 @@
       Title="LastAchievedPage">
     <Page.Resources>
         <DataTemplate x:Key="AchievementInfo">
-            <Grid Background="#1B2838" Width="750" Margin="10">
-                <Border BorderBrush="White" BorderThickness="0" CornerRadius="4"/>
-                <DockPanel Margin="10" LastChildFill="True">
-                    <Image Width="100" Height="75" Source="{Binding Path=ImagePath}"/>
-                    <StackPanel Margin="5">
-                        <TextBlock Foreground="White" FontWeight="Bold" FontSize="30" TextWrapping="Wrap" Text="{Binding Path=AchievementName}"/>
-                        <TextBlock Foreground="WhiteSmoke" FontSize="20" TextWrapping="Wrap" Text="{Binding Path=AchievementDesctiption}"/>
-                        <TextBlock Foreground="White" FontWeight="Bold" FontSize="20" Text="{Binding Path=AchievementDate}"/>
+            <Grid Background="#1B2838"  Width="750" Height="60" Margin="10">
+                <Image x:Name="GameIcon" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Source="{Binding Path=GameIcon}"/>
+                <TextBlock MaxWidth="300" Foreground="White" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="13" Margin="0,10,40,0" FontFamily="Arial Black" Text="{Binding Path=GameName}"/>
+                <StackPanel Margin="5" Orientation="Horizontal">
+                    <Image Width="25" Height="25" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0" Source="{Binding Path=IconOpen}"/>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <TextBlock MaxWidth="600" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16" TextWrapping="Wrap" FontFamily="Arial Black" Text="{Binding Path=Name}"/>
+                        <TextBlock MaxWidth="600" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontFamily="Arial Black" FontSize="10" Text="{Binding Path=Description}" TextWrapping="WrapWithOverflow">
+                            <TextBlock.ToolTip>
+                                <ToolTip Background="#1B2838" Foreground="White">
+                                    <TextBlock MaxWidth="250" TextWrapping="Wrap" Text="{Binding Description}"/>
+                                </ToolTip>
+                            </TextBlock.ToolTip>
+                    </TextBlock>
+                        <TextBlock MaxWidth="600" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="10" TextWrapping="Wrap" FontFamily="Arial Black" Text="{Binding Percent, StringFormat='{}{0}%'}"/>
                     </StackPanel>
-                </DockPanel>
+                </StackPanel>
             </Grid>
         </DataTemplate>
     </Page.Resources>
