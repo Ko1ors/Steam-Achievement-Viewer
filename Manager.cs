@@ -215,6 +215,17 @@ namespace AchievementTest
             return achList;
         }
 
+        public static List<AchievementWithGameInfo> GetAllAchievementsWithGameInfoList()
+        {
+            List<AchievementWithGameInfo> achList = new List<AchievementWithGameInfo>();
+            gamesList.Games.Game.ForEach(e =>
+            {
+                achList.AddRange(e.Achievements.Achievement.ConvertAll(e => new AchievementWithGameInfo(e))
+                    .Select(i => { i.GameIcon = e.GameIcon; i.GameName = e.Name; return i; }));
+            });
+            return achList;
+        }
+
         public static List<Achievement> GetRarestAchievements()
         {
             return GetAllAchievementsList().OrderBy(e => e.Percent).Where(e => e.Closed == "0").ToList();
@@ -223,6 +234,11 @@ namespace AchievementTest
         public static List<Achievement> GetRarestAchievements(int count)
         {
             return GetAllAchievementsList().OrderBy(e => e.Percent).Where(e => e.Closed == "0").Take(count).ToList();
+        }
+
+        public static List<AchievementWithGameInfo> GetRarestAchievementsWithGameInfo(int count)
+        {
+            return GetAllAchievementsWithGameInfoList().OrderBy(e => e.Percent).Where(e => e.Closed == "0").Take(count).ToList();
         }
     }
 }

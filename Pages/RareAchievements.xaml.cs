@@ -22,7 +22,7 @@ namespace AchievementTest.Pages
         public RareAchievements()
         {
             InitializeComponent();
-            AchievementTable.ItemsSource = Manager.GetRarestAchievements(100);
+            AchievementTable.ItemsSource = Manager.GetRarestAchievementsWithGameInfo(100);
         }
     }
 }

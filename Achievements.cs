@@ -32,4 +32,22 @@ namespace AchievementTest
 		[XmlElement(ElementName = "percent")]
 		public float Percent { get; set; }
 	}
+
+	public class AchievementWithGameInfo : Achievement
+	{
+		public string GameName { get; set; }
+		public string GameIcon { get; set; }
+
+		public AchievementWithGameInfo(Achievement a)
+        {
+			IconClosed = a.IconClosed;
+			IconOpen = a.IconOpen;
+			Name = a.Name;
+			Apiname = a.Apiname;
+			Description = a.Description;
+			UnlockTimestamp = a.UnlockTimestamp;
+			Closed = a.Closed;
+			Percent = a.Percent;
+        }
+	}
 }
