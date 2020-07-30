@@ -13,7 +13,7 @@
                 <Image x:Name="GameIcon" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Source="{Binding Path=GameIcon}"/>
                 <TextBlock MaxWidth="300" Foreground="White" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="13" Margin="0,10,40,0" FontFamily="Arial Black" Text="{Binding Path=GameName}"/>
                 <StackPanel Margin="5" Orientation="Horizontal">
-                    <Image Width="25" Height="25" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0" Source="{Binding Path=IconOpen}"/>
+                    <Image Width="25" Height="25" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0" Source="{Binding Path=IconClosed}"/>
                     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                         <TextBlock MaxWidth="600" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16" TextWrapping="Wrap" FontFamily="Arial Black" Text="{Binding Path=Name}"/>
                         <TextBlock MaxWidth="600" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontFamily="Arial Black" FontSize="10" Text="{Binding Path=Description}" TextWrapping="WrapWithOverflow">
