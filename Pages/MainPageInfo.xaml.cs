@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,15 +14,13 @@ using System.Windows.Shapes;
 namespace AchievementTest.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для RareAchievements.xaml
+    /// Логика взаимодействия для MainPageInfo.xaml
     /// </summary>
-    public partial class RareAchievements : Page
+    public partial class MainPageInfo : Page
     {
-        public RareAchievements()
+        public MainPageInfo()
         {
             InitializeComponent();
-            AchievementTable.ItemsSource = Manager.GetRarestAchievements(100);
-            
         }
     }
 }
