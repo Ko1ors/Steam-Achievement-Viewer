@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Controls;
 
 
@@ -14,6 +15,7 @@ namespace AchievementTest.Pages
         public LastAchievedPage()
         {
             InitializeComponent();
+            AchievementTable.ItemsSource = Manager.GetLatestAchievements(100);
         }
     }
 }

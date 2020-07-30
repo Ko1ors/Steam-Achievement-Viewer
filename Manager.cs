@@ -240,5 +240,10 @@ namespace AchievementTest
         {
             return GetAllAchievementsWithGameInfoList().OrderBy(e => e.Percent).Where(e => e.Closed == "0").Take(count).ToList();
         }
+
+        public static List<AchievementWithGameInfo> GetLatestAchievements(int count)
+        {
+            return GetAllAchievementsWithGameInfoList().OrderByDescending(e => e.UnlockTime).Where(e => e.Closed == "1").Take(count).ToList();
+        }
     }
 }

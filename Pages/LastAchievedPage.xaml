@@ -30,7 +30,7 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    <Grid x:Name="LastAchievements" Margin="10">
-        <ListBox  VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="AchievementList" ItemTemplate="{StaticResource AchievementInfo}" Background="#171A21"/>
+    <Grid x:Name="AchievementsTableList">
+        <ListBox x:Name="AchievementTable" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource AchievementInfo}" Background="#FF171A21" />
     </Grid>
 </Page>
