@@ -43,7 +43,7 @@ namespace AchievementTest
             Close();
         }
 
-        private void MainButton_clicked(object sender, RoutedEventArgs e)
+        private void AuthorizationButton_clicked(object sender, RoutedEventArgs e)
         {
             Information.Content = GetPageObject<MainPage>();
         }
@@ -61,6 +61,11 @@ namespace AchievementTest
         private void RareAchievementButton_clicked(object sender, RoutedEventArgs e)
         {
             Information.Content = GetPageObject<RareAchievements>();
+        }
+
+        private void MainInfoButton_cliked(object sender, RoutedEventArgs e)
+        {
+            Information.Content = GetPageObject<MainPageInfo>();
         }
     }
 }
