@@ -1,5 +1,8 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -10,21 +13,27 @@ namespace AchievementTest.Pages
     /// </summary>
     public partial class CloseAchievements : Page
     {
+        private List<Game> originalGameList;
         public CloseAchievements()
         {
             InitializeComponent();
             GameList.ItemsSource = Manager.GetIncompleteGames();
-            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(GameList.ItemsSource);
+            originalGameList = Manager.GetIncompleteGames();
+            ListCollectionView view = (ListCollectionView)CollectionViewSource.GetDefaultView(GameList.ItemsSource);
             view.Filter = GameSearchFilter;
         }
 
 
         private void GameSelected(object sender, SelectionChangedEventArgs e)
         {
-            
-            AchievementList.ItemsSource = Manager.GetClosestAchievements((GameList.SelectedItem as Game).AppID).Achievement;
-            if (AchievementList.Items.Count > 0)
-                AchievementList.ScrollIntoView(AchievementList.Items[0]);
+            if (GameList.SelectedItem != null)
+            {
+                AchievementList.ItemsSource = Manager.GetClosestAchievements((GameList.SelectedItem as Game).AppID).Achievement;
+                if (AchievementList.Items.Count > 0)
+                    AchievementList.ScrollIntoView(AchievementList.Items[0]);
+            }
+            else
+                AchievementList.ItemsSource = null;
         }
 
         private bool GameSearchFilter(object item)

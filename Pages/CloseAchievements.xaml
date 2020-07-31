@@ -9,12 +9,12 @@
       Title="CloseAchievements">
     <Page.Resources>
         <DataTemplate x:Key="ShortGameInfo">
-            <StackPanel>
-                <StackPanel Margin="5" Orientation="Horizontal">
+            <VirtualizingStackPanel>
+                <VirtualizingStackPanel Margin="5" Orientation="Horizontal">
                     <Image Margin="0,0,5,0" Width="16" Height="16" Stretch="UniformToFill" Source="{Binding Path=GameIcon}"/>
                     <TextBlock MaxWidth="100" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontSize="10" TextWrapping="Wrap" Text="{Binding Path=Name}"/>
-                </StackPanel>
-            </StackPanel>
+                </VirtualizingStackPanel>
+            </VirtualizingStackPanel>
         </DataTemplate>
         <DataTemplate x:Key="CloseAchievementList">
             <Grid Width="630" Background="#1B2838" Margin="10">
@@ -37,10 +37,12 @@
     <Grid Background="#1B2838" Margin="10">
         <DockPanel LastChildFill="True">
             <Grid x:Name="Games" HorizontalAlignment="Left" Background="Black" Width="160">
-                <StackPanel>
-                    <TextBox FontSize="14" VerticalContentAlignment="Center"  x:Name="textBoxSearch" Height="25" BorderBrush="White" BorderThickness="1" Background="#FF1B2838" FontFamily="Arial Black" Foreground="White" TextChanged="textBoxSearch_TextChanged"/>
-                    <ListBox x:Name="GameList" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource ShortGameInfo}" Background="#FF171A21" SelectionChanged="GameSelected"/>
-                </StackPanel>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <TextBox FontSize="14" Grid.Row="0" VerticalContentAlignment="Center"  x:Name="textBoxSearch" Height="25" BorderBrush="White" BorderThickness="1" Background="#FF1B2838" FontFamily="Arial Black" Foreground="White" TextChanged="textBoxSearch_TextChanged"/>
+                <ListBox x:Name="GameList" Grid.Row="1" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource ShortGameInfo}" Background="#FF171A21" SelectionChanged="GameSelected"/>
             </Grid>
             <Grid x:Name="Achievements">
                     <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingPanel.ScrollUnit="Pixel" x:Name="AchievementList" ItemTemplate="{StaticResource CloseAchievementList}" Background="#FF171A21"/>
