@@ -17,7 +17,7 @@ namespace AchievementTest
         public static int currentGameRetrieve;
 
         private static readonly string xmlProfileError = "The specified profile could not be found.";
-        private static readonly string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
+        private static readonly string directoryPath = AppDomain.CurrentDomain.BaseDirectory + "data\\";
 
         private static Dictionary<Type, Page> pagesDictionary = new Dictionary<Type, Page>();
 
@@ -128,7 +128,7 @@ namespace AchievementTest
 
         private static void LoadGames()
         {
-            if (File.Exists(directoryPath + profile.SteamID64 + "\\gameslist.xml"))
+            if (File.Exists(directoryPath + profile?.SteamID64 + "\\gameslist.xml"))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(GamesList));
                 System.IO.StreamReader file = new System.IO.StreamReader(directoryPath + profile.SteamID64 + "\\gameslist.xml");
