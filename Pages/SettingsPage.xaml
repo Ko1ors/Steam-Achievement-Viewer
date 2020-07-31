@@ -8,31 +8,92 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="SettingsPage">
     <Page.Resources>
-        <DataTemplate x:Key="SettingItem">
-            <Grid Background="#1B2838"  Width="100" Height="100" Margin="10">
-                <Image x:Name="GameIcon" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Source="{Binding Path=GameIcon}"/>
-                <TextBlock MaxWidth="300" Foreground="White" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Top" FontSize="13" Margin="0,10,40,0" FontFamily="Arial Black" Text="{Binding Path=GameName}"/>
-                <StackPanel Margin="5" Orientation="Horizontal">
-                    <Image Width="25" Height="25" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0" Source="{Binding Path=IconOpen}"/>
-                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                        <TextBlock MaxWidth="600" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="16" TextWrapping="Wrap" FontFamily="Arial Black" Text="{Binding Path=Name}"/>
-                        <TextBlock MaxWidth="600" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontFamily="Arial Black" FontSize="10" Text="{Binding Path=Description}" TextWrapping="WrapWithOverflow">
-                            <TextBlock.ToolTip>
-                                <ToolTip Background="#1B2838" Foreground="White">
-                                    <TextBlock MaxWidth="250" TextWrapping="Wrap" Text="{Binding Description}"/>
-                                </ToolTip>
-                            </TextBlock.ToolTip>
+        <!--<DataTemplate x:Key="SettingItem">
+            <Grid Background="#1B2838" Width="100" Height="100" Margin="10">
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <Image Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Top" Source="{Binding Path=OptionIcon}"/>
+                    <TextBlock MaxWidth="600" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" TextWrapping="Wrap" FontFamily="Arial Black" Text="{Binding Path=Name}"/>
+                    <TextBlock MaxWidth="600" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontFamily="Arial Black" FontSize="10" Text="{Binding Path=Description}" TextWrapping="WrapWithOverflow">
+                        <TextBlock.ToolTip>
+                            <ToolTip Background="#1B2838" Foreground="White">
+                                <TextBlock MaxWidth="250" TextWrapping="Wrap" Text="{Binding Description}"/>
+                            </ToolTip>
+                        </TextBlock.ToolTip>
                     </TextBlock>
-                        <TextBlock MaxWidth="600" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="10" TextWrapping="Wrap" FontFamily="Arial Black" Text="{Binding Percent, StringFormat='{}{0}%'}"/>
-                    </StackPanel>
+                    <TextBlock MaxWidth="600" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="10" TextWrapping="Wrap" FontFamily="Arial Black" Text="{Binding Percent, StringFormat='{}{0}%'}"/>
                 </StackPanel>
             </Grid>
         </DataTemplate>
         <ItemsPanelTemplate x:Key="SettingsTableList">
             <WrapPanel/>
-        </ItemsPanelTemplate>
+        </ItemsPanelTemplate>-->
+        <Style TargetType="Button" x:Key="MainButtonStyle">
+            <Setter Property="FontFamily" Value="Arial Black"/>
+            <Setter Property="Background" Value="#14141f"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Height" Value="auto"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Border x:Name="NavButton" CornerRadius="10" BorderBrush="White" BorderThickness="0" Height="100" Width="100"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <!--<Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="NavButton" Property="BorderBrush" Value="#FFE6DDDD"/>
+                                <Setter TargetName="NavButton" Property="Background" Value="Gray"/>
+                                <Setter TargetName="NavButton" Property="Control.Foreground" Value="Gray"/>
+                            </Trigger>-->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Control.Foreground" Value="Gray" />
+                                <Setter Property="Control.FontWeight" Value="Bold" />
+                                <Setter Property="BorderBrush" Value="GhostWhite" />
+                            </Trigger>
+                            <!--<Trigger Property="IsFocused" Value="True">
+                                <Setter Property="Control.Foreground" Value="Gray"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="NavButton" Property="Background" Value="#232423"/>
+                            </Trigger>-->
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
-    <Grid>
-        <ListBox x:Name="SettingsTable" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource SettingItem}" ItemsPanel="{Binding SettingsTableList}" Background="#FF171A21" />
+    <Grid Background="#1B2838">
+        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <Button  Style="{StaticResource MainButtonStyle}">
+                <Button.Content>
+                    <StackPanel>
+                        <Image  Margin="10" Source="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1174180/5106abd9c1187a97f23295a0ba9470c94804ec6c.jpg" Width="40" Height="40" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                        <TextBlock Text="НАСТРОЙКА" TextWrapping="Wrap" MaxWidth="90"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>            <Button  Style="{StaticResource MainButtonStyle}">
+                <Button.Content>
+                    <StackPanel>
+                        <Image  Margin="10" Source="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1174180/5106abd9c1187a97f23295a0ba9470c94804ec6c.jpg" Width="40" Height="40" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                        <TextBlock Text="НАСТРОЙКА" TextWrapping="Wrap" MaxWidth="90"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>            <Button  Style="{StaticResource MainButtonStyle}">
+                <Button.Content>
+                    <StackPanel>
+                        <Image  Margin="10" Source="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1174180/5106abd9c1187a97f23295a0ba9470c94804ec6c.jpg" Width="40" Height="40" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                        <TextBlock Text="НАСТРОЙКА" TextWrapping="Wrap" MaxWidth="90"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>            <Button  Style="{StaticResource MainButtonStyle}">
+                <Button.Content>
+                    <StackPanel>
+                        <Image  Margin="10" Source="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1174180/5106abd9c1187a97f23295a0ba9470c94804ec6c.jpg" Width="40" Height="40" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                        <TextBlock Text="НАСТРОЙКА" TextWrapping="Wrap" MaxWidth="90"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+        </WrapPanel>
     </Grid>
 </Page>

@@ -1,14 +1,35 @@
-﻿<Page x:Class="AchievementTest.Pages.MainPageInfo"
+﻿<Page
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AchievementTest.Pages"
+      xmlns:AchievementTest="clr-namespace:AchievementTest" x:Class="AchievementTest.Pages.MainPageInfo"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPageInfo">
-
     <Grid Background="#1B2838" Margin="10">
-        <Label VerticalAlignment="Center" HorizontalAlignment="Center" Content="STEAM ACHIEVEMENT VIEWER" Foreground="White"/>
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Margin="10">
+                <TextBlock Text="СТАТИСТИКА:" HorizontalAlignment="Center" FontSize="20" Foreground="White" Margin="0,0,10,0"/>
+                <TextBlock  x:Name="ProfileName" HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="10">
+                <TextBlock Text="ВСЕГО ИГР:" FontSize="20" Foreground="White" />
+                <TextBlock x:Name="GamesCount" HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="10">
+                <TextBlock Text="ВСЕГО ДОСТУПНО ДОСТИЖЕНИЙ:" FontSize="20" Foreground="White"/>
+                <TextBlock  x:Name="AchievementCount" HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="10">
+                <TextBlock VerticalAlignment="Center" Text="ПОЛУЧЕНО:" FontSize="20" Foreground="White"/>
+                <Grid Margin="20">
+                    <TextBlock x:Name="AchievementAchieved" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="White"/>
+                    <AchievementTest:RadialProgressBar x:Name="AchievementProgressCircle" MaxHeight="200" MaxWidth="200" MinHeight="130" MinWidth="130" IndicatorBrush="#FFDFDEE8"/>
+                    <!--<AchievementTest:RadialProgressBar x:Name="CircleProgressBar" Height="100" Width="100" IndicatorBrush="#FFDFDEE8" VerticalAlignment="Top" HorizontalAlignment="Center"/>-->
+                </Grid>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Page>

@@ -24,6 +24,7 @@ namespace AchievementTest
             ((MainWindow)System.Windows.Application.Current.MainWindow).ProfileAvatar.Source = new BitmapImage(new Uri(IconPath));
         }
 
+
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
@@ -52,6 +53,11 @@ namespace AchievementTest
         private void MainInfoButton_cliked(object sender, RoutedEventArgs e)
         {
             Information.Content = Manager.GetPageObject<MainPageInfo>();
+        }
+
+        private void SettingsButton_clicked(object sender, RoutedEventArgs e)
+        {
+            Information.Content = Manager.GetPageObject<SettingsPage>();
         }
     }
 }
