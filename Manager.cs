@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -12,13 +13,41 @@ namespace AchievementTest
     {
         public static Profile profile;
         public static GamesList gamesList;
+
         public static int currentGameRetrieve;
+
         private static readonly string xmlProfileError = "The specified profile could not be found.";
         private static readonly string directoryPath = AppDomain.CurrentDomain.BaseDirectory;
 
+        private static Dictionary<Type, Page> pagesDictionary = new Dictionary<Type, Page>();
+
         public static void Start()
         {
+            if(Settings.Default.SteamID != "-1")
+            {
+                LoadProfile(Settings.Default.SteamID);
+                LoadGames();
+            }
+        }
 
+        public static Page GetPageObject<T>() where T : Page, new()
+        {
+            if (!pagesDictionary.TryGetValue(typeof(T), out Page page))
+            {
+                page = new T();
+                pagesDictionary.Add(typeof(T), page);
+            }
+            return page;
+        }
+
+        public static void SaveSettingsInfo()
+        {
+            if(profile != null)
+            {
+                Settings.Default.SteamID = profile.SteamID64;
+                Settings.Default.LastUpdate = DateTime.Now;
+                Settings.Default.Save();
+            }
         }
 
         public static bool GetProfile(string steamID)
@@ -36,11 +65,10 @@ namespace AchievementTest
                 profile = null;
                 return false;
             }
-            SaveProfile();
             return true;
         }
 
-        private static void SaveProfile()
+        public static void SaveProfile()
         {
             if (!System.IO.Directory.Exists(directoryPath + profile.SteamID64))
                 Directory.CreateDirectory(directoryPath + profile.SteamID64);
@@ -49,12 +77,12 @@ namespace AchievementTest
             serializer.Serialize(file, profile);
         }
 
-        private static void LoadProfile()
+        private static void LoadProfile(string steamID)
         {
-            if (File.Exists(directoryPath + profile.SteamID64 + "\\profile.xml"))
+            if (File.Exists(directoryPath + steamID + "\\profile.xml"))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(Profile));
-                System.IO.StreamReader file = new System.IO.StreamReader(directoryPath + profile.SteamID + "\\profile.xml");
+                System.IO.StreamReader file = new System.IO.StreamReader(directoryPath + steamID + "\\profile.xml");
                 profile = (Profile)serializer.Deserialize(file);
                 file.Close();
             }
@@ -76,7 +104,6 @@ namespace AchievementTest
                 return false;
             }
             CheckGamesForAchievements();
-            SaveGames();
             return true;
         }
 
@@ -90,7 +117,7 @@ namespace AchievementTest
             gamesList.Games.Game.RemoveAll(e => e.Achievements == null);
         }
 
-        private static void SaveGames()
+        public static void SaveGames()
         {
             if (!System.IO.Directory.Exists(directoryPath + profile.SteamID64))
                 Directory.CreateDirectory(directoryPath + profile.SteamID64);
@@ -104,7 +131,7 @@ namespace AchievementTest
             if (File.Exists(directoryPath + profile.SteamID64 + "\\gameslist.xml"))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(GamesList));
-                System.IO.StreamReader file = new System.IO.StreamReader(directoryPath + profile.SteamID + "\\gameslist.xml");
+                System.IO.StreamReader file = new System.IO.StreamReader(directoryPath + profile.SteamID64 + "\\gameslist.xml");
                 gamesList = (GamesList)serializer.Deserialize(file);
                 file.Close();
             }
@@ -142,7 +169,6 @@ namespace AchievementTest
             }
             CheckAchievementsNull();
             SaveGames();
-
             return true;
         }
 
@@ -182,7 +208,6 @@ namespace AchievementTest
                }
            });
             CheckAchievementsNull();
-            SaveGames();
             return true;
         }
 

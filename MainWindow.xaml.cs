@@ -22,20 +22,11 @@ namespace AchievementTest
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static Dictionary<Type, Page> pagesDictionary = new Dictionary<Type, Page>();
+        
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        public static Page GetPageObject<T>() where T : Page, new()
-        {
-            if (!pagesDictionary.TryGetValue(typeof(T), out Page page))
-            {
-                page = new T();
-                pagesDictionary.Add(typeof(T), page);
-            }
-            return page;
+            Manager.Start();
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -45,27 +36,27 @@ namespace AchievementTest
 
         private void AuthorizationButton_clicked(object sender, RoutedEventArgs e)
         {
-            Information.Content = GetPageObject<MainPage>();
+            Information.Content = Manager.GetPageObject<MainPage>();
         }
         private void LastAchievedButton_clicked(object sender, RoutedEventArgs e)
         {
-            Information.Content = GetPageObject<LastAchievedPage>();
+            Information.Content = Manager.GetPageObject<LastAchievedPage>();
         }
 
         private void CloseAchievementButton_clicked(object sender, RoutedEventArgs e)
         {
             
-            Information.Content = GetPageObject<CloseAchievements>();
+            Information.Content = Manager.GetPageObject<CloseAchievements>();
         }
 
         private void RareAchievementButton_clicked(object sender, RoutedEventArgs e)
         {
-            Information.Content = GetPageObject<RareAchievements>();
+            Information.Content = Manager.GetPageObject<RareAchievements>();
         }
 
         private void MainInfoButton_cliked(object sender, RoutedEventArgs e)
         {
-            Information.Content = GetPageObject<MainPageInfo>();
+            Information.Content = Manager.GetPageObject<MainPageInfo>();
         }
     }
 }

@@ -82,6 +82,13 @@ namespace AchievementTest.Pages
                     UpdateStatusLabel("Не удалось получить список достижений. Подождите и попробуйте позже");
                     return;
                 }
+                Thread.Sleep(1000);
+                UpdateStatusLabel("Сохраняю результаты работы");
+                Manager.SaveProfile();
+                Manager.SaveGames();
+                Manager.SaveSettingsInfo();
+                Thread.Sleep(1000);
+                UpdateStatusLabel("Результаты были успешно сохранены");
             }));
         }
         private void UpdateAvatarImage(string IconPath)
