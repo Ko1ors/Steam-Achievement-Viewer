@@ -31,7 +31,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Grid>
-                            <Border x:Name="NavButton" CornerRadius="10" BorderBrush="White" BorderThickness="0" Height="auto" Width="100"/>
+                            <Border x:Name="NavButton" CornerRadius="10" BorderBrush="White" BorderThickness="0" Height="auto" Width="80"/>
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Grid>
                         <ControlTemplate.Triggers>
@@ -88,7 +88,7 @@
                     <shell:ColumnDefinition Width="13*"/>
                     <shell:ColumnDefinition Width="787*"/>
                 </shell:Grid.ColumnDefinitions>
-                <ScrollViewer Grid.Column="3" MaxWidth="700" Height="auto" HorizontalAlignment="Left" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
+                <ScrollViewer Grid.Column="2" MaxWidth="700" Height="auto" HorizontalAlignment="Left" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
                     <StackPanel Orientation="Horizontal" shell:Grid.ColumnSpan="2">
                         <Button  Content="ГЛАВНАЯ" Style="{StaticResource MainButtonStyle}" Click="MainInfoButton_cliked"/>
                         <Button  Content="АВТОРИЗАЦИЯ" Style="{StaticResource MainButtonStyle}" Click="AuthorizationButton_clicked"/>
@@ -101,6 +101,7 @@
                         </Button>
                         <Button  Content="БЛИЖАЙШИЕ" Style="{StaticResource MainButtonStyle}" Click="CloseAchievementButton_clicked"/>
                         <Button  Content="РЕДКИЕ" Style="{StaticResource MainButtonStyle}" Click="RareAchievementButton_clicked"/>
+                        <Button  Content="НАСТРОЙКИ" Style="{StaticResource MainButtonStyle}" Click="SettingsButton_clicked"/>
                     </StackPanel>
                 </ScrollViewer>
                 <Border BorderThickness="5" shell:Grid.ColumnSpan="2"/>

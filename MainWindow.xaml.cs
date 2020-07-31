@@ -53,5 +53,10 @@ namespace AchievementTest
         {
             Information.Content = Manager.GetPageObject<MainPageInfo>();
         }
+
+        private void SettingsButton_clicked(object sender, RoutedEventArgs e)
+        {
+            Information.Content = Manager.GetPageObject<SettingsPage>();
+        }
     }
 }
