@@ -223,6 +223,21 @@ namespace AchievementTest
             }
             return achievements;
         }
+        
+        public static int GetTotalAchievementsCount()
+        {
+            
+            int count = 0;
+            gamesList?.Games.Game.ForEach(e => count += e.Achievements.Achievement.Count);
+            return count;
+        }
+
+        public static int GetCompletedAchievementsCount()
+        {
+            int count = 0;
+            gamesList?.Games.Game.ForEach(e => count += e.Achievements.Achievement.Where(e => e.Closed == "1").Count());
+            return count;
+        }
 
         public static Achievements GetClosestAchievements(string appid)
         {
