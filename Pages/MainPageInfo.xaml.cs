@@ -25,6 +25,9 @@ namespace AchievementTest.Pages
             {
                 UpdateProfileName(Manager.profile.SteamID);
                 UpdateGameCount(Manager.gamesList.Games.Game.Count);
+                UpdateAchievementCount(Manager.GetTotalAchievementsCount());
+                UpdateAchieved(Manager.GetCompletedAchievementsCount());
+                UpdateProgressBar((Manager.GetCompletedAchievementsCount()*100)/Manager.GetTotalAchievementsCount());
                 //int AchievementC=0;
                 //foreach(Game g in Manager.gamesList.Games.Game)
                 //{
@@ -51,6 +54,8 @@ namespace AchievementTest.Pages
         public void UpdateAchieved(int Achieved)
         {
             AchievementAchieved.Text = Achieved.ToString();
+            AchievementAchieved.Text += "/";
+            AchievementAchieved.Text += AchievementCount.Text;
         }
         private void UpdateProgressBar(int Progress)
         {
