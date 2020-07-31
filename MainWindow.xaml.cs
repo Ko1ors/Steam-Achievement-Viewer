@@ -1,19 +1,9 @@
 ﻿using AchievementTest.Pages;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Xml;
+using System.Windows.Threading;
 
 namespace AchievementTest
 {
@@ -22,11 +12,21 @@ namespace AchievementTest
     /// </summary>
     public partial class MainWindow : Window
     {
-        
+
         public MainWindow()
         {
             InitializeComponent();
             Manager.Start();
+            if (Manager.profile != null)
+                UpdateAvatar(Manager.profile.AvatarFull);
+        }
+
+        public void UpdateAvatar(string IconPath)
+        {
+            Dispatcher.BeginInvoke(DispatcherPriority.Background, (SendOrPostCallback)delegate
+            {
+                ((MainWindow)System.Windows.Application.Current.MainWindow).ProfileAvatar.Source = new BitmapImage(new Uri(IconPath));
+            }, null);
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -45,7 +45,7 @@ namespace AchievementTest
 
         private void CloseAchievementButton_clicked(object sender, RoutedEventArgs e)
         {
-            
+
             Information.Content = Manager.GetPageObject<CloseAchievements>();
         }
 

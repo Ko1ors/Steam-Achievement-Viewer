@@ -35,7 +35,7 @@ namespace AchievementTest.Pages
 
                 if (Manager.GetProfile(steamID))
                 {
-                    UpdateAvatarImage(Manager.profile.AvatarFull);
+                    (System.Windows.Application.Current.MainWindow as MainWindow).UpdateAvatar(Manager.profile.AvatarFull);
                     UpdateStatusLabel("Данные о профиле были успешно получены");
                 }
                 else
@@ -90,13 +90,6 @@ namespace AchievementTest.Pages
                 Thread.Sleep(1000);
                 UpdateStatusLabel("Результаты были успешно сохранены");
             }));
-        }
-        private void UpdateAvatarImage(string IconPath)
-        {
-            Dispatcher.BeginInvoke(DispatcherPriority.Background, (SendOrPostCallback)delegate
-            {
-                ((MainWindow)System.Windows.Application.Current.MainWindow).ProfileAvatar.Source = new BitmapImage(new Uri(IconPath));
-            }, null);
         }
         private void UpdateProgressBar(int Progress) 
         {
