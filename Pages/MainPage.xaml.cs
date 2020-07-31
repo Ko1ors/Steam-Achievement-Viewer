@@ -39,6 +39,7 @@ namespace AchievementTest.Pages
                     {
                         (System.Windows.Application.Current.MainWindow as MainWindow).UpdateAvatar(Manager.profile.AvatarFull);
                     }, null);
+                    
                     UpdateStatusLabel("Данные о профиле были успешно получены");
                 }
                 else

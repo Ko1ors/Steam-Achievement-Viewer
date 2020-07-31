@@ -24,6 +24,7 @@ namespace AchievementTest
             ((MainWindow)System.Windows.Application.Current.MainWindow).ProfileAvatar.Source = new BitmapImage(new Uri(IconPath));
         }
 
+
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
             Close();
