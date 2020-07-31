@@ -23,7 +23,7 @@ namespace AchievementTest
 
         public static void Start()
         {
-            if(Settings.Default.SteamID != "-1")
+            if (Settings.Default.SteamID != "-1")
             {
                 LoadProfile(Settings.Default.SteamID);
                 LoadGames();
@@ -42,7 +42,7 @@ namespace AchievementTest
 
         public static void SaveSettingsInfo()
         {
-            if(profile != null)
+            if (profile != null)
             {
                 Settings.Default.SteamID = profile.SteamID64;
                 Settings.Default.LastUpdate = DateTime.Now;
@@ -236,7 +236,7 @@ namespace AchievementTest
         public static List<Achievement> GetAllAchievementsList()
         {
             List<Achievement> achList = new List<Achievement>();
-            gamesList.Games.Game.ForEach(e =>achList.AddRange(e.Achievements.Achievement));
+            gamesList.Games.Game.ForEach(e => achList.AddRange(e.Achievements.Achievement));
             return achList;
         }
 
@@ -263,7 +263,7 @@ namespace AchievementTest
 
         public static List<AchievementWithGameInfo> GetRarestAchievementsWithGameInfo(int count)
         {
-            return GetAllAchievementsWithGameInfoList().OrderBy(e => e.Percent).Where(e => e.Closed == "0").Take(count).ToList();
+            return GetAllAchievementsWithGameInfoList().OrderBy(e => e.Percent).Where(e => e.Closed == "0" && e.Percent != -1).Take(count).ToList();
         }
 
         public static List<AchievementWithGameInfo> GetLatestAchievements(int count)

@@ -1,9 +1,7 @@
 ﻿using AchievementTest.Pages;
 using System;
-using System.Threading;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using System.Windows.Threading;
 
 namespace AchievementTest
 {
@@ -23,10 +21,7 @@ namespace AchievementTest
 
         public void UpdateAvatar(string IconPath)
         {
-            Dispatcher.BeginInvoke(DispatcherPriority.Background, (SendOrPostCallback)delegate
-            {
-                ((MainWindow)System.Windows.Application.Current.MainWindow).ProfileAvatar.Source = new BitmapImage(new Uri(IconPath));
-            }, null);
+            ((MainWindow)System.Windows.Application.Current.MainWindow).ProfileAvatar.Source = new BitmapImage(new Uri(IconPath));
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

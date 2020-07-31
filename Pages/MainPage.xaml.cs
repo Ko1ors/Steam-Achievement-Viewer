@@ -35,7 +35,10 @@ namespace AchievementTest.Pages
 
                 if (Manager.GetProfile(steamID))
                 {
-                    (System.Windows.Application.Current.MainWindow as MainWindow).UpdateAvatar(Manager.profile.AvatarFull);
+                    Dispatcher.BeginInvoke(DispatcherPriority.Background, (SendOrPostCallback)delegate
+                    {
+                        (System.Windows.Application.Current.MainWindow as MainWindow).UpdateAvatar(Manager.profile.AvatarFull);
+                    }, null);
                     UpdateStatusLabel("Данные о профиле были успешно получены");
                 }
                 else
