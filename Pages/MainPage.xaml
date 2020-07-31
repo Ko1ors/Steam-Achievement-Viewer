@@ -10,7 +10,7 @@
       Title="MainPage">
     <Grid Background="#1B2838">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="Enter your Steam ID" FontSize="30" Foreground="White"/>
+            <Label HorizontalAlignment="Center" VerticalAlignment="Center" Content="Enter your Steam ID" FontSize="24" Margin="-100,0,0,0" Foreground="White" FontFamily="Arial Black" FontWeight="Normal" FontStyle="Normal"/>
             <StackPanel Height="60" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
                 <TextBox FontSize="25" x:Name="textBoxSteamID" Height="40" BorderBrush="White" BorderThickness="3" Width="400"/>
                 <Button Content="Enter" Style="{StaticResource OverButtonStyle}" Click="ButtonEnter_Click"/>
