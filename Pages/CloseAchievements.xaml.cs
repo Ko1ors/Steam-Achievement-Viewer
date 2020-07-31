@@ -1,6 +1,7 @@
 ﻿
+using System;
 using System.Windows.Controls;
-
+using System.Windows.Data;
 
 namespace AchievementTest.Pages
 {
@@ -12,12 +13,16 @@ namespace AchievementTest.Pages
         public CloseAchievements()
         {
             InitializeComponent();
-            GameList.ItemsSource = Manager.gamesList.Games.Game;
+            GameList.ItemsSource = Manager.GetIncompleteGames();
         }
+
 
         private void GameSelected(object sender, SelectionChangedEventArgs e)
         {
-            AchievementList.ItemsSource = Manager.GetClosestAchievements(Manager.gamesList.Games.Game[GameList.SelectedIndex].AppID).Achievement;
+            
+            AchievementList.ItemsSource = Manager.GetClosestAchievements((GameList.SelectedItem as Game).AppID).Achievement;
+            if (AchievementList.Items.Count > 0)
+                AchievementList.ScrollIntoView(AchievementList.Items[0]);
         }
     }
 }
