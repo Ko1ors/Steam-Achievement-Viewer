@@ -1,6 +1,10 @@
 ﻿
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows.Controls;
-
+using System.Windows.Data;
 
 namespace AchievementTest.Pages
 {
@@ -9,15 +13,40 @@ namespace AchievementTest.Pages
     /// </summary>
     public partial class CloseAchievements : Page
     {
+        private List<Game> originalGameList;
         public CloseAchievements()
         {
             InitializeComponent();
-            GameList.ItemsSource = Manager.gamesList.Games.Game;
+            GameList.ItemsSource = Manager.GetIncompleteGames();
+            originalGameList = Manager.GetIncompleteGames();
+            ListCollectionView view = (ListCollectionView)CollectionViewSource.GetDefaultView(GameList.ItemsSource);
+            view.Filter = GameSearchFilter;
         }
+
 
         private void GameSelected(object sender, SelectionChangedEventArgs e)
         {
-            AchievementList.ItemsSource = Manager.GetClosestAchievements(Manager.gamesList.Games.Game[GameList.SelectedIndex].AppID).Achievement;
+            if (GameList.SelectedItem != null)
+            {
+                AchievementList.ItemsSource = Manager.GetClosestAchievements((GameList.SelectedItem as Game).AppID).Achievement;
+                if (AchievementList.Items.Count > 0)
+                    AchievementList.ScrollIntoView(AchievementList.Items[0]);
+            }
+            else
+                AchievementList.ItemsSource = null;
+        }
+
+        private bool GameSearchFilter(object item)
+        {
+            if (String.IsNullOrEmpty(textBoxSearch.Text))
+                return true;
+            else
+                return ((item as Game).Name.IndexOf(textBoxSearch.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+        }
+
+        private void textBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CollectionViewSource.GetDefaultView(GameList.ItemsSource).Refresh();
         }
     }
 }
