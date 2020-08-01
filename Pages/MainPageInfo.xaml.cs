@@ -49,12 +49,15 @@ namespace AchievementTest.Pages
         {
             if (Manager.IsLogged())
             {
+                infoStackPanel.Visibility = Visibility.Visible;
                 UpdateProfileName(Manager.profile.SteamID);
                 UpdateGameCount(Manager.gamesList.Games.Game.Count);
                 UpdateAchievementCount(Manager.GetTotalAchievementsCount());
                 UpdateAchieved(Manager.GetCompletedAchievementsCount());
                 UpdateProgressBar((Manager.GetCompletedAchievementsCount() * 100) / Manager.GetTotalAchievementsCount());
             }
+            else
+                infoStackPanel.Visibility = Visibility.Collapsed;
         }
     }
 }

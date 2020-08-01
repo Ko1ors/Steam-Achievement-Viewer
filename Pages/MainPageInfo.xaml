@@ -11,21 +11,21 @@
     <Grid Background="#1B2838" Margin="10">
         <StackPanel VerticalAlignment="Top" HorizontalAlignment="Center" x:Name="infoStackPanel">
             <StackPanel Orientation="Horizontal" Margin="10">
-                <TextBlock Text="СТАТИСТИКА:" HorizontalAlignment="Center" FontSize="20" Foreground="White" Margin="0,0,10,0"/>
-                <TextBlock  x:Name="ProfileName" HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
+                <TextBlock Text="СТАТИСТИКА:" HorizontalAlignment="Center" FontFamily="Arial Black" FontSize="20" Foreground="White" Margin="0,0,10,0"/>
+                <TextBlock  x:Name="ProfileName" HorizontalAlignment="Center" FontFamily="Arial Black"  FontSize="20" Foreground="White"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="10">
-                <TextBlock Text="ВСЕГО ИГР:" FontSize="20" Foreground="White" />
-                <TextBlock x:Name="GamesCount" HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
+                <TextBlock Text="ВСЕГО ИГР:" FontSize="20" FontFamily="Arial Black"  Foreground="White" />
+                <TextBlock x:Name="GamesCount" HorizontalAlignment="Center" FontFamily="Arial Black"  FontSize="20" Foreground="White"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="10">
-                <TextBlock Text="ВСЕГО ДОСТУПНО ДОСТИЖЕНИЙ:" FontSize="20" Foreground="White"/>
-                <TextBlock  x:Name="AchievementCount" HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
+                <TextBlock Text="ВСЕГО ДОСТУПНО ДОСТИЖЕНИЙ:" FontFamily="Arial Black"  FontSize="20" Foreground="White"/>
+                <TextBlock  x:Name="AchievementCount" FontFamily="Arial Black"  HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="10">
-                <TextBlock VerticalAlignment="Center" Text="ПОЛУЧЕНО:" FontSize="20" Foreground="White"/>
+                <TextBlock VerticalAlignment="Center" Text="ПОЛУЧЕНО:" FontFamily="Arial Black"  FontSize="20" Foreground="White"/>
                 <Grid Margin="20">
-                    <TextBlock x:Name="AchievementAchieved" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="White"/>
+                    <TextBlock x:Name="AchievementAchieved" HorizontalAlignment="Center" FontFamily="Arial Black"  VerticalAlignment="Center" FontSize="14" Foreground="White"/>
                     <AchievementTest:RadialProgressBar x:Name="AchievementProgressCircle" MaxHeight="200" MaxWidth="200" MinHeight="130" MinWidth="130" IndicatorBrush="#FFDFDEE8"/>
                     <!--<AchievementTest:RadialProgressBar x:Name="CircleProgressBar" Height="100" Width="100" IndicatorBrush="#FFDFDEE8" VerticalAlignment="Top" HorizontalAlignment="Center"/>-->
                 </Grid>
