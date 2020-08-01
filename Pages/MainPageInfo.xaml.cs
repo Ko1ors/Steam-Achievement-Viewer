@@ -21,23 +21,6 @@ namespace AchievementTest.Pages
         public MainPageInfo()
         {
             InitializeComponent();
-            if (Manager.profile != null)
-            {
-                UpdateProfileName(Manager.profile.SteamID);
-                UpdateGameCount(Manager.gamesList.Games.Game.Count);
-                UpdateAchievementCount(Manager.GetTotalAchievementsCount());
-                UpdateAchieved(Manager.GetCompletedAchievementsCount());
-                UpdateProgressBar((Manager.GetCompletedAchievementsCount()*100)/Manager.GetTotalAchievementsCount());
-                //int AchievementC=0;
-                //foreach(Game g in Manager.gamesList.Games.Game)
-                //{
-                //    foreach(Achievement a in g.Achievements.Achievement)
-                //    {
-                //        AchievementC++;
-                //    }
-                //}
-                //UpdateAchievementCount(AchievementC);
-            }
         }
         public void UpdateProfileName(string Name)
         {
@@ -60,6 +43,18 @@ namespace AchievementTest.Pages
         private void UpdateProgressBar(int Progress)
         {
             AchievementProgressCircle.Value = Progress;
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (Manager.IsLogged())
+            {
+                UpdateProfileName(Manager.profile.SteamID);
+                UpdateGameCount(Manager.gamesList.Games.Game.Count);
+                UpdateAchievementCount(Manager.GetTotalAchievementsCount());
+                UpdateAchieved(Manager.GetCompletedAchievementsCount());
+                UpdateProgressBar((Manager.GetCompletedAchievementsCount() * 100) / Manager.GetTotalAchievementsCount());
+            }
         }
     }
 }

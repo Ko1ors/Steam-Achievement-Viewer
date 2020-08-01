@@ -21,8 +21,13 @@ namespace AchievementTest.Pages
     {
         public RareAchievements()
         {
-            InitializeComponent();
-            AchievementTable.ItemsSource = Manager.GetRarestAchievementsWithGameInfo(100);
+            InitializeComponent(); 
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if(Manager.IsLogged())
+                AchievementTable.ItemsSource = Manager.GetRarestAchievementsWithGameInfo(100);
         }
     }
 }

@@ -13,14 +13,9 @@ namespace AchievementTest.Pages
     /// </summary>
     public partial class CloseAchievements : Page
     {
-        private List<Game> originalGameList;
         public CloseAchievements()
         {
             InitializeComponent();
-            GameList.ItemsSource = Manager.GetIncompleteGames();
-            originalGameList = Manager.GetIncompleteGames();
-            ListCollectionView view = (ListCollectionView)CollectionViewSource.GetDefaultView(GameList.ItemsSource);
-            view.Filter = GameSearchFilter;
         }
 
 
@@ -46,7 +41,17 @@ namespace AchievementTest.Pages
 
         private void textBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            CollectionViewSource.GetDefaultView(GameList.ItemsSource).Refresh();
+            CollectionViewSource.GetDefaultView(GameList.ItemsSource)?.Refresh();
+        }
+
+        private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (Manager.IsLogged())
+            {
+                GameList.ItemsSource = Manager.GetIncompleteGames();
+                ListCollectionView view = (ListCollectionView)CollectionViewSource.GetDefaultView(GameList.ItemsSource);
+                view.Filter = GameSearchFilter;
+            }
         }
     }
 }

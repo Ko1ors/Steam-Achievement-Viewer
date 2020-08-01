@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:AchievementTest.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="LastAchievedPage">
+      Title="LastAchievedPage" Loaded="Page_Loaded">
     <Page.Resources>
         <DataTemplate x:Key="AchievementInfo">
             <Grid Background="#1B2838"  Width="750" Margin="10">

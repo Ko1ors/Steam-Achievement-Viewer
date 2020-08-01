@@ -11,11 +11,16 @@ namespace AchievementTest.Pages
     /// </summary>
     public partial class LastAchievedPage : Page
     {
-        ObservableCollection<Achievement> Achievements = new ObservableCollection<Achievement>();
         public LastAchievedPage()
         {
             InitializeComponent();
-            AchievementTable.ItemsSource = Manager.GetLatestAchievements(100);
+            
+        }
+
+        private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if(Manager.IsLogged())
+                AchievementTable.ItemsSource = Manager.GetLatestAchievements(100);
         }
     }
 }

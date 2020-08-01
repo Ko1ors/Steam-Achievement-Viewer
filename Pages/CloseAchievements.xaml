@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:AchievementTest.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="CloseAchievements">
+      Title="CloseAchievements" Loaded="Page_Loaded">
     <Page.Resources>
         <DataTemplate x:Key="ShortGameInfo">
             <VirtualizingStackPanel>

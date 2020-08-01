@@ -50,6 +50,11 @@ namespace AchievementTest
             }
         }
 
+        public static bool IsLogged()
+        {
+            return profile != null;
+        }
+
         public static bool GetProfile(string steamID)
         {
             var response = GetRequest.XmlRequest("https://steamcommunity.com/profiles/" + steamID + "/?xml=1");
@@ -226,7 +231,6 @@ namespace AchievementTest
         
         public static int GetTotalAchievementsCount()
         {
-            
             int count = 0;
             gamesList?.Games.Game.ForEach(e => count += e.Achievements.Achievement.Count);
             return count;
