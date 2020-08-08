@@ -40,6 +40,11 @@ namespace AchievementTest.Pages
             AchievementAchieved.Text += "/";
             AchievementAchieved.Text += AchievementCount.Text;
         }
+        public void UpdateAchievementStatistics(int Achieved)
+        {
+            AchievementStatistics.Text = Achieved.ToString();
+            AchievementStatistics.Text += "/100%";
+        }
         private void UpdateProgressBar(int Progress)
         {
             AchievementProgressCircle.Value = Progress;
@@ -54,6 +59,7 @@ namespace AchievementTest.Pages
                 UpdateGameCount(Manager.gamesList.Games.Game.Count);
                 UpdateAchievementCount(Manager.GetTotalAchievementsCount());
                 UpdateAchieved(Manager.GetCompletedAchievementsCount());
+                UpdateAchievementStatistics((Manager.GetCompletedAchievementsCount() * 100) / Manager.GetTotalAchievementsCount());
                 UpdateProgressBar((Manager.GetCompletedAchievementsCount() * 100) / Manager.GetTotalAchievementsCount());
             }
             else

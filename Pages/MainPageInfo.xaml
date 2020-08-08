@@ -22,13 +22,19 @@
                 <TextBlock Text="ВСЕГО ДОСТУПНО ДОСТИЖЕНИЙ:" FontFamily="Arial Black"  FontSize="20" Foreground="White"/>
                 <TextBlock  x:Name="AchievementCount" FontFamily="Arial Black"  HorizontalAlignment="Center" FontSize="20" Foreground="White"/>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="10">
-                <TextBlock VerticalAlignment="Center" Text="ПОЛУЧЕНО:" FontFamily="Arial Black"  FontSize="20" Foreground="White"/>
-                <Grid Margin="20">
-                    <TextBlock x:Name="AchievementAchieved" HorizontalAlignment="Center" FontFamily="Arial Black"  VerticalAlignment="Center" FontSize="14" Foreground="White"/>
-                    <AchievementTest:RadialProgressBar x:Name="AchievementProgressCircle" MaxHeight="200" MaxWidth="200" MinHeight="130" MinWidth="130" IndicatorBrush="#FFDFDEE8"/>
-                    <!--<AchievementTest:RadialProgressBar x:Name="CircleProgressBar" Height="100" Width="100" IndicatorBrush="#FFDFDEE8" VerticalAlignment="Top" HorizontalAlignment="Center"/>-->
-                </Grid>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10,10,10,0">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock VerticalAlignment="Center" Text="ПОЛУЧЕНО:" FontFamily="Arial Black"  FontSize="20" Foreground="White"/>
+                        <TextBlock x:Name="AchievementAchieved" HorizontalAlignment="Center" FontFamily="Arial Black"  VerticalAlignment="Bottom" FontSize="14" Foreground="White"/>
+
+                    </StackPanel>
+                    <Grid Margin="20,20,20,0">
+                        <TextBlock  x:Name="AchievementStatistics" Margin="0,0,0,20" HorizontalAlignment="Center" FontFamily="Arial Black"  VerticalAlignment="Center" FontSize="14" Foreground="White"/>
+                        <AchievementTest:RadialProgressBar x:Name="AchievementProgressCircle" MaxHeight="200" MaxWidth="200" MinHeight="130" MinWidth="130" IndicatorBrush="#FFDFDEE8"/>
+                        <!--<AchievementTest:RadialProgressBar x:Name="CircleProgressBar" Height="100" Width="100" IndicatorBrush="#FFDFDEE8" VerticalAlignment="Top" HorizontalAlignment="Center"/>-->
+                    </Grid>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Grid>

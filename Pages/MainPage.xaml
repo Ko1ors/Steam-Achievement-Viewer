@@ -9,14 +9,20 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage">
     <Grid Background="#1B2838">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Height="242">
-            <Label HorizontalAlignment="Left" VerticalAlignment="Center" Content="Enter your Steam ID" FontSize="24" Foreground="White" FontFamily="Arial Black"/>
-            <StackPanel Height="60" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
-                <TextBox FontSize="20" VerticalContentAlignment="Center"  x:Name="textBoxSteamID" Height="40" BorderBrush="White" BorderThickness="2" Width="400" Background="#FF1B2838" FontFamily="Arial Black" Foreground="White"/>
-                <Button Content="Enter" FontSize="16"  Style="{StaticResource OverButtonStyle}" Click="ButtonEnter_Click"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="Enter your Steam ID" FontSize="24" Foreground="White" FontFamily="Arial Black"/>
+                <StackPanel Height="60" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+                    <TextBox FontSize="20" VerticalContentAlignment="Center"  x:Name="textBoxSteamID" Height="40" BorderBrush="White" BorderThickness="2" Width="400" Background="#FF1B2838" FontFamily="Arial Black" Foreground="White"/>
+                    <Button Content="Enter" FontSize="16"  Style="{StaticResource OverButtonStyle}" Click="ButtonEnter_Click"/>
+                </StackPanel>
+                <StackPanel>
+                    <AchievementTest:RadialProgressBar x:Name="CircleProgressBar" Height="100" Width="100" IndicatorBrush="#FFDFDEE8" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                </StackPanel>
             </StackPanel>
-            <Label HorizontalAlignment="Center" x:Name="statusLabel" VerticalAlignment="Center" Content="" FontSize="15" FontFamily="Arial Black" Foreground="White"/>
-            <AchievementTest:RadialProgressBar x:Name="CircleProgressBar" Height="100" Width="100" IndicatorBrush="#FFDFDEE8" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+            <StackPanel>
+                <Label HorizontalAlignment="Center" x:Name="statusLabel" VerticalAlignment="Center" Content="" FontSize="15" FontFamily="Arial Black" Foreground="White"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Page>
