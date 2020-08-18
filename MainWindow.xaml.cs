@@ -1,9 +1,9 @@
-﻿using AchievementTest.Pages;
+﻿using SteamAchievementViewer.Pages;
 using System;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace AchievementTest
+namespace SteamAchievementViewer
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

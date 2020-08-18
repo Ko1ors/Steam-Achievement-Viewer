@@ -3,7 +3,7 @@ using System.Net;
 using System.Text;
 using System.Xml;
 
-namespace AchievementTest
+namespace SteamAchievementViewer
 {
     class GetRequest
     {

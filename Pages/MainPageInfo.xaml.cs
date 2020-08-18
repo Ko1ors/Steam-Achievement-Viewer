@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AchievementTest.Pages
+namespace SteamAchievementViewer.Pages
 {
     /// <summary>
     /// Логика взаимодействия для MainPageInfo.xaml

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AchievementTest {
+namespace SteamAchievementViewer {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

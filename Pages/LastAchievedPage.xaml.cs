@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Controls;
 
 
-namespace AchievementTest.Pages
+namespace SteamAchievementViewer.Pages
 {
     /// <summary>
     /// Логика взаимодействия для LastAchievedPage.xaml

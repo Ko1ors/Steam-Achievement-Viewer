@@ -1,11 +1,11 @@
-﻿<Window x:Class="AchievementTest.MainWindow" Background="Black"
+﻿<Window x:Class="SteamAchievementViewer.MainWindow" Background="Black"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AchievementTest" 
+        xmlns:local="clr-namespace:SteamAchievementViewer" 
         xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:pages="clr-namespace:AchievementTest.Pages"
+        xmlns:pages="clr-namespace:SteamAchievementViewer.Pages"
         mc:Ignorable="d"
         Title="Steam Achievement Viewer" Height="450" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="MainInfoButton_cliked">
     <shell:WindowChrome.WindowChrome>
@@ -101,7 +101,7 @@
                         </Button>
                         <Button  Content="БЛИЖАЙШИЕ" Style="{StaticResource MainButtonStyle}" Click="CloseAchievementButton_clicked"/>
                         <Button  Content="РЕДКИЕ" Style="{StaticResource MainButtonStyle}" Click="RareAchievementButton_clicked"/>
-                        <Button  Content="НАСТРОЙКИ" Style="{StaticResource MainButtonStyle}" Click="SettingsButton_clicked"/>
+                        <Button  Content="НАСТРОЙКИ" Visibility="Hidden" Style="{StaticResource MainButtonStyle}" Click="SettingsButton_clicked"/>
                     </StackPanel>
                 </ScrollViewer>
                 <Border BorderThickness="5" shell:Grid.ColumnSpan="2"/>

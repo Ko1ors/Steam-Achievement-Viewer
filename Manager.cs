@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace AchievementTest
+namespace SteamAchievementViewer
 {
     public static class Manager
     {

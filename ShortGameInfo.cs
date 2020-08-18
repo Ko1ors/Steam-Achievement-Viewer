@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AchievementTest
+namespace SteamAchievementViewer
 {
     public class ShortGameInfo
     {

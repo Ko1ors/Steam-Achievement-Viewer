@@ -7,7 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
-namespace AchievementTest.Pages
+namespace SteamAchievementViewer.Pages
 {
     /// <summary>
     /// Логика взаимодействия для MainPage.xaml

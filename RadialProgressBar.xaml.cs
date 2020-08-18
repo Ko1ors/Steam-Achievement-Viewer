@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AchievementTest
+namespace SteamAchievementViewer
 {
     /// <summary>
     /// Логика взаимодействия для RadialProgressBar.xaml

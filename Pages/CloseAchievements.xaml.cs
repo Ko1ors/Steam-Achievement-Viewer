@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace AchievementTest.Pages
+namespace SteamAchievementViewer.Pages
 {
     /// <summary>
     /// Логика взаимодействия для CloseAchievements.xaml

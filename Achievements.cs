@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace AchievementTest
+namespace SteamAchievementViewer
 {
 	[XmlRoot(ElementName= "achievements")]
 	public class Achievements
