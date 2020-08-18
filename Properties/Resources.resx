@@ -120,7 +120,22 @@
   <data name="AuthPage" xml:space="preserve">
     <value>LOGIN</value>
   </data>
+  <data name="ClosestPage" xml:space="preserve">
+    <value>CLOSEST
+ ACHIEVEMENTS</value>
+  </data>
+  <data name="LastAchievedPage" xml:space="preserve">
+    <value>LAST
+ ACHIEVED</value>
+  </data>
   <data name="MainPage" xml:space="preserve">
     <value>MAIN</value>
+  </data>
+  <data name="RarestPage" xml:space="preserve">
+    <value>RAREST
+ ACHIEVEMENTS</value>
+  </data>
+  <data name="SettingsPage" xml:space="preserve">
+    <value>SETTINGS</value>
   </data>
 </root>

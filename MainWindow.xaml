@@ -90,17 +90,11 @@
                 <ScrollViewer Grid.Column="2" MaxWidth="700" Height="auto" HorizontalAlignment="Left" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
                     <StackPanel Orientation="Horizontal" shell:Grid.ColumnSpan="2">
                         <Button Content="{x:Static res:Resources.MainPage}" Style="{StaticResource MainButtonStyle}" Click="MainInfoButton_cliked"/>
-                        <Button Content="АВТОРИЗАЦИЯ" Style="{StaticResource MainButtonStyle}" Click="AuthorizationButton_clicked"/>
-                        <Button Style="{StaticResource MainButtonStyle}" Click="LastAchievedButton_clicked" >
-                            <TextBlock HorizontalAlignment="Center" >
-                            ПОСЛЕДНИЕ
-                            <LineBreak/>
-                            ПОЛУЧЕННЫЕ
-                            </TextBlock>
-                        </Button>
-                        <Button  Content="БЛИЖАЙШИЕ" Style="{StaticResource MainButtonStyle}" Click="CloseAchievementButton_clicked"/>
-                        <Button  Content="РЕДКИЕ" Style="{StaticResource MainButtonStyle}" Click="RareAchievementButton_clicked"/>
-                        <Button  Content="НАСТРОЙКИ" Visibility="Hidden" Style="{StaticResource MainButtonStyle}" Click="SettingsButton_clicked"/>
+                        <Button Content="{x:Static res:Resources.AuthPage}" Style="{StaticResource MainButtonStyle}" Click="AuthorizationButton_clicked"/>
+                        <Button Style="{StaticResource MainButtonStyle}" Click="LastAchievedButton_clicked" Content="{x:Static res:Resources.LastAchievedPage}"/>
+                        <Button  Content="{x:Static res:Resources.ClosestPage}" Style="{StaticResource MainButtonStyle}" Click="CloseAchievementButton_clicked"/>
+                        <Button  Content="{x:Static res:Resources.RarestPage}" Style="{StaticResource MainButtonStyle}" Click="RareAchievementButton_clicked"/>
+                        <Button  Content="{x:Static res:Resources.SettingsPage}" Visibility="Hidden" Style="{StaticResource MainButtonStyle}" Click="SettingsButton_clicked"/>
                     </StackPanel>
                 </ScrollViewer>
                 <Border BorderThickness="5" shell:Grid.ColumnSpan="2"/>

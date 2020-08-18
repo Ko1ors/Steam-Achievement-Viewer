@@ -18,7 +18,7 @@ namespace SteamAchievementViewer
         {
             base.OnStartup(e);
 
-            //System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo("ru");
+            //System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo("en");
         }
     }
 }

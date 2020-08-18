@@ -118,9 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AuthPage" xml:space="preserve">
-    <value>LOGIN</value>
+    <value>АВТОРИЗАЦИЯ</value>
+  </data>
+  <data name="ClosestPage" xml:space="preserve">
+    <value>БЛИЖАЙШИЕ
+ ДОСТИЖЕНИЯ</value>
+  </data>
+  <data name="LastAchievedPage1" xml:space="preserve">
+    <value>ПОСЛЕДНИЕ
+ ПОЛУЧЕННЫЕ</value>
   </data>
   <data name="MainPage" xml:space="preserve">
     <value>ГЛАВНАЯ</value>
+  </data>
+  <data name="RarestPage" xml:space="preserve">
+    <value>РЕДКИЕ
+ ДОСТИЖЕНИЯ</value>
+  </data>
+  <data name="SettingsPage" xml:space="preserve">
+    <value>НАСТРОЙКИ</value>
   </data>
 </root>

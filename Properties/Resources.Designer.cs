@@ -70,11 +70,50 @@ namespace SteamAchievementViewer.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на CLOSEST
+        /// ACHIEVEMENTS.
+        /// </summary>
+        public static string ClosestPage {
+            get {
+                return ResourceManager.GetString("ClosestPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на LAST
+        /// ACHIEVED.
+        /// </summary>
+        public static string LastAchievedPage {
+            get {
+                return ResourceManager.GetString("LastAchievedPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на MAIN.
         /// </summary>
         public static string MainPage {
             get {
                 return ResourceManager.GetString("MainPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на RAREST
+        /// ACHIEVEMENTS.
+        /// </summary>
+        public static string RarestPage {
+            get {
+                return ResourceManager.GetString("RarestPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на SETTINGS.
+        /// </summary>
+        public static string SettingsPage {
+            get {
+                return ResourceManager.GetString("SettingsPage", resourceCulture);
             }
         }
     }
