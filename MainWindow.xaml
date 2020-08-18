@@ -3,9 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SteamAchievementViewer" 
         xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:pages="clr-namespace:SteamAchievementViewer.Pages"
+        xmlns:res="clr-namespace:SteamAchievementViewer.Properties"
         mc:Ignorable="d"
         Title="Steam Achievement Viewer" Height="450" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="MainInfoButton_cliked">
     <shell:WindowChrome.WindowChrome>
@@ -90,8 +89,8 @@
                 </shell:Grid.ColumnDefinitions>
                 <ScrollViewer Grid.Column="2" MaxWidth="700" Height="auto" HorizontalAlignment="Left" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto">
                     <StackPanel Orientation="Horizontal" shell:Grid.ColumnSpan="2">
-                        <Button  Content="ГЛАВНАЯ" Style="{StaticResource MainButtonStyle}" Click="MainInfoButton_cliked"/>
-                        <Button  Content="АВТОРИЗАЦИЯ" Style="{StaticResource MainButtonStyle}" Click="AuthorizationButton_clicked"/>
+                        <Button Content="{x:Static res:Resources.MainPage}" Style="{StaticResource MainButtonStyle}" Click="MainInfoButton_cliked"/>
+                        <Button Content="АВТОРИЗАЦИЯ" Style="{StaticResource MainButtonStyle}" Click="AuthorizationButton_clicked"/>
                         <Button Style="{StaticResource MainButtonStyle}" Click="LastAchievedButton_clicked" >
                             <TextBlock HorizontalAlignment="Center" >
                             ПОСЛЕДНИЕ

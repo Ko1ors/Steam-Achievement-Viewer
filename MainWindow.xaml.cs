@@ -13,6 +13,7 @@ namespace SteamAchievementViewer
 
         public MainWindow()
         {
+
             InitializeComponent();
             Manager.Start();
             if (Manager.profile != null)
