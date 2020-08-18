@@ -32,7 +32,7 @@ namespace SteamAchievementViewer
 
         private void AuthorizationButton_clicked(object sender, RoutedEventArgs e)
         {
-            Information.Content = Manager.GetPageObject<MainPage>();
+            Information.Content = Manager.GetPageObject<AuthPage>();
         }
         private void LastAchievedButton_clicked(object sender, RoutedEventArgs e)
         {

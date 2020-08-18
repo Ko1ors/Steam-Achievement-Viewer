@@ -4,7 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SteamAchievementViewer.Pages"
-      xmlns:AchievementTest="clr-namespace:SteamAchievementViewer" x:Class="SteamAchievementViewer.Pages.MainPage"
+      xmlns:AchievementTest="clr-namespace:SteamAchievementViewer" x:Class="SteamAchievementViewer.Pages.AuthPage"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage">
@@ -14,10 +14,7 @@
                 <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="Enter your Steam ID" FontSize="24" Foreground="White" FontFamily="Arial Black"/>
                 <StackPanel Height="60" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
                     <TextBox FontSize="20" VerticalContentAlignment="Center"  x:Name="textBoxSteamID" Height="40" BorderBrush="White" BorderThickness="2" Width="400" Background="#FF1B2838" FontFamily="Arial Black" Foreground="White"/>
-                    <Button Content="Enter" FontSize="16"  Style="{StaticResource OverButtonStyle}" Click="ButtonEnter_Click"/>
-                </StackPanel>
-                <StackPanel>
-                    
+                    <Button Content="Enter" x:Name="EnterButton" FontSize="16"  Style="{StaticResource OverButtonStyle}" Click="ButtonEnter_Click"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel>
