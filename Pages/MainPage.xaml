@@ -17,11 +17,12 @@
                     <Button Content="Enter" FontSize="16"  Style="{StaticResource OverButtonStyle}" Click="ButtonEnter_Click"/>
                 </StackPanel>
                 <StackPanel>
-                    <AchievementTest:RadialProgressBar x:Name="CircleProgressBar" Height="100" Width="100" IndicatorBrush="#FFDFDEE8" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                    
                 </StackPanel>
             </StackPanel>
             <StackPanel>
-                <Label HorizontalAlignment="Center" x:Name="statusLabel" VerticalAlignment="Center" Content="" FontSize="15" FontFamily="Arial Black" Foreground="White"/>
+                <Label HorizontalAlignment="Center" x:Name="statusLabel" FontSize="15" FontFamily="Arial Black" Foreground="White" HorizontalContentAlignment="Center" MaxWidth="750"/>
+                <AchievementTest:RadialProgressBar x:Name="CircleProgressBar" Height="100" Width="100" IndicatorBrush="#FFDFDEE8" VerticalAlignment="Top" HorizontalAlignment="Center"/>
             </StackPanel>
         </StackPanel>
     </Grid>
