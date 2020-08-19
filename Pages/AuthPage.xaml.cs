@@ -44,7 +44,7 @@ namespace SteamAchievementViewer.Pages
                 string steamID = textBoxSteamID.Text;
                 var task = Task.Run(new Action(() =>
                 {
-                    UpdateStatusLabel("Получаю данные о профиле");
+                    UpdateStatusLabel(Properties.Resources.RetrievingProfileData);
                     Thread.Sleep(1000);
 
                     if (Manager.GetProfile(steamID))
@@ -54,35 +54,35 @@ namespace SteamAchievementViewer.Pages
                             (System.Windows.Application.Current.MainWindow as MainWindow).UpdateAvatar(Manager.profile.AvatarFull);
                         }, null);
 
-                        UpdateStatusLabel("Данные о профиле были успешно получены");
+                        UpdateStatusLabel(Properties.Resources.ProfileDataRetrieved);
                     }
                     else
                     {
-                        UpdateStatusLabel("Не удалось получить данные о профиле. Подождите и попробуйте позже");
+                        UpdateStatusLabel(Properties.Resources.ProfileDataFailed);
                         return;
                     }
                     Thread.Sleep(1000);
-                    UpdateStatusLabel("Получаю список игр");
+                    UpdateStatusLabel(Properties.Resources.RetrievingGameList);
                     Thread.Sleep(1000);
 
                     if (Manager.GetGames())
                     {
-                        UpdateStatusLabel("Список игр был успешно получен");
+                        UpdateStatusLabel(Properties.Resources.GameListRetrieved);
                     }
                     else
                     {
-                        UpdateStatusLabel("Не удалось получить список игр. Подождите и попробуйте позже");
+                        UpdateStatusLabel(Properties.Resources.GameListFailed);
                         return;
                     }
 
                     Thread.Sleep(1000);
-                    UpdateStatusLabel("Получаю список достижений");
+                    UpdateStatusLabel(Properties.Resources.RetrievingAchievementList);
 
                     Task.Run(new Action(() =>
                     {
                         while (Manager.currentGameRetrieve < Manager.gamesList.Games.Game.Count)
                         {
-                            UpdateStatusLabel("Получаю список достижений "
+                            UpdateStatusLabel(Properties.Resources.RetrievingAchievementList + " " +
                                 + Manager.currentGameRetrieve + "/" + Manager.gamesList.Games.Game.Count
                                 + "\t" + Manager.gamesList.Games.Game[Manager.currentGameRetrieve].Name);
                             UpdateProgressBar((Manager.currentGameRetrieve * 100) / Manager.gamesList.Games.Game.Count);
@@ -93,20 +93,20 @@ namespace SteamAchievementViewer.Pages
 
                     if (Manager.GetAchievementsParallel())
                     {
-                        UpdateStatusLabel("Список достижений был успешно получен");
+                        UpdateStatusLabel(Properties.Resources.AchievementListRetrieved);
                     }
                     else
                     {
-                        UpdateStatusLabel("Не удалось получить список достижений. Подождите и попробуйте позже");
+                        UpdateStatusLabel(Properties.Resources.AchievementListFailed);
                         return;
                     }
                     Thread.Sleep(1000);
-                    UpdateStatusLabel("Сохраняю результаты работы");
+                    UpdateStatusLabel(Properties.Resources.ResultSaving);
                     Manager.SaveProfile();
                     Manager.SaveGames();
                     Manager.SaveSettingsInfo();
                     Thread.Sleep(1000);
-                    UpdateStatusLabel("Результаты были успешно сохранены");
+                    UpdateStatusLabel(Properties.Resources.ResultSaved);
                     
                 }));
                 Task.Run(() =>
