@@ -61,6 +61,24 @@ namespace SteamAchievementViewer.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to get the achievement list. Please wait and try again later.
+        /// </summary>
+        public static string AchievementListFailed {
+            get {
+                return ResourceManager.GetString("AchievementListFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The achievement list has been successfully received.
+        /// </summary>
+        public static string AchievementListRetrieved {
+            get {
+                return ResourceManager.GetString("AchievementListRetrieved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на LOGIN.
         /// </summary>
         public static string AuthPage {
@@ -76,6 +94,33 @@ namespace SteamAchievementViewer.Properties {
         public static string ClosestPage {
             get {
                 return ResourceManager.GetString("ClosestPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Enter your Steam ID.
+        /// </summary>
+        public static string EnterSteamID {
+            get {
+                return ResourceManager.GetString("EnterSteamID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to get the game list. Please wait and try again later.
+        /// </summary>
+        public static string GameListFailed {
+            get {
+                return ResourceManager.GetString("GameListFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The game list has been successfully received.
+        /// </summary>
+        public static string GameListRetrieved {
+            get {
+                return ResourceManager.GetString("GameListRetrieved", resourceCulture);
             }
         }
         
@@ -99,12 +144,75 @@ namespace SteamAchievementViewer.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to get profile information. Please wait and try again later.
+        /// </summary>
+        public static string ProfileDataFailed {
+            get {
+                return ResourceManager.GetString("ProfileDataFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Profile data has been successfully retrieved.
+        /// </summary>
+        public static string ProfileDataRetrieved {
+            get {
+                return ResourceManager.GetString("ProfileDataRetrieved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на RAREST
         /// ACHIEVEMENTS.
         /// </summary>
         public static string RarestPage {
             get {
                 return ResourceManager.GetString("RarestPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Results have been saved successfully.
+        /// </summary>
+        public static string ResultSaved {
+            get {
+                return ResourceManager.GetString("ResultSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Saving the results.
+        /// </summary>
+        public static string ResultSaving {
+            get {
+                return ResourceManager.GetString("ResultSaving", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Retrieving the achievement list.
+        /// </summary>
+        public static string RetrievingAchievementList {
+            get {
+                return ResourceManager.GetString("RetrievingAchievementList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Retrieving the game list.
+        /// </summary>
+        public static string RetrievingGameList {
+            get {
+                return ResourceManager.GetString("RetrievingGameList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Retrieving profile data.
+        /// </summary>
+        public static string RetrievingProfileData {
+            get {
+                return ResourceManager.GetString("RetrievingProfileData", resourceCulture);
             }
         }
         

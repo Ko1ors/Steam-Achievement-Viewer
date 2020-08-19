@@ -117,12 +117,27 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AchievementListFailed" xml:space="preserve">
+    <value>Failed to get the achievement list. Please wait and try again later</value>
+  </data>
+  <data name="AchievementListRetrieved" xml:space="preserve">
+    <value>The achievement list has been successfully received</value>
+  </data>
   <data name="AuthPage" xml:space="preserve">
     <value>LOGIN</value>
   </data>
   <data name="ClosestPage" xml:space="preserve">
     <value>CLOSEST
  ACHIEVEMENTS</value>
+  </data>
+  <data name="EnterSteamID" xml:space="preserve">
+    <value>Enter your Steam ID</value>
+  </data>
+  <data name="GameListFailed" xml:space="preserve">
+    <value>Failed to get the game list. Please wait and try again later</value>
+  </data>
+  <data name="GameListRetrieved" xml:space="preserve">
+    <value>The game list has been successfully received</value>
   </data>
   <data name="LastAchievedPage" xml:space="preserve">
     <value>LAST
@@ -131,9 +146,30 @@
   <data name="MainPage" xml:space="preserve">
     <value>MAIN</value>
   </data>
+  <data name="ProfileDataFailed" xml:space="preserve">
+    <value>Failed to get profile information. Please wait and try again later</value>
+  </data>
+  <data name="ProfileDataRetrieved" xml:space="preserve">
+    <value>Profile data has been successfully retrieved</value>
+  </data>
   <data name="RarestPage" xml:space="preserve">
     <value>RAREST
  ACHIEVEMENTS</value>
+  </data>
+  <data name="ResultSaved" xml:space="preserve">
+    <value>Results have been saved successfully</value>
+  </data>
+  <data name="ResultSaving" xml:space="preserve">
+    <value>Saving the results</value>
+  </data>
+  <data name="RetrievingAchievementList" xml:space="preserve">
+    <value>Retrieving the achievement list</value>
+  </data>
+  <data name="RetrievingGameList" xml:space="preserve">
+    <value>Retrieving the game list</value>
+  </data>
+  <data name="RetrievingProfileData" xml:space="preserve">
+    <value>Retrieving profile data</value>
   </data>
   <data name="SettingsPage" xml:space="preserve">
     <value>SETTINGS</value>
