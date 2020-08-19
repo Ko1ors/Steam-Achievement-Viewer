@@ -139,7 +139,7 @@
   <data name="GameListRetrieved" xml:space="preserve">
     <value>Список игр был успешно получен</value>
   </data>
-  <data name="LastAchievedPage1" xml:space="preserve">
+  <data name="LastAchievedPage" xml:space="preserve">
     <value>ПОСЛЕДНИЕ
  ПОЛУЧЕННЫЕ</value>
   </data>
