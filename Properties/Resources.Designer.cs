@@ -88,6 +88,16 @@ namespace SteamAchievementViewer.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на ALL CLOSEST
+        /// ACHIEVEMENTS.
+        /// </summary>
+        public static string ClosestAllPage {
+            get {
+                return ResourceManager.GetString("ClosestAllPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на CLOSEST
         /// ACHIEVEMENTS.
         /// </summary>
