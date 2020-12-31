@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:SteamAchievementViewer.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="350" d:DesignWidth="800"
       Title="LastAchievedPage" Loaded="Page_Loaded">
     <Page.Resources>
         <DataTemplate x:Key="AchievementInfo">
@@ -31,8 +31,8 @@
         </DataTemplate>
     </Page.Resources>
     <Grid x:Name="AchievementsTableList">
-        <Grid Height="600">
-            <ListBox Height="580" x:Name="AchievementTable" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource AchievementInfo}" Background="#FF171A21" />
+        <Grid>
+            <ListBox x:Name="AchievementTable" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource AchievementInfo}" Background="#FF171A21"/>
         </Grid>
     </Grid>
 </Page>
