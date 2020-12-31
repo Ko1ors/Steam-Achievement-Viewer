@@ -290,6 +290,11 @@ namespace SteamAchievementViewer
             return GetAllAchievementsWithGameInfoList().OrderByDescending(e => e.UnlockTime).Where(e => e.Closed == "1").Take(count).ToList();
         }
 
+        public static List<AchievementWithGameInfo> GetClosestAchievements(int count)
+        {
+            return GetAllAchievementsWithGameInfoList().OrderByDescending(e => e.Percent).Where(e => e.Closed == "0").Take(count).ToList();
+        }
+
         public static List<Game> GetIncompleteGames()
         {
             return gamesList.Games.Game.Where(e => e.Achievements.Achievement.Where(e => e.Closed == "0").Count() > 0).ToList();

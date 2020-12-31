@@ -93,7 +93,7 @@
                         <Button Content="{x:Static res:Resources.AuthPage}" Style="{StaticResource MainButtonStyle}" Click="AuthorizationButton_clicked"/>
                         <Button Style="{StaticResource MainButtonStyle}" Click="LastAchievedButton_clicked" Content="{x:Static res:Resources.LastAchievedPage}"/>
                         <Button  Content="{x:Static res:Resources.ClosestPage}" Style="{StaticResource MainButtonStyle}" Click="CloseAchievementButton_clicked"/>
-                        <Button  Content="{x:Static res:Resources.ClosestAllPage}" Style="{StaticResource MainButtonStyle}" Click="CloseAchievementButton_clicked"/>
+                        <Button  Content="{x:Static res:Resources.ClosestAllPage}" Style="{StaticResource MainButtonStyle}" Click="CloseAllAchievementButton_clicked"/>
                         <Button  Content="{x:Static res:Resources.RarestPage}" Style="{StaticResource MainButtonStyle}" Click="RareAchievementButton_clicked" />
                         <Button  Content="{x:Static res:Resources.SettingsPage}" Visibility="Hidden" Style="{StaticResource MainButtonStyle}" Click="SettingsButton_clicked"/>
                     </StackPanel>

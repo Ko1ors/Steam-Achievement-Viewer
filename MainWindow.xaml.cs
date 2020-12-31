@@ -42,8 +42,13 @@ namespace SteamAchievementViewer
 
         private void CloseAchievementButton_clicked(object sender, RoutedEventArgs e)
         {
-
             Information.Content = Manager.GetPageObject<CloseAchievements>();
+        }
+
+        private void CloseAllAchievementButton_clicked(object sender, RoutedEventArgs e)
+        {
+
+            Information.Content = Manager.GetPageObject<CloseAllAchievements>();
         }
 
         private void RareAchievementButton_clicked(object sender, RoutedEventArgs e)
