@@ -134,7 +134,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type RepeatButton}">
-                        <Canvas Height="5">
+                        <Canvas Height="12">
                             <Polygon Fill="#7B8392" Points="12,6 0,0 7,6  0,12"></Polygon>
                         </Canvas>
                     </ControlTemplate>
