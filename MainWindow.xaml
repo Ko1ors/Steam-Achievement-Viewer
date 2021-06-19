@@ -25,7 +25,7 @@
             <Setter Property="Background" Value="#14141f"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Height" Value="auto"/>
-            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Margin" Value="10,5,10,0"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -84,22 +84,42 @@
         <DockPanel LastChildFill="True">
             <Grid Margin="0,20,0,0" x:Name="NavBar" Height="60" DockPanel.Dock="Top" Background="#171A21">
                 <shell:Grid.ColumnDefinitions>
-                    <shell:ColumnDefinition Width="13*"/>
-                    <shell:ColumnDefinition Width="787*"/>
+                    <shell:ColumnDefinition Width="*"/>
+                    <shell:ColumnDefinition Width="70"/>
                 </shell:Grid.ColumnDefinitions>
-                <ScrollViewer Grid.Column="2" MaxWidth="700" Height="auto" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                    <StackPanel Orientation="Horizontal" Height="60">
-                        <Button Content="{x:Static res:Resources.MainPage}" Style="{StaticResource MainButtonStyle}" Click="MainInfoButton_cliked"/>
-                        <Button Content="{x:Static res:Resources.AuthPage}" Style="{StaticResource MainButtonStyle}" Click="AuthorizationButton_clicked"/>
-                        <Button Style="{StaticResource MainButtonStyle}" Click="LastAchievedButton_clicked" Content="{x:Static res:Resources.LastAchievedPage}"/>
-                        <Button  Content="{x:Static res:Resources.ClosestPage}" Style="{StaticResource MainButtonStyle}" Click="CloseAchievementButton_clicked"/>
-                        <Button  Content="{x:Static res:Resources.ClosestAllPage}" Style="{StaticResource MainButtonStyle}" Click="CloseAllAchievementButton_clicked"/>
-                        <Button  Content="{x:Static res:Resources.RarestPage}" Style="{StaticResource MainButtonStyle}" Click="RareAchievementButton_clicked" />
-                        <Button  Content="{x:Static res:Resources.SettingsPage}" Visibility="Hidden" Style="{StaticResource MainButtonStyle}" Click="SettingsButton_clicked"/>
-                    </StackPanel>
-                </ScrollViewer>
-                <Border BorderThickness="5" shell:Grid.ColumnSpan="2"/>
-                <Image x:Name="ProfileAvatar" Stretch="Fill"  Width="50" Height="50" HorizontalAlignment="Left" Margin="727,5,0,5" shell:Grid.Column="1"/>
+
+                <ListView ScrollViewer.VerticalScrollBarVisibility="Disabled" BorderBrush="Transparent" Background="Transparent"  ScrollViewer.HorizontalScrollBarVisibility="Visible">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                        <Border>
+                                            <ContentPresenter/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <Button Content="{x:Static res:Resources.MainPage}" Style="{StaticResource MainButtonStyle}" Click="MainInfoButton_cliked"/>
+                    <Button Content="{x:Static res:Resources.AuthPage}" Style="{StaticResource MainButtonStyle}" Click="AuthorizationButton_clicked"/>
+                    <Button Style="{StaticResource MainButtonStyle}" Click="LastAchievedButton_clicked" Content="{x:Static res:Resources.LastAchievedPage}"/>
+                    <Button  Content="{x:Static res:Resources.ClosestPage}" Style="{StaticResource MainButtonStyle}" Click="CloseAchievementButton_clicked"/>
+                    <Button  Content="{x:Static res:Resources.ClosestAllPage}" Style="{StaticResource MainButtonStyle}" Click="CloseAllAchievementButton_clicked"/>
+                    <Button  Content="{x:Static res:Resources.RarestPage}" Style="{StaticResource MainButtonStyle}" Click="RareAchievementButton_clicked" />
+                    <Button  Content="{x:Static res:Resources.SettingsPage}" IsEnabled="False" Style="{StaticResource MainButtonStyle}" Click="SettingsButton_clicked"/>
+                </ListView>
+
+                <Border Grid.Column="1" BorderThickness="3" BorderBrush="#1B2838" Width="53" Height="53">
+                    <Image  x:Name="ProfileAvatar" Stretch="Fill" HorizontalAlignment="Center"/>
+                </Border>
             </Grid>
             <Grid x:Name="InformationPages" Height="auto" Background="#1B2838" >
                 <Frame x:Name="Information" NavigationUIVisibility="Hidden"/>
