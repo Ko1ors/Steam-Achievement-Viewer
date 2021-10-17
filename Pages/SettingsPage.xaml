@@ -64,36 +64,5 @@
         </Style>
     </Page.Resources>
     <Grid Background="#1B2838">
-        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <Button  Style="{StaticResource MainButtonStyle}">
-                <Button.Content>
-                    <StackPanel>
-                        <Image  Margin="10" Source="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1174180/5106abd9c1187a97f23295a0ba9470c94804ec6c.jpg" Width="40" Height="40" VerticalAlignment="Top" HorizontalAlignment="Center"/>
-                        <TextBlock Text="НАСТРОЙКА" TextWrapping="Wrap" MaxWidth="90"/>
-                    </StackPanel>
-                </Button.Content>
-            </Button>            <Button  Style="{StaticResource MainButtonStyle}">
-                <Button.Content>
-                    <StackPanel>
-                        <Image  Margin="10" Source="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1174180/5106abd9c1187a97f23295a0ba9470c94804ec6c.jpg" Width="40" Height="40" VerticalAlignment="Top" HorizontalAlignment="Center"/>
-                        <TextBlock Text="НАСТРОЙКА" TextWrapping="Wrap" MaxWidth="90"/>
-                    </StackPanel>
-                </Button.Content>
-            </Button>            <Button  Style="{StaticResource MainButtonStyle}">
-                <Button.Content>
-                    <StackPanel>
-                        <Image  Margin="10" Source="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1174180/5106abd9c1187a97f23295a0ba9470c94804ec6c.jpg" Width="40" Height="40" VerticalAlignment="Top" HorizontalAlignment="Center"/>
-                        <TextBlock Text="НАСТРОЙКА" TextWrapping="Wrap" MaxWidth="90"/>
-                    </StackPanel>
-                </Button.Content>
-            </Button>            <Button  Style="{StaticResource MainButtonStyle}">
-                <Button.Content>
-                    <StackPanel>
-                        <Image  Margin="10" Source="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1174180/5106abd9c1187a97f23295a0ba9470c94804ec6c.jpg" Width="40" Height="40" VerticalAlignment="Top" HorizontalAlignment="Center"/>
-                        <TextBlock Text="НАСТРОЙКА" TextWrapping="Wrap" MaxWidth="90"/>
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-        </WrapPanel>
     </Grid>
 </Page>
