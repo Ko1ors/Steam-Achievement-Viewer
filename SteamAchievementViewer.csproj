@@ -6,6 +6,7 @@
     <UseWPF>true</UseWPF>
     <AssemblyName>SteamAchievementViewer</AssemblyName>
     <RootNamespace>SteamAchievementViewer</RootNamespace>
+	<ApplicationIcon>images\icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
