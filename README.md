@@ -18,12 +18,11 @@ Steam achievement viewer (SAV) is an application that helps players to keep trac
 * [Project Status](#project-status)
 * [Room for Improvement](#room-for-improvement)
 * [Acknowledgements](#acknowledgements)
-* [Contact](#contact)
-<!-- * [License](#license) -->
+* [License](#license)
 
 
 ## General Information
-> The application makes it easier to view all player's achievemts by gathering information about achievements for all of Steam library games in one convenient UI.
+The application makes it easier to view all player's achievemts by gathering information about achievements for all of Steam library games in one convenient UI.
 
 
 ## Technologies used
@@ -99,12 +98,5 @@ You can check main issues here: https://github.com/Ko1ors/Steam-Achievement-View
 - Many thanks to store.steampowered.com
 
 
-## Contact
-Created by [@flynerdpl](https://www.flynerd.pl/) - feel free to contact me!
-
-
-<!-- Optional -->
-<!-- ## License -->
-<!-- This project is open source and available under the [... License](). -->
-
-<!-- You don't have to include all sections - just the one's relevant to your project -->
+## License 
+This project is open source and available under the MIT license
