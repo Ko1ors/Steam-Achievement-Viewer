@@ -49,7 +49,7 @@ In order to see all achievements user have to provide a steam id. It can be foun
 >(id is marked by green rectangle)
 >
 
-## Setup (WORK IN PROGRESS)
+## Setup
 > For developers:
 - Install Visual Studio 2022 with .Net Development Pack (SDK)
 - Clone repository
@@ -64,7 +64,7 @@ In order to see all achievements user have to provide a steam id. It can be foun
 - run SteamAchievementViewer.exe
 
 
-## SAV example usage
+## Usage
 
 Once a user has entered steam id, we can see a process of loading all of player's achievements:
 
