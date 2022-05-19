@@ -6,7 +6,7 @@
         xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:res="clr-namespace:SteamAchievementViewer.Properties"
         mc:Ignorable="d" 
-        Title="Steam Achievement Viewer" Height="450" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Loaded="MainInfoButton_cliked">
+        Title="Steam Achievement Viewer" Height="450" Width="800" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome
 
@@ -54,6 +54,18 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Selected}" Value="true">
+                    <Setter Property="Foreground" Value="LightSlateGray" />
+                </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Selected}" Value="false" />
+                        <Condition Binding="{Binding Path=Model.IsNavigationAvailable,  RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Value="false" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Foreground" Value="Gray" />
+                </MultiDataTrigger>
+            </Style.Triggers>
         </Style>
         <Style TargetType="Button" x:Key="FlatButtonStyle">
             <Setter Property="Width" Value="75"/>
@@ -98,7 +110,7 @@
                 <shell:ColumnDefinition Width="70"/>
             </shell:Grid.ColumnDefinitions>
 
-            <ListView Margin="5,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
+            <ListView Margin="5,0,0,0" ScrollViewer.VerticalScrollBarVisibility="Disabled" ItemsSource="{Binding Model.NavigationPages}" d:ItemsSource="{d:SampleData ItemCount=5}" BorderThickness="0" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel Orientation="Horizontal"/>
@@ -117,14 +129,11 @@
                         </Setter>
                     </Style>
                 </ListView.ItemContainerStyle>
-
-                <Button Content="{x:Static res:Resources.MainPage}" Style="{StaticResource MainButtonStyle}" Click="MainInfoButton_cliked"/>
-                <Button Content="{x:Static res:Resources.AuthPage}" Style="{StaticResource MainButtonStyle}" Click="AuthorizationButton_clicked"/>
-                <Button Content="{x:Static res:Resources.LastAchievedPage}" Style="{StaticResource MainButtonStyle}" Click="LastAchievedButton_clicked" />
-                <Button Content="{x:Static res:Resources.ClosestPage}" Style="{StaticResource MainButtonStyle}" Click="CloseAchievementButton_clicked"/>
-                <Button Content="{x:Static res:Resources.ClosestAllPage}" Style="{StaticResource MainButtonStyle}" Click="CloseAllAchievementButton_clicked"/>
-                <Button Content="{x:Static res:Resources.RarestPage}" Style="{StaticResource MainButtonStyle}" Click="RareAchievementButton_clicked" />
-                <!--<Button  Content="{x:Static res:Resources.SettingsPage}" IsEnabled="False" Style="{StaticResource MainButtonStyle}" Click="SettingsButton_clicked"/>-->
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding Title}" Style="{StaticResource MainButtonStyle}" CommandParameter="{Binding}"  Click="Navigation_Click"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
 
             <Border Grid.Column="1" BorderThickness="3" BorderBrush="#1B2838" Width="50" Height="50">
