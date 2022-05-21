@@ -26,7 +26,7 @@ The application makes it easier to view all player's achievemts by gathering inf
 
 
 ## Technologies used
-- .NET Core - version 3.1
+- .NET 6.0
 - WPF
 
 
