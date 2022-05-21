@@ -30,12 +30,12 @@ namespace SteamAchievementViewer
             }
         }
 
-        public static Page GetPageObject<T>() where T : Page, new()
+        public static Page GetPageObject(Type type)
         {
-            if (!pagesDictionary.TryGetValue(typeof(T), out Page page))
+            if (!pagesDictionary.TryGetValue(type, out Page page))
             {
-                page = new T();
-                pagesDictionary.Add(typeof(T), page);
+                page = (Page)Activator.CreateInstance(type);
+                pagesDictionary.Add(type, page);
             }
             return page;
         }

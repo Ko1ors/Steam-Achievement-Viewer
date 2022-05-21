@@ -41,6 +41,7 @@ namespace SteamAchievementViewer.Pages
             if (!GetInformationInProcess)
             {
                 GetInformationInProcess = true;
+                (App.Current.MainWindow as MainWindow).Model.IsNavigationAvailable = false;
                 string steamID = textBoxSteamID.Text;
                 var task = Task.Run(new Action(() =>
                 {
@@ -51,7 +52,7 @@ namespace SteamAchievementViewer.Pages
                     {
                         Dispatcher.BeginInvoke(DispatcherPriority.Background, (SendOrPostCallback)delegate
                         {
-                            (System.Windows.Application.Current.MainWindow as MainWindow).UpdateAvatar(Manager.profile.AvatarFull);
+                            (App.Current.MainWindow as MainWindow).UpdateAvatar(Manager.profile.AvatarFull);
                         }, null);
 
                         UpdateStatusLabel(Properties.Resources.ProfileDataRetrieved);
@@ -59,6 +60,10 @@ namespace SteamAchievementViewer.Pages
                     else
                     {
                         UpdateStatusLabel(Properties.Resources.ProfileDataFailed);
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            (App.Current.MainWindow as MainWindow).Model.IsNavigationAvailable = true;
+                        });
                         return;
                     }
                     Thread.Sleep(1000);
@@ -72,6 +77,10 @@ namespace SteamAchievementViewer.Pages
                     else
                     {
                         UpdateStatusLabel(Properties.Resources.GameListFailed);
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            (App.Current.MainWindow as MainWindow).Model.IsNavigationAvailable = true;
+                        });
                         return;
                     }
 
@@ -98,6 +107,10 @@ namespace SteamAchievementViewer.Pages
                     else
                     {
                         UpdateStatusLabel(Properties.Resources.AchievementListFailed);
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            (App.Current.MainWindow as MainWindow).Model.IsNavigationAvailable = true;
+                        });
                         return;
                     }
                     Thread.Sleep(1000);
@@ -107,7 +120,11 @@ namespace SteamAchievementViewer.Pages
                     Manager.SaveSettingsInfo();
                     Thread.Sleep(1000);
                     UpdateStatusLabel(Properties.Resources.ResultSaved);
-                    
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        (App.Current.MainWindow as MainWindow).Model.IsNavigationAvailable = true;
+                    });
+
                 }));
                 Task.Run(() =>
                 {
