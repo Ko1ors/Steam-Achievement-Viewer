@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace SteamAchievementViewer.Pages
@@ -12,6 +14,19 @@ namespace SteamAchievementViewer.Pages
     /// </summary>
     public partial class AuthPage : Page
     {
+        private string hyperlinkText;
+        public string HyperlinkText
+        {
+            get => hyperlinkText;
+            set
+            {
+                hyperlinkText = value;
+            }
+        }
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("cmd", $"/c start {HyperlinkText}") { CreateNoWindow = true });
+        }
         private bool _giip;
         private bool GetInformationInProcess
         {
@@ -28,6 +43,7 @@ namespace SteamAchievementViewer.Pages
         public AuthPage()
         {
             InitializeComponent();
+            HyperlinkText = "https://github.com/Ko1ors/Steam-Achievement-Viewer/blob/master/README.md#login";
         }
 
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
