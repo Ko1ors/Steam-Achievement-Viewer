@@ -1,5 +1,5 @@
 ﻿using SteamAchievementViewer.Models;
-using SteamAchievementViewer.Pages;
+using SteamAchievementViewer.Services;
 using System;
 using System.Linq;
 using System.Windows;
@@ -13,23 +13,19 @@ namespace SteamAchievementViewer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly INavigationService _navigationService;
+
         public MainWindowModel Model { get; set; }
 
-        public MainWindow()
+        public MainWindow(INavigationService navigationService)
         {
             InitializeComponent();
+            _navigationService = navigationService;
             Model = new MainWindowModel();
-            Model.NavigationPages = new()
-            {
-                new NavigationPageElement{ Type = typeof(MainPageInfo), Title = Properties.Resources.MainPage },
-                new NavigationPageElement{ Type = typeof(AuthPage), Title = Properties.Resources.AuthPage },
-                new NavigationPageElement{ Type = typeof(LastAchievedPage), Title = Properties.Resources.LastAchievedPage },
-                new NavigationPageElement{ Type = typeof(CloseAchievements), Title = Properties.Resources.ClosestPage },
-                new NavigationPageElement{ Type = typeof(CloseAllAchievements), Title = Properties.Resources.ClosestAllPage },
-                new NavigationPageElement{ Type = typeof(RareAchievements), Title = Properties.Resources.RarestPage },
-            };
+            Model.NavigationPages = _navigationService.GetPageElements().ToList();
             Model.IsNavigationAvailable = true;
-            NavigateTo(Model.NavigationPages.First());
+            _navigationService.SetNavigationFrame(Information);
+            _navigationService.NavigateTo(Model.NavigationPages.First());
 
             DataContext = this;
 
@@ -49,15 +45,8 @@ namespace SteamAchievementViewer
             {
                 var button = (Button)sender;
                 var navigationPage = button.CommandParameter as NavigationPageElement;
-                NavigateTo(navigationPage);
+                _navigationService.NavigateTo(navigationPage);
             }
-        }
-
-        private void NavigateTo(NavigationPageElement navigationPage)
-        {
-            Model.NavigationPages.ForEach(np => np.Selected = false);
-            navigationPage.Selected = true;
-            Information.Content = Manager.GetPageObject(navigationPage.Type);
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
