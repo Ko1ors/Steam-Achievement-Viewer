@@ -45,7 +45,7 @@
                 <ListBox x:Name="GameList" Grid.Row="1" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource ShortGameInfo}" Background="#FF171A21" SelectionChanged="GameSelected"/>
             </Grid>
             <Grid x:Name="Achievements">
-                    <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingPanel.ScrollUnit="Pixel" x:Name="AchievementList" ItemTemplate="{StaticResource CloseAchievementList}" Background="#FF171A21"/>
+                    <ListBox HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingPanel.ScrollUnit="Pixel" x:Name="AchievementList" ItemTemplate="{StaticResource CloseAchievementList}" Background="#FF171A21"/>
             </Grid>
         </DockPanel>
     </Grid>
