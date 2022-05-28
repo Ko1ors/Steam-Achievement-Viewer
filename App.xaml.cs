@@ -2,6 +2,7 @@
 using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Pages;
 using SteamAchievementViewer.Services;
+using SteamAchievementViewer.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -29,8 +30,13 @@ namespace SteamAchievementViewer
 
         private void ConfigureServices(IServiceCollection services)
         {
+            // Services
             services.AddSingleton<INavigationService, NavigationService>();
 
+            // ViewModels
+            services.AddScoped<MainWindowViewModel>();
+
+            // Pages
             services.AddTransient<AuthPage>();
             services.AddTransient<CloseAchievements>();
             services.AddTransient<CloseAllAchievements>();
@@ -39,6 +45,7 @@ namespace SteamAchievementViewer
             services.AddTransient<RareAchievements>();
             services.AddTransient<SettingsPage>();
 
+            // Windows
             services.AddSingleton<MainWindow>();       
         }
 

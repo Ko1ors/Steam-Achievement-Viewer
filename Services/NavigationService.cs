@@ -9,7 +9,9 @@ namespace SteamAchievementViewer.Services
     public class NavigationService : INavigationService
     {
         private List<NavigationPageElement> _pageElements;
-        private Frame _frame;
+     
+        public event AvailabilityNotify AvailabilityChanged;
+        public event NavigationNotify NavigationChanged;
 
         public NavigationService()
         {
@@ -19,6 +21,11 @@ namespace SteamAchievementViewer.Services
         public void AddPageElement(NavigationPageElement element)
         {
             _pageElements.Add(element);
+        }
+
+        public void ChangeAvailability(bool isAvailable)
+        {
+            AvailabilityChanged?.Invoke(isAvailable);
         }
 
         public IEnumerable<NavigationPageElement> GetPageElements()
@@ -37,12 +44,7 @@ namespace SteamAchievementViewer.Services
         {
             _pageElements.Where(npe => npe.Selected is true && npe != element).ToList().ForEach(npe => npe.Selected = false);
             element.Selected = true;
-            _frame.Content = App.ServiceProvider.GetService(element.Type);
-        }
-
-        public void SetNavigationFrame(Frame frame)
-        {
-            _frame = frame;
+            NavigationChanged?.Invoke(App.ServiceProvider.GetService(element.Type) as Page);
         }
     }
 }
