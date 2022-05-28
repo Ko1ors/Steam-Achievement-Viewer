@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml;
 
 namespace SteamAchievementViewer
 {
@@ -32,6 +33,7 @@ namespace SteamAchievementViewer
         {
             // Services
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddTransient<IClientService<XmlDocument>, XmlClientService>();
 
             // ViewModels
             services.AddScoped<MainWindowViewModel>();

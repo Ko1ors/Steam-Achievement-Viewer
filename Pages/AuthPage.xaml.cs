@@ -40,19 +40,19 @@ namespace SteamAchievementViewer.Pages
             GetUserInformation();
         }
 
-        private void GetUserInformation()
+        private async Task GetUserInformation()
         {
             if (!GetInformationInProcess)
             {
                 GetInformationInProcess = true;
                 _navigationService.ChangeAvailability(false);
                 string steamID = textBoxSteamID.Text;
-                var task = Task.Run(new Action(() =>
+                var task = Task.Run(new  Action(async () =>
                 {
                     UpdateStatusLabel(Properties.Resources.RetrievingProfileData);
                     Thread.Sleep(1000);
 
-                    if (Manager.GetProfile(steamID))
+                    if (await Manager.GetProfile(steamID))
                     {
                         Dispatcher.BeginInvoke(DispatcherPriority.Background, (SendOrPostCallback)delegate
                         {
@@ -71,7 +71,7 @@ namespace SteamAchievementViewer.Pages
                     UpdateStatusLabel(Properties.Resources.RetrievingGameList);
                     Thread.Sleep(1000);
 
-                    if (Manager.GetGames())
+                    if (await Manager.GetGames())
                     {
                         UpdateStatusLabel(Properties.Resources.GameListRetrieved);
                     }
@@ -98,7 +98,7 @@ namespace SteamAchievementViewer.Pages
                         UpdateProgressBar((Manager.currentGameRetrieve * 100) / Manager.gamesList.Games.Game.Count);
                     }));
 
-                    if (Manager.GetAchievementsParallel())
+                    if (await Manager.GetAchievementsParallel())
                     {
                         UpdateStatusLabel(Properties.Resources.AchievementListRetrieved);
                     }

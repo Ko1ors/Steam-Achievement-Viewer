@@ -1,10 +1,10 @@
 ﻿using SteamAchievementViewer.Models;
+using SteamAchievementViewer.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -12,6 +12,8 @@ namespace SteamAchievementViewer
 {
     public static class Manager
     {
+        private static readonly IClientService<XmlDocument> _xmlClient;
+
         public static Profile profile;
         public static GamesList gamesList;
 
@@ -20,7 +22,10 @@ namespace SteamAchievementViewer
         private static readonly string xmlProfileError = "The specified profile could not be found.";
         private static readonly string directoryPath = AppDomain.CurrentDomain.BaseDirectory + "data\\";
 
-        private static Dictionary<Type, Page> pagesDictionary = new Dictionary<Type, Page>();
+        static Manager()
+        {
+            _xmlClient = App.ServiceProvider.GetService(typeof(IClientService<XmlDocument>)) as IClientService<XmlDocument>;
+        }
 
         public static void Start()
         {
@@ -29,16 +34,6 @@ namespace SteamAchievementViewer
                 LoadProfile(Settings.Default.SteamID);
                 LoadGames();
             }
-        }
-
-        public static Page GetPageObject(Type type)
-        {
-            if (!pagesDictionary.TryGetValue(type, out Page page))
-            {
-                page = (Page)Activator.CreateInstance(type);
-                pagesDictionary.Add(type, page);
-            }
-            return page;
         }
 
         public static void SaveSettingsInfo()
@@ -56,9 +51,9 @@ namespace SteamAchievementViewer
             return profile != null;
         }
 
-        public static bool GetProfile(string steamID)
+        public static async Task<bool> GetProfile(string steamID)
         {
-            var response = GetRequest.XmlRequest("https://steamcommunity.com/profiles/" + steamID + "/?xml=1");
+            var response = await _xmlClient.SendGetRequest("https://steamcommunity.com/profiles/" + steamID + "/?xml=1");
             if (response.InnerText == xmlProfileError)
                 return false;
             XmlSerializer serializer = new XmlSerializer(typeof(Profile));
@@ -94,9 +89,9 @@ namespace SteamAchievementViewer
             }
         }
 
-        public static bool GetGames()
+        public static async Task<bool> GetGames()
         {
-            var response = GetRequest.XmlRequest("https://steamcommunity.com/profiles/" + profile.SteamID64 + "/games?tab=all&xml=1");
+            var response = await _xmlClient.SendGetRequest("https://steamcommunity.com/profiles/" + profile.SteamID64 + "/games?tab=all&xml=1");
             if (response.InnerText == xmlProfileError)
                 return false;
             XmlSerializer serializer = new XmlSerializer(typeof(GamesList));
@@ -143,14 +138,14 @@ namespace SteamAchievementViewer
             }
         }
 
-        public static bool GetAchievements()
+        public static async Task<bool> GetAchievements()
         {
             currentGameRetrieve = 0;
             XmlSerializer serializer = new XmlSerializer(typeof(Achievements));
             foreach (Game game in gamesList.Games.Game)
             {
                 currentGameRetrieve++;
-                var response = GetRequest.XmlRequest(game.StatsLink + "/?xml=1");
+                var response = await _xmlClient.SendGetRequest(game.StatsLink + "/?xml=1");
                 if (response.InnerText == xmlProfileError || response.InnerText == "")
                     continue;
                 using (XmlReader reader = new XmlNodeReader(response))
@@ -160,7 +155,7 @@ namespace SteamAchievementViewer
                 }
                 if (game.Achievements == null)
                     continue;
-                Achievements achievements = GetGlobalAchievementPercentages(game.AppID);
+                Achievements achievements = await GetGlobalAchievementPercentages(game.AppID);
                 if (achievements != null)
                 {
                     foreach (Achievement achievement in game.Achievements.Achievement)
@@ -178,13 +173,13 @@ namespace SteamAchievementViewer
             return true;
         }
 
-        public static bool GetAchievementsParallel()
+        public static async Task<bool> GetAchievementsParallel()
         {
             currentGameRetrieve = 0;
-            Parallel.ForEach(gamesList.Games.Game, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 }, game =>
+            Parallel.ForEach(gamesList.Games.Game, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 }, async game =>
            {
                currentGameRetrieve++;
-               var response = GetRequest.XmlRequest(game.StatsLink + "/?xml=1");
+               var response = await _xmlClient.SendGetRequest(game.StatsLink + "/?xml=1");
                if (response.InnerText == xmlProfileError || response.InnerText == "")
                    return;
                using (XmlReader reader = new XmlNodeReader(response))
@@ -200,7 +195,7 @@ namespace SteamAchievementViewer
                }
                if (game.Achievements == null)
                    return;
-               Achievements achievements = GetGlobalAchievementPercentages(game.AppID);
+               Achievements achievements = await GetGlobalAchievementPercentages(game.AppID);
                if (achievements != null)
                {
                    foreach (Achievement achievement in game.Achievements.Achievement)
@@ -217,10 +212,10 @@ namespace SteamAchievementViewer
             return true;
         }
 
-        public static Achievements GetGlobalAchievementPercentages(string appid)
+        public static async Task<Achievements> GetGlobalAchievementPercentages(string appid)
         {
             Achievements achievements = null;
-            var response = GetRequest.XmlRequest("https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid=" + appid + "&format=xml");
+            var response = await _xmlClient.SendGetRequest("https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid=" + appid + "&format=xml");
             using (XmlReader reader = new XmlNodeReader(response))
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(Achievements));
@@ -229,7 +224,7 @@ namespace SteamAchievementViewer
             }
             return achievements;
         }
-        
+
         public static int GetTotalAchievementsCount()
         {
             int count = 0;
