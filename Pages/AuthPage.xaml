@@ -12,14 +12,13 @@
     <Grid Background="#1B2838">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="24" Foreground="White" FontFamily="Arial Black">
-                    <Hyperlink TextDecorations="{x:Null}" Click="Hyperlink_Click">
-                        <TextBlock Text="{Binding HyperlinkText, FallbackValue={x:Static res:Resources.EnterSteamID}}"/>
-                    </Hyperlink>
-                </TextBlock>
+                <WrapPanel>
+                    <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="{x:Static res:Resources.EnterSteamID}" FontSize="24" Foreground="White" FontFamily="Arial Black"/>
+                    <Button Content="?" x:Name="EnterButton" FontSize="16"  Style="{StaticResource TooltipButtonStyle}" Click="Hyperlink_Click" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+                </WrapPanel>
                 <StackPanel Height="60" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
                     <TextBox FontSize="20" VerticalContentAlignment="Center"  x:Name="textBoxSteamID" Height="40" BorderBrush="White" BorderThickness="2" Width="400" Background="#FF1B2838" FontFamily="Arial Black" Foreground="White"/>
-                    <Button Content="Enter" x:Name="EnterButton" FontSize="16"  Style="{StaticResource OverButtonStyle}" Click="ButtonEnter_Click"/>
+                    <Button Content="Enter" x:Name="ToolTipButton" FontSize="16"  Style="{StaticResource OverButtonStyle}" Click="ButtonEnter_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel>

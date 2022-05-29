@@ -23,10 +23,7 @@ namespace SteamAchievementViewer.Pages
                 hyperlinkText = value;
             }
         }
-        private void Hyperlink_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start(new ProcessStartInfo("cmd", $"/c start {HyperlinkText}") { CreateNoWindow = true });
-        }
+
         private bool _giip;
         private bool GetInformationInProcess
         {
@@ -45,7 +42,10 @@ namespace SteamAchievementViewer.Pages
             InitializeComponent();
             HyperlinkText = "https://github.com/Ko1ors/Steam-Achievement-Viewer/blob/master/README.md#login";
         }
-
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("cmd", $"/c start {HyperlinkText}") { CreateNoWindow = true });
+        }
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
         {
             UpdateProgressBar(0);
