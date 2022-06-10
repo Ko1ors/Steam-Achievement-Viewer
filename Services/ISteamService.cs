@@ -25,5 +25,15 @@ namespace SteamAchievementViewer.Services
         Task<bool> GetAchievementsParallelAsync(List<Game> games);
 
         Task<Achievements> GetGlobalAchievementPercentagesAsync(string appid);
+
+        void SaveGames();
+
+        void SaveProfile();
+
+        void LoadGames();
+
+        void LoadProfile(string steamID);
+
+        void SaveSettingsInfo();
     }
 }

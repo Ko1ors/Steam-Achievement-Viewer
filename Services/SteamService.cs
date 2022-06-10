@@ -70,7 +70,7 @@ namespace SteamAchievementViewer.Services
             SaveGames();
             return true;
         }
-        
+
         public async Task<bool> GetAchievementsParallelAsync(List<Game> games)
         {
             int gameRetrieved = 0;
@@ -114,7 +114,6 @@ namespace SteamAchievementViewer.Services
             });
             OnAchievementProgressUpdated?.Invoke(GamesList.Games.Game.Count, GamesList.Games.Game.Count, GamesList.Games.Game.Last().Name);
             GamesList.Games.Game.RemoveAll(e => e.Achievements == null);
-            SaveGames();
             return true;
         }
 
@@ -173,13 +172,54 @@ namespace SteamAchievementViewer.Services
             return Profile != null;
         }
 
-        private void SaveGames()
+        public void SaveGames()
         {
             if (!Directory.Exists(DirectoryPath + Profile.SteamID64))
                 Directory.CreateDirectory(DirectoryPath + Profile.SteamID64);
             XmlSerializer serializer = new XmlSerializer(typeof(GamesList));
             FileStream file = File.Create(DirectoryPath + Profile.SteamID64 + "\\gameslist.xml");
             serializer.Serialize(file, GamesList);
+        }
+        
+        public void SaveProfile()
+        {
+            if (!Directory.Exists(DirectoryPath + Profile.SteamID64))
+                Directory.CreateDirectory(DirectoryPath + Profile.SteamID64);
+            XmlSerializer serializer = new XmlSerializer(typeof(Profile));
+            FileStream file = File.Create(DirectoryPath + Profile.SteamID64 + "\\profile.xml");
+            serializer.Serialize(file, Profile);
+        }
+
+        public void LoadGames()
+        {
+            if (File.Exists(DirectoryPath + Profile?.SteamID64 + "\\gameslist.xml"))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(GamesList));
+                StreamReader file = new StreamReader(DirectoryPath + Profile.SteamID64 + "\\gameslist.xml");
+                GamesList = (GamesList)serializer.Deserialize(file);
+                file.Close();
+            }
+        }
+
+        public void LoadProfile(string steamID)
+        {
+            if (File.Exists(DirectoryPath + steamID + "\\profile.xml"))
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(Profile));
+                StreamReader file = new StreamReader(DirectoryPath + steamID + "\\profile.xml");
+                Profile = (Profile)serializer.Deserialize(file);
+                file.Close();
+            }
+        }
+
+        public void SaveSettingsInfo()
+        {
+            if (Profile != null)
+            {
+                Settings.Default.SteamID = Profile.SteamID64;
+                Settings.Default.LastUpdate = DateTime.Now;
+                Settings.Default.Save();
+            }
         }
     }
 }
