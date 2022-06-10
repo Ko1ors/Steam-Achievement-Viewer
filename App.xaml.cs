@@ -35,6 +35,7 @@ namespace SteamAchievementViewer
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddTransient<IClientService<XmlDocument>, XmlClientService>();
             services.AddSingleton<ISteamService, SteamService>();
+            services.AddTransient<IGameAchievementsService, GameAchievementsService>();
 
             // ViewModels
             services.AddScoped<MainWindowViewModel>();

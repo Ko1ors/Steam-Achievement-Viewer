@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SteamAchievementViewer.Models;
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
@@ -44,21 +45,23 @@ namespace SteamAchievementViewer
             }
         }
     }
-    public class AchievementWithGameInfo : Achievement
+    public class AchievementGameInfo : Achievement
     {
         public string GameName { get; set; }
         public string GameIcon { get; set; }
 
-        public AchievementWithGameInfo(Achievement a)
+        public AchievementGameInfo(Achievement achievement, Game game)
         {
-            IconClosed = a.IconClosed;
-            IconOpen = a.IconOpen;
-            Name = a.Name;
-            Apiname = a.Apiname;
-            Description = a.Description;
-            UnlockTime = a.UnlockTime;
-            Closed = a.Closed;
-            Percent = a.Percent;
+            IconClosed = achievement.IconClosed;
+            IconOpen = achievement.IconOpen;
+            Name = achievement.Name;
+            Apiname = achievement.Apiname;
+            Description = achievement.Description;
+            UnlockTime = achievement.UnlockTime;
+            Closed = achievement.Closed;
+            Percent = achievement.Percent;
+            GameName = game.Name;
+            GameIcon = game.GameIcon;
         }
     }
 }
