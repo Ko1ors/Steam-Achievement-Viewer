@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using SteamAchievementViewer.Services;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SteamAchievementViewer.Pages
 {
@@ -18,33 +9,44 @@ namespace SteamAchievementViewer.Pages
     /// </summary>
     public partial class MainPageInfo : Page
     {
-        public MainPageInfo()
+        private readonly ISteamService _steamService;
+        private readonly IGameAchievementsService _gameAchievementsService;
+
+        public MainPageInfo(ISteamService steamService, IGameAchievementsService gameAchievementsService)
         {
             InitializeComponent();
+            _steamService = steamService;
+            _gameAchievementsService = gameAchievementsService;
         }
+
         public void UpdateProfileName(string Name)
         {
             ProfileName.Text = Name;
         }
+
         public void UpdateGameCount(int GameCount)
         {
             GamesCount.Text = GameCount.ToString();
         }
-        public void  UpdateAchievementCount(int Achievements)
+
+        public void UpdateAchievementCount(int Achievements)
         {
             AchievementCount.Text = Achievements.ToString();
         }
+
         public void UpdateAchieved(int Achieved)
         {
             AchievementAchieved.Text = Achieved.ToString();
             AchievementAchieved.Text += "/";
             AchievementAchieved.Text += AchievementCount.Text;
         }
+
         public void UpdateAchievementStatistics(int Achieved)
         {
             AchievementStatistics.Text = Achieved.ToString();
             AchievementStatistics.Text += "/100%";
         }
+
         private void UpdateProgressBar(int Progress)
         {
             AchievementProgressCircle.Value = Progress;
@@ -52,15 +54,15 @@ namespace SteamAchievementViewer.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (Manager.IsLogged())
+            if (_steamService.IsLogged())
             {
                 infoStackPanel.Visibility = Visibility.Visible;
-                UpdateProfileName(Manager.profile.SteamID);
-                UpdateGameCount(Manager.gamesList.Games.Game.Count);
-                UpdateAchievementCount(Manager.GetTotalAchievementsCount());
-                UpdateAchieved(Manager.GetCompletedAchievementsCount());
-                UpdateAchievementStatistics((Manager.GetCompletedAchievementsCount() * 100) / Manager.GetTotalAchievementsCount());
-                UpdateProgressBar((Manager.GetCompletedAchievementsCount() * 100) / Manager.GetTotalAchievementsCount());
+                UpdateProfileName(_steamService.Profile.SteamID);
+                UpdateGameCount(_steamService.GamesList.Games.Game.Count);
+                UpdateAchievementCount(_gameAchievementsService.GetTotalAchievementsCount());
+                UpdateAchieved(_gameAchievementsService.GetCompletedAchievementsCount());
+                UpdateAchievementStatistics(_gameAchievementsService.GetCompletedAchievementsCount() * 100 / _gameAchievementsService.GetTotalAchievementsCount());
+                UpdateProgressBar(_gameAchievementsService.GetCompletedAchievementsCount() * 100 / _gameAchievementsService.GetTotalAchievementsCount());
             }
             else
                 infoStackPanel.Visibility = Visibility.Collapsed;

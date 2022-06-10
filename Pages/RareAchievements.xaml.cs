@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
+﻿using SteamAchievementViewer.Services;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SteamAchievementViewer.Pages
 {
@@ -19,15 +9,20 @@ namespace SteamAchievementViewer.Pages
     /// </summary>
     public partial class RareAchievements : Page
     {
-        public RareAchievements()
+        private readonly ISteamService _steamService;
+        private readonly IGameAchievementsService _gameAchievementsService;
+
+        public RareAchievements(ISteamService steamService, IGameAchievementsService gameAchievementsService)
         {
-            InitializeComponent(); 
+            InitializeComponent();
+            _steamService = steamService;
+            _gameAchievementsService = gameAchievementsService;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if(Manager.IsLogged())
-                AchievementTable.ItemsSource = Manager.GetRarestAchievementsWithGameInfo(100);
+            if (_steamService.IsLogged())
+                AchievementTable.ItemsSource = _gameAchievementsService.GetRarestAchievements();
         }
     }
 }

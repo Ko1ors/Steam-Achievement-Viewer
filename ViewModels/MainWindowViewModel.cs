@@ -9,6 +9,7 @@ namespace SteamAchievementViewer.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private readonly INavigationService _navigationService;
+        private readonly ISteamService _steamService;
 
         public MainWindowModel Model { get; set; }
 
@@ -26,9 +27,11 @@ namespace SteamAchievementViewer.ViewModels
 
         public RelayCommand NavigationCommand { get; set; }
 
-        public MainWindowViewModel(INavigationService navigationService)
+        public MainWindowViewModel(INavigationService navigationService, ISteamService steamService)
         {
             _navigationService = navigationService;
+            _steamService = steamService;
+            
             _navigationService.AvailabilityChanged += NavigationService_AvailabilityChanged;
             _navigationService.NavigationChanged += NavigationService_NavigationChanged;
 
@@ -39,6 +42,8 @@ namespace SteamAchievementViewer.ViewModels
                 NavigationPages = _navigationService.GetPageElements().ToList(),
                 IsNavigationAvailable = true
             };
+
+            _steamService.Start();
             _navigationService.NavigateTo(Model.NavigationPages.Skip(1).First());
         }
 

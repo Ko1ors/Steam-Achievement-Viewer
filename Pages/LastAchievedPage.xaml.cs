@@ -1,8 +1,5 @@
-﻿
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using SteamAchievementViewer.Services;
 using System.Windows.Controls;
-
 
 namespace SteamAchievementViewer.Pages
 {
@@ -11,17 +8,20 @@ namespace SteamAchievementViewer.Pages
     /// </summary>
     public partial class LastAchievedPage : Page
     {
-        public LastAchievedPage()
+        private readonly ISteamService _steamService;
+        private readonly IGameAchievementsService _gameAchievementsService;
+
+        public LastAchievedPage(ISteamService steamService, IGameAchievementsService gameAchievementsService)
         {
             InitializeComponent();
-            
+            _steamService = steamService;
+            _gameAchievementsService = gameAchievementsService;
         }
 
         private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            if(Manager.IsLogged())
-                AchievementTable.ItemsSource = Manager.GetLatestAchievements(100);
+            if (_steamService.IsLogged())
+                AchievementTable.ItemsSource = _gameAchievementsService.GetLatestAchievements();
         }
     }
 }
- 

@@ -29,6 +29,17 @@ namespace SteamAchievementViewer.Services
             _xmlClient = xmlClient;
         }
 
+        public bool Start()
+        {
+            if (Settings.Default.SteamID == "-1")
+                return false;
+            
+            LoadProfile(Settings.Default.SteamID);
+            LoadGames();
+            
+            return true;
+        }
+
         public async Task<bool> GetAchievementsAsync(List<Game> games)
         {
             int gameRetrieved = 0;
@@ -180,7 +191,7 @@ namespace SteamAchievementViewer.Services
             FileStream file = File.Create(DirectoryPath + Profile.SteamID64 + "\\gameslist.xml");
             serializer.Serialize(file, GamesList);
         }
-        
+
         public void SaveProfile()
         {
             if (!Directory.Exists(DirectoryPath + Profile.SteamID64))

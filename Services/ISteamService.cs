@@ -14,6 +14,8 @@ namespace SteamAchievementViewer.Services
 
         public GamesList GamesList { get; }
 
+        bool Start();
+
         bool IsLogged();
 
         Task<bool> GetProfileAsync(string steamID);
@@ -35,5 +37,6 @@ namespace SteamAchievementViewer.Services
         void LoadProfile(string steamID);
 
         void SaveSettingsInfo();
+
     }
 }

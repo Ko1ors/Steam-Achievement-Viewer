@@ -1,10 +1,7 @@
-﻿using SteamAchievementViewer.Models;
-using SteamAchievementViewer.Services;
+﻿using SteamAchievementViewer.Services;
 using SteamAchievementViewer.ViewModels;
 using System;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
 namespace SteamAchievementViewer
@@ -15,14 +12,14 @@ namespace SteamAchievementViewer
     public partial class MainWindow : Window
     {
 
-        public MainWindow(MainWindowViewModel viewModel)
+        public MainWindow(MainWindowViewModel viewModel, ISteamService steamService)
         {
             InitializeComponent();
             DataContext = viewModel;
 
-            Manager.Start();
-            if (Manager.profile != null)
-                UpdateAvatar(Manager.profile.AvatarFull);
+            // TODO: move update avatar logic into view model
+            if (steamService.Profile != null)
+                UpdateAvatar(steamService.Profile.AvatarFull);
         }
 
         public void UpdateAvatar(string IconPath)
