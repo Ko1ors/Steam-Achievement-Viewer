@@ -1,8 +1,11 @@
 ﻿using SteamAchievementViewer.Services;
+﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace SteamAchievementViewer.Pages
@@ -13,6 +16,17 @@ namespace SteamAchievementViewer.Pages
         private ISteamService _steamService;
 
         private bool _getInformationInProcess;
+        private string hyperlinkText;
+        public string HyperlinkText
+        {
+            get => hyperlinkText;
+            set
+            {
+                hyperlinkText = value;
+            }
+        }
+
+        private bool _giip;
         private bool GetInformationInProcess
         {
             get => _getInformationInProcess;
@@ -32,6 +46,7 @@ namespace SteamAchievementViewer.Pages
             _navigationService = navigationService;
             _steamService = steamService;
             _steamService.OnAchievementProgressUpdated += _steamService_OnAchievementProgressUpdated;
+            HyperlinkText = "https://github.com/Ko1ors/Steam-Achievement-Viewer/blob/master/README.md#login";
         }
 
         private void _steamService_OnAchievementProgressUpdated(int totalGames, int currentGameCount, string lastGameName)
@@ -39,8 +54,13 @@ namespace SteamAchievementViewer.Pages
 
             UpdateStatusLabel(Properties.Resources.RetrievingAchievementList + " " + currentGameCount + "/" + totalGames + "\t" + lastGameName);
             UpdateProgressBar((currentGameCount * 100) / totalGames);
+  
         }
-
+        
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("cmd", $"/c start {HyperlinkText}") { CreateNoWindow = true });
+        }
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
         {
             _ = GetUserInformationAsync();
