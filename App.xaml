@@ -30,7 +30,32 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+        <Style TargetType="Button" x:Key="TooltipButtonStyle">
+            <Setter Property="Background" Value="#14141f"/>
+            <Setter Property="FontFamily" Value="Arial Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Height" Value="auto"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Border x:Name="NavButton" CornerRadius="360" BorderBrush="Gray" BorderThickness="2" Height="20" Width="20"/>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="NavButton" Property="BorderBrush" Value="White"/>
+                                <Setter TargetName="NavButton" Property="Background" Value="#FF4C4C4C"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="NavButton" Property="Background" Value="#232423"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="ScrollBarLineButtonStyle" TargetType="{x:Type RepeatButton}">
             <Setter Property="Focusable" Value="False"/>
             <Setter Property="Template">

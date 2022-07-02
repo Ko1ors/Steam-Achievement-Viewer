@@ -63,4 +63,8 @@
     <Folder Include="images\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SDK.Expression.Blend" Version="1.0.0" />
+  </ItemGroup>
+
 </Project>
