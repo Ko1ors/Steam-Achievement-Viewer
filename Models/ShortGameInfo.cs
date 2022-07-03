@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SteamAchievementViewer
+﻿namespace SteamAchievementViewer.Models
 {
     public class ShortGameInfo
     {

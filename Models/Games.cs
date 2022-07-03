@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace SteamAchievementViewer
+namespace SteamAchievementViewer.Models
 {
 
     [XmlRoot(ElementName = "gamesList")]

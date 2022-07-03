@@ -1,3 +1,4 @@
+﻿using SteamAchievementViewer.Services;
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
@@ -9,11 +10,12 @@ using System.Windows.Threading;
 
 namespace SteamAchievementViewer.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для MainPage.xaml
-    /// </summary>
     public partial class AuthPage : Page
     {
+        private INavigationService _navigationService;
+        private ISteamService _steamService;
+
+        private bool _getInformationInProcess;
         private string hyperlinkText;
         public string HyperlinkText
         {
@@ -27,48 +29,61 @@ namespace SteamAchievementViewer.Pages
         private bool _giip;
         private bool GetInformationInProcess
         {
-            get => _giip;
+            get => _getInformationInProcess;
             set
             {
-                _giip = value;
+                _getInformationInProcess = value;
                 if (value)
                     EnableEnterButton(false);
                 else
                     EnableEnterButton(true);
             }
         }
-        public AuthPage()
+        
+        public AuthPage(INavigationService navigationService, ISteamService steamService)
         {
             InitializeComponent();
+            _navigationService = navigationService;
+            _steamService = steamService;
+            _steamService.OnAchievementProgressUpdated += _steamService_OnAchievementProgressUpdated;
             HyperlinkText = "https://github.com/Ko1ors/Steam-Achievement-Viewer/blob/master/README.md#login";
         }
+
+        private void _steamService_OnAchievementProgressUpdated(int totalGames, int currentGameCount, string lastGameName)
+        {
+
+            UpdateStatusLabel(Properties.Resources.RetrievingAchievementList + " " + currentGameCount + "/" + totalGames + "\t" + lastGameName);
+            UpdateProgressBar((currentGameCount * 100) / totalGames);
+  
+        }
+        
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(new ProcessStartInfo("cmd", $"/c start {HyperlinkText}") { CreateNoWindow = true });
         }
         private void ButtonEnter_Click(object sender, RoutedEventArgs e)
         {
-            UpdateProgressBar(0);
-            GetUserInformation();
+            _ = GetUserInformationAsync();
         }
 
-        private void GetUserInformation()
+        private async Task GetUserInformationAsync()
         {
             if (!GetInformationInProcess)
             {
+                UpdateProgressBar(0);
                 GetInformationInProcess = true;
-                (App.Current.MainWindow as MainWindow).Model.IsNavigationAvailable = false;
+                _navigationService.ChangeAvailability(false);
                 string steamID = textBoxSteamID.Text;
-                var task = Task.Run(new Action(() =>
+                await Task.Run(async () =>
                 {
                     UpdateStatusLabel(Properties.Resources.RetrievingProfileData);
                     Thread.Sleep(1000);
 
-                    if (Manager.GetProfile(steamID))
+                    if (await _steamService.GetProfileAsync(steamID))
                     {
-                        Dispatcher.BeginInvoke(DispatcherPriority.Background, (SendOrPostCallback)delegate
+                        _ = Dispatcher.BeginInvoke(DispatcherPriority.Background, (SendOrPostCallback)delegate
                         {
-                            (App.Current.MainWindow as MainWindow).UpdateAvatar(Manager.profile.AvatarFull);
+                            (Application.Current.MainWindow as MainWindow).UpdateAvatar(_steamService.Profile.AvatarFull);
                         }, null);
 
                         UpdateStatusLabel(Properties.Resources.ProfileDataRetrieved);
@@ -76,79 +91,53 @@ namespace SteamAchievementViewer.Pages
                     else
                     {
                         UpdateStatusLabel(Properties.Resources.ProfileDataFailed);
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            (App.Current.MainWindow as MainWindow).Model.IsNavigationAvailable = true;
-                        });
                         return;
                     }
+
                     Thread.Sleep(1000);
                     UpdateStatusLabel(Properties.Resources.RetrievingGameList);
                     Thread.Sleep(1000);
 
-                    if (Manager.GetGames())
+                    if (await _steamService.GetGamesAsync(steamID))
                     {
                         UpdateStatusLabel(Properties.Resources.GameListRetrieved);
                     }
                     else
                     {
                         UpdateStatusLabel(Properties.Resources.GameListFailed);
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            (App.Current.MainWindow as MainWindow).Model.IsNavigationAvailable = true;
-                        });
+                        _navigationService.ChangeAvailability(true);
                         return;
                     }
 
                     Thread.Sleep(1000);
                     UpdateStatusLabel(Properties.Resources.RetrievingAchievementList);
 
-                    Task.Run(new Action(() =>
-                    {
-                        while (Manager.currentGameRetrieve < Manager.gamesList.Games.Game.Count)
-                        {
-                            UpdateStatusLabel(Properties.Resources.RetrievingAchievementList + " " +
-                                + Manager.currentGameRetrieve + "/" + Manager.gamesList.Games.Game.Count
-                                + "\t" + Manager.gamesList.Games.Game[Manager.currentGameRetrieve].Name);
-                            UpdateProgressBar((Manager.currentGameRetrieve * 100) / Manager.gamesList.Games.Game.Count);
-                            Thread.Sleep(1000);
-                        }
-                        UpdateProgressBar((Manager.currentGameRetrieve * 100) / Manager.gamesList.Games.Game.Count);
-                    }));
-
-                    if (Manager.GetAchievementsParallel())
+                    if (await _steamService.GetAchievementsParallelAsync(_steamService.GamesList.Games.Game))
                     {
                         UpdateStatusLabel(Properties.Resources.AchievementListRetrieved);
                     }
                     else
                     {
                         UpdateStatusLabel(Properties.Resources.AchievementListFailed);
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            (App.Current.MainWindow as MainWindow).Model.IsNavigationAvailable = true;
-                        });
                         return;
                     }
+
                     Thread.Sleep(1000);
                     UpdateStatusLabel(Properties.Resources.ResultSaving);
-                    Manager.SaveProfile();
-                    Manager.SaveGames();
-                    Manager.SaveSettingsInfo();
+
+                    _steamService.SaveProfile();
+                    _steamService.SaveGames();
+                    _steamService.SaveSettingsInfo();
+
                     Thread.Sleep(1000);
                     UpdateStatusLabel(Properties.Resources.ResultSaved);
-                    this.Dispatcher.Invoke(() =>
-                    {
-                        (App.Current.MainWindow as MainWindow).Model.IsNavigationAvailable = true;
-                    });
-
-                }));
-                Task.Run(() =>
-                {
-                    task.Wait();
-                    GetInformationInProcess = false;
                 });
+
+                _navigationService.ChangeAvailability(true);
+                GetInformationInProcess = false;
             }
         }
+
         private void UpdateProgressBar(int Progress)
         {
             Dispatcher.BeginInvoke(DispatcherPriority.Background, (SendOrPostCallback)delegate
