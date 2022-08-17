@@ -19,6 +19,8 @@ namespace SteamAchievementViewer.Services
 
         public event AchievementProgressUpdatedDelegate OnAchievementProgressUpdated;
 
+        public event AvatarUpdatedDelegate OnAvatarUpdated;
+
         public Profile Profile { get; private set; }
 
         public GamesList GamesList { get; private set; }
@@ -175,6 +177,7 @@ namespace SteamAchievementViewer.Services
                 Profile = null;
                 return false;
             }
+            OnAvatarUpdated?.Invoke(Profile.AvatarFull);
             return true;
         }
 

@@ -6,9 +6,13 @@ namespace SteamAchievementViewer.Services
 {
     public delegate void AchievementProgressUpdatedDelegate(int totalGames, int currentGameCount, string lastGameName);
 
+    public delegate void AvatarUpdatedDelegate(string avatarUrl);
+
     public interface ISteamService
     {
         public event AchievementProgressUpdatedDelegate OnAchievementProgressUpdated;
+        
+        public event AvatarUpdatedDelegate OnAvatarUpdated;
 
         public Profile Profile { get; }
 

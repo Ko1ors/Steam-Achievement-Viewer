@@ -141,7 +141,7 @@
                 </ListView>
 
                 <Border Grid.Column="1" BorderThickness="3" BorderBrush="#1B2838" Width="50" Height="50">
-                    <Image x:Name="ProfileAvatar" Stretch="Fill" HorizontalAlignment="Center"/>
+                    <Image Source="{Binding AvatarSource}" Stretch="Fill" HorizontalAlignment="Center"/>
                 </Border>
             </Grid>
 

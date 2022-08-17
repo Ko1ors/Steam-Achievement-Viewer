@@ -1,8 +1,10 @@
 ﻿using SteamAchievementViewer.Commands;
 using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Services;
+using System;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace SteamAchievementViewer.ViewModels
 {
@@ -11,9 +13,10 @@ namespace SteamAchievementViewer.ViewModels
         private readonly INavigationService _navigationService;
         private readonly ISteamService _steamService;
 
-        public MainWindowModel Model { get; set; }
-
         private Page _currentPage;
+        private BitmapImage _avatarSource;
+
+        public MainWindowModel Model { get; set; }
 
         public Page CurrentPage
         {
@@ -22,6 +25,16 @@ namespace SteamAchievementViewer.ViewModels
             {
                 _currentPage = value;
                 OnPropertyChanged(nameof(CurrentPage));
+            }
+        }
+
+        public BitmapImage AvatarSource
+        {
+            get { return _avatarSource; }
+            set
+            {
+                _avatarSource = value;
+                OnPropertyChanged(nameof(AvatarSource));
             }
         }
 
@@ -35,6 +48,8 @@ namespace SteamAchievementViewer.ViewModels
             _navigationService.AvailabilityChanged += NavigationService_AvailabilityChanged;
             _navigationService.NavigationChanged += NavigationService_NavigationChanged;
 
+            _steamService.OnAvatarUpdated += SteamServiceOnAvatarUpdated;
+
             NavigationCommand = new RelayCommand((obj) => Navigate(obj as NavigationPageElement), (obj) => CanNavigate());
 
             Model = new MainWindowModel
@@ -44,7 +59,21 @@ namespace SteamAchievementViewer.ViewModels
             };
 
             _steamService.Start();
+
+            if (steamService.Profile != null)
+                UpdateAvatar(steamService.Profile.AvatarFull);
+            
             _navigationService.NavigateTo(Model.NavigationPages.Skip(1).First());
+        }
+
+        private void SteamServiceOnAvatarUpdated(string avatarUrl)
+        {
+            UpdateAvatar(avatarUrl);
+        }
+
+        private void UpdateAvatar(string avatarUrl)
+        {
+            AvatarSource = new BitmapImage(new Uri(avatarUrl));
         }
 
         private void NavigationService_NavigationChanged(Page page)
