@@ -4,8 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:res="clr-namespace:SteamAchievementViewer.Properties"
-      xmlns:local="clr-namespace:SteamAchievementViewer.Pages"
-      xmlns:AchievementTest="clr-namespace:SteamAchievementViewer" x:Class="SteamAchievementViewer.Pages.AuthPage"
+      xmlns:AchievementTest="clr-namespace:SteamAchievementViewer" xmlns:viewmodels="clr-namespace:SteamAchievementViewer.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:AuthPageViewModel}" x:Class="SteamAchievementViewer.Pages.AuthPage"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage">
@@ -14,16 +13,16 @@
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <WrapPanel>
                     <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Text="{x:Static res:Resources.EnterSteamID}" FontSize="24" Foreground="White" FontFamily="Arial Black"/>
-                    <Button Content="?" x:Name="EnterButton" FontSize="16"  Style="{StaticResource TooltipButtonStyle}" Click="Hyperlink_Click" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
+                    <Button Content="?" FontSize="16"  Style="{StaticResource TooltipButtonStyle}" Command="{Binding HyperlinkCommand}" HorizontalAlignment="Stretch" Margin="5,0,0,0"/>
                 </WrapPanel>
                 <StackPanel Height="60" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
-                    <TextBox FontSize="20" VerticalContentAlignment="Center"  x:Name="textBoxSteamID" Height="40" BorderBrush="White" BorderThickness="2" Width="400" Background="#FF1B2838" FontFamily="Arial Black" Foreground="White"/>
-                    <Button Content="Enter" x:Name="ToolTipButton" FontSize="16"  Style="{StaticResource OverButtonStyle}" Click="ButtonEnter_Click" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <TextBox FontSize="20" VerticalContentAlignment="Center" Text="{Binding SteamId, UpdateSourceTrigger=PropertyChanged}" Height="40" BorderBrush="White" BorderThickness="2" Width="400" Background="#FF1B2838" FontFamily="Arial Black" Foreground="White"/>
+                    <Button Content="Enter" FontSize="16"  Style="{StaticResource OverButtonStyle}" Command="{Binding AuthCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel>
-                <Label HorizontalAlignment="Center" x:Name="statusLabel" FontSize="15" FontFamily="Arial Black" Foreground="White" HorizontalContentAlignment="Center" MaxWidth="750"/>
-                <AchievementTest:RadialProgressBar x:Name="CircleProgressBar" Height="100" Width="100" IndicatorBrush="#FFDFDEE8" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                <Label HorizontalAlignment="Center" Content="{Binding StatusLabelContent}" FontSize="15" FontFamily="Arial Black" Foreground="White" HorizontalContentAlignment="Center" MaxWidth="750"/>
+                <AchievementTest:RadialProgressBar Value="{Binding ProgressBarValue}" Height="100" Width="100" IndicatorBrush="#FFDFDEE8" VerticalAlignment="Top" HorizontalAlignment="Center"/>
             </StackPanel>
         </StackPanel>
     </Grid>

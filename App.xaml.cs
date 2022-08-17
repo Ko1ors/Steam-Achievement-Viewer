@@ -32,6 +32,7 @@ namespace SteamAchievementViewer
 
             // ViewModels
             services.AddScoped<MainWindowViewModel>();
+            services.AddScoped<AuthPageViewModel>();
 
             // Pages
             services.AddTransient<AuthPage>();
