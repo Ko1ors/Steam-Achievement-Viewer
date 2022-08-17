@@ -9,7 +9,7 @@ namespace SteamAchievementViewer.Services
     public class NavigationService : INavigationService
     {
         private List<NavigationPageElement> _pageElements;
-     
+
         public event AvailabilityNotify AvailabilityChanged;
         public event NavigationNotify NavigationChanged;
 

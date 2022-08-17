@@ -3,13 +3,6 @@ using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Pages;
 using SteamAchievementViewer.Services;
 using SteamAchievementViewer.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
 
@@ -50,7 +43,7 @@ namespace SteamAchievementViewer
             services.AddTransient<SettingsPage>();
 
             // Windows
-            services.AddSingleton<MainWindow>();       
+            services.AddSingleton<MainWindow>();
         }
 
         private void ConfigureNavigation()

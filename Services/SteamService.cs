@@ -33,10 +33,10 @@ namespace SteamAchievementViewer.Services
         {
             if (Settings.Default.SteamID == "-1")
                 return false;
-            
+
             LoadProfile(Settings.Default.SteamID);
             LoadGames();
-            
+
             return true;
         }
 

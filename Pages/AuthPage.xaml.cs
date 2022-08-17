@@ -1,11 +1,9 @@
 ﻿using SteamAchievementViewer.Services;
-﻿using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace SteamAchievementViewer.Pages
@@ -39,7 +37,7 @@ namespace SteamAchievementViewer.Pages
                     EnableEnterButton(true);
             }
         }
-        
+
         public AuthPage(INavigationService navigationService, ISteamService steamService)
         {
             InitializeComponent();
@@ -54,9 +52,9 @@ namespace SteamAchievementViewer.Pages
 
             UpdateStatusLabel(Properties.Resources.RetrievingAchievementList + " " + currentGameCount + "/" + totalGames + "\t" + lastGameName);
             UpdateProgressBar((currentGameCount * 100) / totalGames);
-  
+
         }
-        
+
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(new ProcessStartInfo("cmd", $"/c start {HyperlinkText}") { CreateNoWindow = true });

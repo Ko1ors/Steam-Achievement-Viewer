@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SteamAchievementViewer
 {
@@ -24,7 +16,7 @@ namespace SteamAchievementViewer
         public Brush IndicatorBrush
         {
             get { return (Brush)this.GetValue(IndicatorBrushProperty); }
-            set { this.SetValue(IndicatorBrushProperty, value);}
+            set { this.SetValue(IndicatorBrushProperty, value); }
         }
         public static readonly DependencyProperty BackgroundBrushProperty = DependencyProperty.Register("BackgroundBrush", typeof(Brush), typeof(RadialProgressBar));
         public Brush BackgroundBrush
@@ -60,7 +52,7 @@ namespace SteamAchievementViewer
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return (int)((double)value / 360) * 100;
-        
+
         }
     }
 }

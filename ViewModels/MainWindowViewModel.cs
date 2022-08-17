@@ -31,7 +31,7 @@ namespace SteamAchievementViewer.ViewModels
         {
             _navigationService = navigationService;
             _steamService = steamService;
-            
+
             _navigationService.AvailabilityChanged += NavigationService_AvailabilityChanged;
             _navigationService.NavigationChanged += NavigationService_NavigationChanged;
 
