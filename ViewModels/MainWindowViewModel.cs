@@ -3,6 +3,7 @@ using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Services;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
@@ -12,6 +13,7 @@ namespace SteamAchievementViewer.ViewModels
     {
         private readonly INavigationService _navigationService;
         private readonly ISteamService _steamService;
+        private readonly SynchronizationContext _synchronizationContext;
 
         private Page _currentPage;
         private BitmapImage _avatarSource;
@@ -44,6 +46,7 @@ namespace SteamAchievementViewer.ViewModels
         {
             _navigationService = navigationService;
             _steamService = steamService;
+            _synchronizationContext = SynchronizationContext.Current;
 
             _navigationService.AvailabilityChanged += NavigationService_AvailabilityChanged;
             _navigationService.NavigationChanged += NavigationService_NavigationChanged;
@@ -62,13 +65,13 @@ namespace SteamAchievementViewer.ViewModels
 
             if (steamService.Profile != null)
                 UpdateAvatar(steamService.Profile.AvatarFull);
-            
+
             _navigationService.NavigateTo(Model.NavigationPages.Skip(1).First());
         }
 
         private void SteamServiceOnAvatarUpdated(string avatarUrl)
         {
-            UpdateAvatar(avatarUrl);
+            _synchronizationContext.Post((avatarUrl) => UpdateAvatar(avatarUrl.ToString()), avatarUrl);
         }
 
         private void UpdateAvatar(string avatarUrl)
