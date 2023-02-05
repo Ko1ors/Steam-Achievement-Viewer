@@ -13,8 +13,10 @@ namespace SteamAchievementViewer.Services
     {
         private const string XmlProfileError = "The specified profile could not be found.";
         private const int UpdateNotifyStep = 5;
+        private const int GetAchievementsMaxAttempts = 10;
         private static readonly string DirectoryPath = AppDomain.CurrentDomain.BaseDirectory + "data\\";
 
+        private readonly Random _random;
         private readonly IClientService<XmlDocument> _xmlClient;
 
         public event AchievementProgressUpdatedDelegate OnAchievementProgressUpdated;
@@ -26,6 +28,7 @@ namespace SteamAchievementViewer.Services
 
         public SteamService(IClientService<XmlDocument> xmlClient)
         {
+            _random = new Random();
             _xmlClient = xmlClient;
         }
 
@@ -33,12 +36,14 @@ namespace SteamAchievementViewer.Services
         {
             if (Settings.Default.SteamID == "-1")
                 return false;
-            
+
             LoadProfile(Settings.Default.SteamID);
             LoadGames();
-            
+
             return true;
         }
+
+        private int GetRandomParameter() => _random.Next(0, 100000);
 
         public async Task<bool> GetAchievementsAsync(List<Game> games)
         {
@@ -47,7 +52,7 @@ namespace SteamAchievementViewer.Services
             XmlSerializer serializer = new XmlSerializer(typeof(Achievements));
             foreach (Game game in GamesList.Games.Game)
             {
-                var response = await _xmlClient.SendGetRequest(game.StatsLink + "/?xml=1");
+                var response = await _xmlClient.SendGetRequest($"{game.StatsLink}/?xml={GetRandomParameter()}");
                 if (response.InnerText == XmlProfileError || response.InnerText == "")
                     continue;
                 using (XmlReader reader = new XmlNodeReader(response))
@@ -85,42 +90,66 @@ namespace SteamAchievementViewer.Services
         public async Task<bool> GetAchievementsParallelAsync(List<Game> games)
         {
             int gameRetrieved = 0;
+            int gameFailed = 0;
             int prevUpdate = 0 - UpdateNotifyStep;
-            await Parallel.ForEachAsync(GamesList.Games.Game, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 }, async (game, token) =>
+            await Parallel.ForEachAsync(GamesList.Games.Game, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 5 }, async (game, token) =>
             {
-                var response = await _xmlClient.SendGetRequest(game.StatsLink + "/?xml=1");
-                if (response.InnerText == XmlProfileError || response.InnerText == "")
-                    return;
-                using (XmlReader reader = new XmlNodeReader(response))
+                int attempt = 0;
+                while (attempt < GetAchievementsMaxAttempts)
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(Game));
-                    reader.ReadToDescendant("game");
-                    var game_ = (Game)serializer.Deserialize(reader);
-                    serializer = new XmlSerializer(typeof(Achievements));
-                    reader.ReadToNextSibling("achievements");
-                    game.Achievements = (Achievements)serializer.Deserialize(reader);
-                    game.GameLogoSmall = game_.GameLogoSmall;
-                    game.GameIcon = game_.GameIcon;
-                }
-                if (game.Achievements == null)
-                    return;
-                Achievements achievements = await GetGlobalAchievementPercentagesAsync(game.AppID);
-                if (achievements != null)
-                {
-                    foreach (Achievement achievement in game.Achievements.Achievement)
+                    try
                     {
-                        var achv = achievements.Achievement.Find(e => e.Name.ToLower() == achievement.Apiname.ToLower());
-                        if (achv != null)
-                            achievement.Percent = achv.Percent;
-                        else
-                            achievement.Percent = -1;
+                        var response = await _xmlClient.SendGetRequest($"{game.StatsLink}/?xml={GetRandomParameter()}");
+                        if (response.InnerText == XmlProfileError || response.InnerText == "")
+                            return;
+                        using (XmlReader reader = new XmlNodeReader(response))
+                        {
+                            XmlSerializer serializer = new XmlSerializer(typeof(Game));
+                            reader.ReadToDescendant("game");
+                            var game_ = (Game)serializer.Deserialize(reader);
+                            serializer = new XmlSerializer(typeof(Achievements));
+                            reader.ReadToNextSibling("achievements");
+                            game.Achievements = (Achievements)serializer.Deserialize(reader);
+                            game.GameLogoSmall = game_.GameLogoSmall;
+                            game.GameIcon = game_.GameIcon;
+                        }
+                        if (game.Achievements == null)
+                            return;
+                        Achievements achievements = await GetGlobalAchievementPercentagesAsync(game.AppID);
+                        if (achievements != null)
+                        {
+                            foreach (Achievement achievement in game.Achievements.Achievement)
+                            {
+                                var achv = achievements.Achievement.Find(e => e.Name.ToLower() == achievement.Apiname.ToLower());
+                                if (achv != null)
+                                    achievement.Percent = achv.Percent;
+                                else
+                                    achievement.Percent = -1;
+                            }
+                        }
+                        gameRetrieved++;
+                        if (gameRetrieved - prevUpdate >= UpdateNotifyStep)
+                        {
+                            prevUpdate = gameRetrieved;
+                            OnAchievementProgressUpdated?.Invoke(GamesList.Games.Game.Count, gameRetrieved, game.Name);
+                        }
+                        break;
+                    }
+                    catch
+                    {
+                        attempt++;
+                        await Task.Delay(_random.Next(500, 1000) * attempt, token);
                     }
                 }
-                gameRetrieved++;
-                if (gameRetrieved - prevUpdate >= UpdateNotifyStep)
+                if (attempt == GetAchievementsMaxAttempts)
                 {
-                    prevUpdate = gameRetrieved;
-                    OnAchievementProgressUpdated?.Invoke(GamesList.Games.Game.Count, gameRetrieved, game.Name);
+                    gameFailed++;
+                    gameRetrieved++;
+                    if (gameRetrieved - prevUpdate >= UpdateNotifyStep)
+                    {
+                        prevUpdate = gameRetrieved;
+                        OnAchievementProgressUpdated?.Invoke(GamesList.Games.Game.Count, gameRetrieved, game.Name);
+                    }
                 }
             });
             OnAchievementProgressUpdated?.Invoke(GamesList.Games.Game.Count, GamesList.Games.Game.Count, GamesList.Games.Game.Last().Name);
@@ -130,7 +159,7 @@ namespace SteamAchievementViewer.Services
 
         public async Task<bool> GetGamesAsync(string steamID)
         {
-            var response = await _xmlClient.SendGetRequest("https://steamcommunity.com/profiles/" + Profile.SteamID64 + "/games?tab=all&xml=1");
+            var response = await _xmlClient.SendGetRequest($"https://steamcommunity.com/profiles/{Profile.SteamID64}/games?tab=all&xml={GetRandomParameter()}");
             if (response.InnerText == XmlProfileError)
                 return false;
             XmlSerializer serializer = new XmlSerializer(typeof(GamesList));
@@ -162,7 +191,7 @@ namespace SteamAchievementViewer.Services
 
         public async Task<bool> GetProfileAsync(string steamID)
         {
-            var response = await _xmlClient.SendGetRequest("https://steamcommunity.com/profiles/" + steamID + "/?xml=1");
+            var response = await _xmlClient.SendGetRequest($"https://steamcommunity.com/profiles/{steamID}/?xml={GetRandomParameter()}");
             if (response.InnerText == XmlProfileError)
                 return false;
             XmlSerializer serializer = new XmlSerializer(typeof(Profile));
