@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Sav.Common.Interfaces;
+using Sav.Common.Repositories;
+using Sav.Common.Services;
 using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Pages;
 using SteamAchievementViewer.Services;
@@ -29,6 +32,10 @@ namespace SteamAchievementViewer
             services.AddTransient<IClientService<XmlDocument>, XmlClientService>();
             services.AddSingleton<ISteamService, SteamService>();
             services.AddTransient<IGameAchievementsService, GameAchievementsService>();
+            services.AddSingleton(typeof(IQueueService<>), typeof(QueueService<>));
+
+            // Repositories
+            services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
 
             // ViewModels
             services.AddScoped<MainWindowViewModel>();

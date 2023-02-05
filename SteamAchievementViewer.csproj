@@ -78,4 +78,8 @@
     <PackageReference Include="Microsoft.SDK.Expression.Blend" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="Sav.Common\Sav.Common.csproj" />
+  </ItemGroup>
+
 </Project>
