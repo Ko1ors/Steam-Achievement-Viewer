@@ -6,6 +6,8 @@ using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Pages;
 using SteamAchievementViewer.Services;
 using SteamAchievementViewer.ViewModels;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
 
@@ -33,9 +35,10 @@ namespace SteamAchievementViewer
             services.AddSingleton<ISteamService, SteamService>();
             services.AddTransient<IGameAchievementsService, GameAchievementsService>();
             services.AddSingleton(typeof(IQueueService<>), typeof(QueueService<>));
+            services.AddScoped<IAchievementsWorkerService, AchievementsWorkerService>();
 
             // Repositories
-            services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
+            services.AddSingleton(typeof(IListRepository<>), typeof(ListRepository<>));
 
             // ViewModels
             services.AddScoped<MainWindowViewModel>();
@@ -69,6 +72,9 @@ namespace SteamAchievementViewer
         {
             base.OnStartup(e);
             ConfigureNavigation();
+            var workerService = ServiceProvider.GetService<IAchievementsWorkerService>();
+            Task.Run(() => workerService.StartAsync(new CancellationTokenSource().Token));
+
             var mainWindow = ServiceProvider.GetService<MainWindow>();
             mainWindow.Show();
 

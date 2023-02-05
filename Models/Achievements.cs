@@ -9,7 +9,7 @@ namespace SteamAchievementViewer
     public class Achievements
     {
         [XmlElement(ElementName = "achievement")]
-        public List<Achievement> Achievement { get; set; }
+        public List<Achievement> Achievement { get; set; } = new List<Achievement>();
     }
 
     [XmlRoot(ElementName = "achievement")]

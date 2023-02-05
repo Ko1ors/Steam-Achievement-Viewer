@@ -1,4 +1,5 @@
-﻿using SteamAchievementViewer.Models;
+﻿using Sav.Common.Interfaces;
+using SteamAchievementViewer.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +19,10 @@ namespace SteamAchievementViewer.Services
 
         private readonly Random _random;
         private readonly IClientService<XmlDocument> _xmlClient;
+        private readonly IQueueService<Game> _gameQueueService;
+        private readonly IListRepository<Game> _gameRepository;
+
+        private Object _saveLock;
 
         public event AchievementProgressUpdatedDelegate OnAchievementProgressUpdated;
 
@@ -25,13 +30,30 @@ namespace SteamAchievementViewer.Services
 
         public Profile Profile { get; private set; }
 
-        public GamesList GamesList { get; private set; }
+        private GamesList _gamesList;
 
-
-        public SteamService(IClientService<XmlDocument> xmlClient)
+        public GamesList GamesList
         {
-            _random = new Random();
+            get
+            {
+                _gamesList.Games.Game = _gameRepository.GetAll().ToList();
+                return _gamesList;
+            }
+            private set
+            {
+                _gamesList = value;
+                _gameRepository.Clear();
+                _gameRepository.AddRange(_gamesList.Games.Game);
+            }
+        }
+
+        public SteamService(IClientService<XmlDocument> xmlClient, IQueueService<Game> gameQueueService, IListRepository<Game> gameRepository)
+        {
             _xmlClient = xmlClient;
+            _gameQueueService = gameQueueService;
+            _gameRepository = gameRepository;
+            _random = new Random();
+            _saveLock = new Object();
         }
 
         public bool Start()
@@ -174,7 +196,9 @@ namespace SteamAchievementViewer.Services
                 GamesList = null;
                 return false;
             }
-            GamesList.Games.Game.RemoveAll(e => e.GlobalStatsLink == null || e.StatsLink == null);
+            // TODO: do not remove games that do not have achievements
+            _gameRepository.RemoveAll(e => e.GlobalStatsLink == null || e.StatsLink == null);
+            _gameQueueService.Add(GamesList.Games.Game);
             return true;
         }
 
@@ -217,11 +241,14 @@ namespace SteamAchievementViewer.Services
 
         public void SaveGames()
         {
-            if (!Directory.Exists(DirectoryPath + Profile.SteamID64))
-                Directory.CreateDirectory(DirectoryPath + Profile.SteamID64);
-            XmlSerializer serializer = new XmlSerializer(typeof(GamesList));
-            FileStream file = File.Create(DirectoryPath + Profile.SteamID64 + "\\gameslist.xml");
-            serializer.Serialize(file, GamesList);
+            lock (_saveLock)
+            {
+                if (!Directory.Exists(DirectoryPath + Profile.SteamID64))
+                    Directory.CreateDirectory(DirectoryPath + Profile.SteamID64);
+                var serializer = new XmlSerializer(typeof(GamesList));
+                FileStream file = File.Create(DirectoryPath + Profile.SteamID64 + "\\gameslist.xml");
+                serializer.Serialize(file, GamesList);
+            }
         }
 
         public void SaveProfile()

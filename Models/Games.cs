@@ -46,6 +46,6 @@ namespace SteamAchievementViewer.Models
         [XmlElement(ElementName = "globalStatsLink")]
         public string GlobalStatsLink { get; set; }
         [XmlElement(ElementName = "achievements")]
-        public Achievements Achievements { get; set; }
+        public Achievements Achievements { get; set; } = new Achievements();
     }
 }

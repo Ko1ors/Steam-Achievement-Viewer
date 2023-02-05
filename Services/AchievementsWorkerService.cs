@@ -14,6 +14,7 @@ namespace SteamAchievementViewer.Services
         private const string XmlProfileError = "The specified profile could not be found.";
         
         private readonly IQueueService<Game> _queueService;
+        private readonly ISteamService _steamService;
         private readonly IClientService<XmlDocument> _xmlClient;
         private readonly Random _random;
 
@@ -21,9 +22,10 @@ namespace SteamAchievementViewer.Services
         
         public bool IsRunning { get; set; }
 
-        public AchievementsWorkerService(IQueueService<Game> queueService, IClientService<XmlDocument> xmlClient)
+        public AchievementsWorkerService(IQueueService<Game> queueService, ISteamService steamService, IClientService<XmlDocument> xmlClient)
         {
             _queueService = queueService;
+            _steamService = steamService;
             _xmlClient = xmlClient;
             _random = new Random();
         }
@@ -83,6 +85,7 @@ namespace SteamAchievementViewer.Services
                             achievement.Percent = -1;
                     }
                 }
+                _steamService.SaveGames();
             }
             catch (Exception e)
             {

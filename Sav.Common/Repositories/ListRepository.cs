@@ -2,11 +2,11 @@
 
 namespace Sav.Common.Repositories
 {
-    public class Repository<T> : IRepository<T>
+    public class ListRepository<T> : IListRepository<T>
     {
         private readonly List<T> _items;
 
-        public Repository()
+        public ListRepository()
         {
             _items = new List<T>();
         }
@@ -24,6 +24,21 @@ namespace Sav.Common.Repositories
         public T? Find(Predicate<T> match)
         {
             return _items.Find(match);
+        }
+
+        public void AddRange(IEnumerable<T> items)
+        {
+            _items.AddRange(items);
+        }
+
+        public void Clear()
+        {
+            _items.Clear();
+        }
+
+        public void RemoveAll(Predicate<T> match)
+        {
+            _items.RemoveAll(match);
         }
     }
 }

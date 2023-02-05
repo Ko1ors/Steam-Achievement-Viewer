@@ -104,21 +104,10 @@ namespace SteamAchievementViewer.ViewModels
                 await Task.Delay(1000);
                 StatusLabelContent = Properties.Resources.RetrievingAchievementList;
 
-                if (await _steamService.GetAchievementsParallelAsync(_steamService.GamesList.Games.Game))
-                {
-                    StatusLabelContent = Properties.Resources.AchievementListRetrieved;
-                }
-                else
-                {
-                    StatusLabelContent = Properties.Resources.AchievementListFailed;
-                    return;
-                }
-
                 await Task.Delay(1000);
                 StatusLabelContent = Properties.Resources.ResultSaving;
 
                 _steamService.SaveProfile();
-                _steamService.SaveGames();
                 _steamService.SaveSettingsInfo();
 
                 await Task.Delay(1000);
