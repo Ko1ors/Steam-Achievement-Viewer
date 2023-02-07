@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Sav.Common.Interfaces;
 using Sav.Common.Repositories;
 using Sav.Common.Services;
+using Sav.Infrastructure;
 using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Pages;
 using SteamAchievementViewer.Services;
@@ -71,6 +73,11 @@ namespace SteamAchievementViewer
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            using (var context = new SteamContext())
+            {
+                context.Database.Migrate();
+            }
+
             ConfigureNavigation();
             var workerService = ServiceProvider.GetService<IAchievementsWorkerService>();
             Task.Run(() => workerService.StartAsync(new CancellationTokenSource().Token));

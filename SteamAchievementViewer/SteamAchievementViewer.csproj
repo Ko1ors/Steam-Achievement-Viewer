@@ -71,6 +71,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sav.Common\Sav.Common.csproj" />
+    <ProjectReference Include="..\Sav.Infrastructure\Sav.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
