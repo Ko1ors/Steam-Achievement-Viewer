@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamAchievementViewer", "SteamAchievementViewer.csproj", "{14B63EDF-BDAD-4A38-ACD5-2310D2D129A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SteamAchievementViewer", "SteamAchievementViewer\SteamAchievementViewer.csproj", "{14B63EDF-BDAD-4A38-ACD5-2310D2D129A4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sav.Common", "Sav.Common\Sav.Common.csproj", "{8C28C3BA-E5C1-403B-9B89-3985F049B65D}"
 EndProject
