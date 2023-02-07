@@ -1,0 +1,102 @@
+﻿using Sav.Common.Interfaces;
+using Sav.Infrastructure;
+using System.Linq.Expressions;
+
+namespace Sav.Common.Repositories
+{
+    public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : class
+    {
+        private readonly SteamContext _context;
+
+        public EntityRepository()
+        {
+            _context = new SteamContext();
+        }
+
+        public async Task<TEntity?> GetByKeysAsync(params object[] keys)
+        {
+            return await _context.Set<TEntity>().FindAsync(keys);
+        }
+
+        public async Task<int> AddAsync(TEntity entity)
+        {
+            await _context.Set<TEntity>().AddAsync(entity);
+            return await _context.SaveChangesAsync();
+        }
+
+        public Task<int> UpdateAsync(TEntity entity)
+        {
+            _context.Set<TEntity>().Update(entity);
+            return _context.SaveChangesAsync();
+        }
+
+        public Task<int> DeleteAsync(TEntity entity)
+        {
+            _context.Set<TEntity>().Remove(entity);
+            return _context.SaveChangesAsync();
+        }
+
+        public async Task AddOrUpdateAsync(TEntity entity)
+        {
+            var existingEntity = _context.Set<TEntity>().Local.FirstOrDefault(e => e == entity);
+
+            if (existingEntity == null)
+            {
+                await AddAsync(entity);
+            }
+            else
+            {
+                _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+                await UpdateAsync(existingEntity);
+            }
+        }
+
+        public TEntity? GetByKeys(params object[] keys)
+        {
+            return _context.Set<TEntity>().Find(keys);
+        }
+
+        public IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _context.Set<TEntity>().Where(predicate).AsEnumerable();
+        }
+
+        public IEnumerable<TEntity> GetAll()
+        {
+            return _context.Set<TEntity>().ToList();
+        }
+
+        public void Add(TEntity entity)
+        {
+            _context.Set<TEntity>().Add(entity);
+            _context.SaveChanges();
+        }
+
+        public void Update(TEntity entity)
+        {
+            _context.Set<TEntity>().Update(entity);
+            _context.SaveChanges();
+        }
+
+        public void Delete(TEntity entity)
+        {
+            _context.Set<TEntity>().Remove(entity);
+            _context.SaveChanges();
+        }
+
+        public void AddOrUpdate(TEntity entity)
+        {
+            var existingEntity = _context.Set<TEntity>().Local.FirstOrDefault(e => e == entity);
+
+            if (existingEntity == null)
+            {
+                Add(entity);
+            }
+            else
+            {
+                _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+                Update(existingEntity);
+            }
+        }
+    }
+}
