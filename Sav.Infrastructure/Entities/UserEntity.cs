@@ -1,10 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sav.Infrastructure.Entities
 {
-    public class User : BaseEntity
+    [Table("Users")]
+    public class UserEntity : BaseEntity
     {
         [Key]
+        public string SteamID64 { get; set; } = null!;
+        
         public string SteamID { get; set; } = null!;
 
         public string OnlineState { get; set; } = null!;
@@ -41,8 +45,13 @@ namespace Sav.Infrastructure.Entities
 
         public string Summary { get; set; } = null!;
 
-        public virtual ICollection<UserGame> UserGames { get; set; } = null!;
+        public virtual ICollection<UserGameEntity> UserGames { get; set; } = null!;
 
-        public virtual ICollection<UserAchievement> UserAchievements { get; set; } = null!;
+        public virtual ICollection<UserAchievementEntity> UserAchievements { get; set; } = null!;
+
+        public override object[] GetKeys()
+        {
+            return new object[] { SteamID64 };
+        }
     }
 }

@@ -11,7 +11,7 @@ using Sav.Infrastructure;
 namespace Sav.Infrastructure.Migrations
 {
     [DbContext(typeof(SteamContext))]
-    [Migration("20230207193407_Initial")]
+    [Migration("20230207214112_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -112,7 +112,7 @@ namespace Sav.Infrastructure.Migrations
 
             modelBuilder.Entity("Sav.Infrastructure.Entities.User", b =>
                 {
-                    b.Property<string>("SteamID")
+                    b.Property<string>("SteamID64")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AvatarFull")
@@ -167,6 +167,10 @@ namespace Sav.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("SteamID")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Summary")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -184,7 +188,7 @@ namespace Sav.Infrastructure.Migrations
                     b.Property<int>("VisibilityState")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("SteamID");
+                    b.HasKey("SteamID64");
 
                     b.ToTable("Users");
                 });

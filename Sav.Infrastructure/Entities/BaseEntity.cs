@@ -5,5 +5,7 @@
         public DateTime Inserted { get; set; }
 
         public DateTime Updated { get; set; }
+
+        public abstract object[] GetKeys();
     }
 }

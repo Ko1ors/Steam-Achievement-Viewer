@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sav.Infrastructure.Entities
 {
-    public class Game : BaseEntity
+    [Table("Games")]
+    public class GameEntity : BaseEntity
     {
         [Key]
         public string AppID { get; set; } = null!;
@@ -23,8 +25,13 @@ namespace Sav.Infrastructure.Entities
 
         public string GlobalStatsLink { get; set; } = null!;
 
-        public virtual ICollection<UserGame> UserGames { get; set; } = null!;
+        public virtual ICollection<UserGameEntity> UserGames { get; set; } = null!;
 
-        public virtual ICollection<Achievement> Achievements { get; set; } = null!;
+        public virtual ICollection<AchievementEntity> Achievements { get; set; } = null!;
+
+        public override object[] GetKeys()
+        {
+            return new object[] { AppID };
+        }
     }
 }

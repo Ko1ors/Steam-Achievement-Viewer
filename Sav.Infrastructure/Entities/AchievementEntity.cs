@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Sav.Infrastructure.Entities
 {
-    public class Achievement : BaseEntity
+    [Table("Achievements")]
+    public class AchievementEntity : BaseEntity
     {
         public string IconClosed { get; set; } = null!;
 
@@ -24,8 +19,13 @@ namespace Sav.Infrastructure.Entities
 
         public string AppID { get; set; } = null!;
 
-        public virtual Game Game { get; set; } = null!;
+        public virtual GameEntity Game { get; set; } = null!;
 
-        public virtual ICollection<UserAchievement> UserAchievements { get; set; } = null!;
+        public virtual ICollection<UserAchievementEntity> UserAchievements { get; set; } = null!;
+
+        public override object[] GetKeys()
+        {
+            return new object[] { AppID, Apiname };
+        }
     }
 }

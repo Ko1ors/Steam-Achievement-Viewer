@@ -36,6 +36,7 @@ namespace Sav.Infrastructure.Migrations
                 name: "Users",
                 columns: table => new
                 {
+                    SteamID64 = table.Column<string>(type: "TEXT", nullable: false),
                     SteamID = table.Column<string>(type: "TEXT", nullable: false),
                     OnlineState = table.Column<string>(type: "TEXT", nullable: false),
                     StateMessage = table.Column<string>(type: "TEXT", nullable: false),
@@ -59,7 +60,7 @@ namespace Sav.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.SteamID);
+                    table.PrimaryKey("PK_Users", x => x.SteamID64);
                 });
 
             migrationBuilder.CreateTable(
@@ -110,7 +111,7 @@ namespace Sav.Infrastructure.Migrations
                         name: "FK_UserGames_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "SteamID",
+                        principalColumn: "SteamID64",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -138,7 +139,7 @@ namespace Sav.Infrastructure.Migrations
                         name: "FK_UserAchievements_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "SteamID",
+                        principalColumn: "SteamID64",
                         onDelete: ReferentialAction.Cascade);
                 });
 
