@@ -1,10 +1,11 @@
 ﻿using Sav.Common.Interfaces;
 using Sav.Infrastructure;
+using Sav.Infrastructure.Entities;
 using System.Linq.Expressions;
 
 namespace Sav.Common.Repositories
 {
-    public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : class
+    public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : BaseEntity
     {
         private readonly SteamContext _context;
 
@@ -20,12 +21,15 @@ namespace Sav.Common.Repositories
 
         public async Task<int> AddAsync(TEntity entity)
         {
+            entity.Inserted = DateTime.Now;
+            entity.Updated = entity.Inserted;
             await _context.Set<TEntity>().AddAsync(entity);
             return await _context.SaveChangesAsync();
         }
 
         public Task<int> UpdateAsync(TEntity entity)
         {
+            entity.Updated = DateTime.Now;
             _context.Set<TEntity>().Update(entity);
             return _context.SaveChangesAsync();
         }
@@ -38,7 +42,7 @@ namespace Sav.Common.Repositories
 
         public async Task AddOrUpdateAsync(TEntity entity)
         {
-            var existingEntity = _context.Set<TEntity>().Local.FirstOrDefault(e => e == entity);
+            var existingEntity = _context.Set<TEntity>().Find(entity.GetKeys());
 
             if (existingEntity == null)
             {
@@ -68,12 +72,15 @@ namespace Sav.Common.Repositories
 
         public void Add(TEntity entity)
         {
+            entity.Inserted = DateTime.Now;
+            entity.Updated = entity.Inserted;
             _context.Set<TEntity>().Add(entity);
             _context.SaveChanges();
         }
 
         public void Update(TEntity entity)
         {
+            entity.Updated = DateTime.Now;
             _context.Set<TEntity>().Update(entity);
             _context.SaveChanges();
         }
@@ -86,7 +93,7 @@ namespace Sav.Common.Repositories
 
         public void AddOrUpdate(TEntity entity)
         {
-            var existingEntity = _context.Set<TEntity>().Local.FirstOrDefault(e => e == entity);
+            var existingEntity = _context.Set<TEntity>().Find(entity.GetKeys());
 
             if (existingEntity == null)
             {
