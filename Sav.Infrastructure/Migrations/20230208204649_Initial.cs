@@ -17,13 +17,13 @@ namespace Sav.Infrastructure.Migrations
                 {
                     AppID = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    GameIcon = table.Column<string>(type: "TEXT", nullable: false),
+                    GameIcon = table.Column<string>(type: "TEXT", nullable: true),
                     Logo = table.Column<string>(type: "TEXT", nullable: false),
-                    GameLogoSmall = table.Column<string>(type: "TEXT", nullable: false),
+                    GameLogoSmall = table.Column<string>(type: "TEXT", nullable: true),
                     StoreLink = table.Column<string>(type: "TEXT", nullable: false),
-                    HoursLast2Weeks = table.Column<string>(type: "TEXT", nullable: false),
-                    HoursOnRecord = table.Column<string>(type: "TEXT", nullable: false),
-                    GlobalStatsLink = table.Column<string>(type: "TEXT", nullable: false),
+                    HoursLast2Weeks = table.Column<string>(type: "TEXT", nullable: true),
+                    HoursOnRecord = table.Column<string>(type: "TEXT", nullable: true),
+                    GlobalStatsLink = table.Column<string>(type: "TEXT", nullable: true),
                     Inserted = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Updated = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -94,7 +94,7 @@ namespace Sav.Infrastructure.Migrations
                 {
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
                     AppID = table.Column<string>(type: "TEXT", nullable: false),
-                    StatsLink = table.Column<string>(type: "TEXT", nullable: false),
+                    StatsLink = table.Column<string>(type: "TEXT", nullable: true),
                     Inserted = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Updated = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },

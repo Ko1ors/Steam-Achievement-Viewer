@@ -11,7 +11,7 @@ using Sav.Infrastructure;
 namespace Sav.Infrastructure.Migrations
 {
     [DbContext(typeof(SteamContext))]
-    [Migration("20230207214112_Initial")]
+    [Migration("20230208204649_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,7 +24,7 @@ namespace Sav.Infrastructure.Migrations
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true);
 
-            modelBuilder.Entity("Sav.Infrastructure.Entities.Achievement", b =>
+            modelBuilder.Entity("Sav.Infrastructure.Entities.AchievementEntity", b =>
                 {
                     b.Property<string>("AppID")
                         .HasColumnType("TEXT");
@@ -62,29 +62,24 @@ namespace Sav.Infrastructure.Migrations
                     b.ToTable("Achievements");
                 });
 
-            modelBuilder.Entity("Sav.Infrastructure.Entities.Game", b =>
+            modelBuilder.Entity("Sav.Infrastructure.Entities.GameEntity", b =>
                 {
                     b.Property<string>("AppID")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("GameIcon")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("GameLogoSmall")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("GlobalStatsLink")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("HoursLast2Weeks")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("HoursOnRecord")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Inserted")
@@ -110,7 +105,35 @@ namespace Sav.Infrastructure.Migrations
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("Sav.Infrastructure.Entities.User", b =>
+            modelBuilder.Entity("Sav.Infrastructure.Entities.UserAchievementEntity", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AppID")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Apiname")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Inserted")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UnlockTime")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserId", "AppID", "Apiname");
+
+                    b.HasIndex("AppID", "Apiname");
+
+                    b.ToTable("UserAchievements");
+                });
+
+            modelBuilder.Entity("Sav.Infrastructure.Entities.UserEntity", b =>
                 {
                     b.Property<string>("SteamID64")
                         .HasColumnType("TEXT");
@@ -193,35 +216,7 @@ namespace Sav.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Sav.Infrastructure.Entities.UserAchievement", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AppID")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Apiname")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Inserted")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UnlockTime")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Updated")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("UserId", "AppID", "Apiname");
-
-                    b.HasIndex("AppID", "Apiname");
-
-                    b.ToTable("UserAchievements");
-                });
-
-            modelBuilder.Entity("Sav.Infrastructure.Entities.UserGame", b =>
+            modelBuilder.Entity("Sav.Infrastructure.Entities.UserGameEntity", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");
@@ -233,7 +228,6 @@ namespace Sav.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("StatsLink")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Updated")
@@ -246,9 +240,9 @@ namespace Sav.Infrastructure.Migrations
                     b.ToTable("UserGames");
                 });
 
-            modelBuilder.Entity("Sav.Infrastructure.Entities.Achievement", b =>
+            modelBuilder.Entity("Sav.Infrastructure.Entities.AchievementEntity", b =>
                 {
-                    b.HasOne("Sav.Infrastructure.Entities.Game", "Game")
+                    b.HasOne("Sav.Infrastructure.Entities.GameEntity", "Game")
                         .WithMany("Achievements")
                         .HasForeignKey("AppID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -257,15 +251,15 @@ namespace Sav.Infrastructure.Migrations
                     b.Navigation("Game");
                 });
 
-            modelBuilder.Entity("Sav.Infrastructure.Entities.UserAchievement", b =>
+            modelBuilder.Entity("Sav.Infrastructure.Entities.UserAchievementEntity", b =>
                 {
-                    b.HasOne("Sav.Infrastructure.Entities.User", "User")
+                    b.HasOne("Sav.Infrastructure.Entities.UserEntity", "User")
                         .WithMany("UserAchievements")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Sav.Infrastructure.Entities.Achievement", "Achievement")
+                    b.HasOne("Sav.Infrastructure.Entities.AchievementEntity", "Achievement")
                         .WithMany("UserAchievements")
                         .HasForeignKey("AppID", "Apiname")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -276,15 +270,15 @@ namespace Sav.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Sav.Infrastructure.Entities.UserGame", b =>
+            modelBuilder.Entity("Sav.Infrastructure.Entities.UserGameEntity", b =>
                 {
-                    b.HasOne("Sav.Infrastructure.Entities.Game", "Game")
+                    b.HasOne("Sav.Infrastructure.Entities.GameEntity", "Game")
                         .WithMany("UserGames")
                         .HasForeignKey("AppID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Sav.Infrastructure.Entities.User", "User")
+                    b.HasOne("Sav.Infrastructure.Entities.UserEntity", "User")
                         .WithMany("UserGames")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -295,19 +289,19 @@ namespace Sav.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Sav.Infrastructure.Entities.Achievement", b =>
+            modelBuilder.Entity("Sav.Infrastructure.Entities.AchievementEntity", b =>
                 {
                     b.Navigation("UserAchievements");
                 });
 
-            modelBuilder.Entity("Sav.Infrastructure.Entities.Game", b =>
+            modelBuilder.Entity("Sav.Infrastructure.Entities.GameEntity", b =>
                 {
                     b.Navigation("Achievements");
 
                     b.Navigation("UserGames");
                 });
 
-            modelBuilder.Entity("Sav.Infrastructure.Entities.User", b =>
+            modelBuilder.Entity("Sav.Infrastructure.Entities.UserEntity", b =>
                 {
                     b.Navigation("UserAchievements");
 

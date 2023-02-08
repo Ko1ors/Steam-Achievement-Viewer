@@ -9,7 +9,7 @@ namespace Sav.Infrastructure.Entities
 
         public string AppID { get; set; } = null!;
 
-        public string StatsLink { get; set; } = null!;
+        public string? StatsLink { get; set; }
 
         public virtual UserEntity User { get; set; } = null!;
 
