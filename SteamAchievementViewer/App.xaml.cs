@@ -1,13 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Sav.Common.Interfaces;
 using Sav.Common.Repositories;
 using Sav.Common.Services;
 using Sav.Infrastructure;
+using SteamAchievementViewer.Mapping;
 using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Pages;
 using SteamAchievementViewer.Services;
 using SteamAchievementViewer.ViewModels;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -41,6 +44,10 @@ namespace SteamAchievementViewer
 
             // Repositories
             services.AddSingleton(typeof(IListRepository<>), typeof(ListRepository<>));
+            services.AddSingleton(typeof(IEntityRepository<>), typeof(EntityRepository<>));
+
+            // Mapping
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // ViewModels
             services.AddScoped<MainWindowViewModel>();
@@ -77,6 +84,10 @@ namespace SteamAchievementViewer
             {
                 context.Database.Migrate();
             }
+
+            var config = new MapperConfiguration(cfg => { cfg.AddProfile<MappingProfile>(); }).CreateMapper();
+            config.ConfigurationProvider.AssertConfigurationIsValid();
+
 
             ConfigureNavigation();
             var workerService = ServiceProvider.GetService<IAchievementsWorkerService>();

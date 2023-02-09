@@ -38,7 +38,7 @@ namespace SteamAchievementViewer.Models
         [XmlElement(ElementName = "steamRating")]
         public string SteamRating { get; set; }
         [XmlElement(ElementName = "hoursPlayed2Wk")]
-        public string HoursPlayed2Wk { get; set; }
+        public double HoursPlayed2Wk { get; set; }
         [XmlElement(ElementName = "headline")]
         public string Headline { get; set; }
         [XmlElement(ElementName = "location")]
@@ -52,9 +52,6 @@ namespace SteamAchievementViewer.Models
         [XmlElement(ElementName = "groups")]
         public Groups Groups { get; set; }
     }
-
-
-
 
     [XmlRoot(ElementName = "mostPlayedGame")]
     public class MostPlayedGame
