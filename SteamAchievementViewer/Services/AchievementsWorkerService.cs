@@ -1,7 +1,11 @@
-﻿using Sav.Common.Interfaces;
+﻿using AutoMapper;
+using Sav.Common.Interfaces;
+using Sav.Infrastructure.Entities;
+using SteamAchievementViewer.Mapping;
 using SteamAchievementViewer.Models;
 using System;
-using System.Runtime;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -12,20 +16,26 @@ namespace SteamAchievementViewer.Services
     public class AchievementsWorkerService : IAchievementsWorkerService
     {
         private const string XmlProfileError = "The specified profile could not be found.";
-        
-        private readonly IQueueService<Game> _queueService;
-        private readonly ISteamService _steamService;
+        private static readonly TimeSpan GameIconsUpdateInterval = TimeSpan.FromHours(24);
+
+        private readonly IQueueService<UserGameEntity> _queueService;
+        private readonly IEntityRepository<GameEntity> _gameRepository;
+        private readonly IEntityRepository<AchievementEntity> _achievementRepository;
+        private readonly IMapper _mapper;
         private readonly IClientService<XmlDocument> _xmlClient;
         private readonly Random _random;
 
         public bool IsStarted { get; set; }
-        
+
         public bool IsRunning { get; set; }
 
-        public AchievementsWorkerService(IQueueService<Game> queueService, ISteamService steamService, IClientService<XmlDocument> xmlClient)
+        public AchievementsWorkerService(IQueueService<UserGameEntity> queueService, IEntityRepository<GameEntity> gameRepository,
+            IEntityRepository<AchievementEntity> achievementRepository, IMapper mapper, IClientService<XmlDocument> xmlClient)
         {
             _queueService = queueService;
-            _steamService = steamService;
+            _gameRepository = gameRepository;
+            _achievementRepository = achievementRepository;
+            _mapper = mapper;
             _xmlClient = xmlClient;
             _random = new Random();
         }
@@ -47,19 +57,21 @@ namespace SteamAchievementViewer.Services
 
         private async Task ExecuteWorkAsync()
         {
-            Game game = null;
+            UserGameEntity userGame = null;
             try
             {
                 if (_queueService.Size == 0)
                     return;
 
-                game = _queueService.Get();
-                if (game is null)
+                userGame = _queueService.Get();
+                if (userGame is null)
                     return;
 
-                var response = await _xmlClient.SendGetRequest($"{game.StatsLink}/?xml={GetRandomParameter()}");
+                var response = await _xmlClient.SendGetRequest($"{userGame.StatsLink}/?xml={GetRandomParameter()}");
                 if (response.InnerText == XmlProfileError || response.InnerText == "")
                     return;
+                Achievements achievementsResponse = null;
+                List<AchievementEntity> achievements = null;
                 using (XmlReader reader = new XmlNodeReader(response))
                 {
                     var serializer = new XmlSerializer(typeof(Game));
@@ -67,30 +79,44 @@ namespace SteamAchievementViewer.Services
                     var game_ = (Game)serializer.Deserialize(reader);
                     serializer = new XmlSerializer(typeof(Achievements));
                     reader.ReadToNextSibling("achievements");
-                    game.Achievements = (Achievements)serializer.Deserialize(reader);
-                    game.GameLogoSmall = game_.GameLogoSmall;
-                    game.GameIcon = game_.GameIcon;
-                }
-                if (game.Achievements == null)
-                    return;
-                Achievements achievements = await GetGlobalAchievementPercentagesAsync(game.AppID);
-                if (achievements != null)
-                {
-                    foreach (Achievement achievement in game.Achievements.Achievement)
+                    achievementsResponse = (Achievements)serializer.Deserialize(reader);
+
+                    var gameEntity = _gameRepository.GetByKeys(userGame.AppID);
+                    achievements = _mapper.MapMultiple<List<AchievementEntity>>(achievementsResponse.Achievement, gameEntity);
+
+                    if (DateTime.Now - gameEntity.Updated > GameIconsUpdateInterval)
                     {
-                        var achv = achievements.Achievement.Find(e => e.Name.ToLower() == achievement.Apiname.ToLower());
-                        if (achv != null)
-                            achievement.Percent = achv.Percent;
-                        else
-                            achievement.Percent = -1;
+                        gameEntity.GameLogoSmall = game_.GameLogoSmall;
+                        gameEntity.GameIcon = game_.GameIcon;
+                        await _gameRepository.UpdateAsync(gameEntity);
                     }
                 }
-                _steamService.SaveGames();
+                if (achievements == null)
+                    return;
+
+                // TODO: move GetGlobalAchievementPercentages to separate worker service
+                achievementsResponse = await GetGlobalAchievementPercentagesAsync(userGame.AppID);
+                if (achievementsResponse != null)
+                {
+                    achievements = achievements.GroupJoin(achievementsResponse.Achievement,
+                        e => e.Apiname.ToLower(),
+                        a => a.Name.ToLower(),
+                        (e, a) =>
+                        {
+                            e.Percent = a.FirstOrDefault()?.Percent ?? -1;
+                            return e;
+                        }).ToList();
+                }
+
+                foreach (var achievement in achievements)
+                {
+                    _achievementRepository.AddOrUpdate(achievement);
+                }
             }
             catch (Exception e)
             {
-                if (game is not null)
-                    _queueService.Add(game);
+                if (userGame is not null)
+                    _queueService.Add(userGame);
             }
         }
 
