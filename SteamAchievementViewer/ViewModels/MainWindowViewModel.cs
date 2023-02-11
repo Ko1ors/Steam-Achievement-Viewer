@@ -61,7 +61,6 @@ namespace SteamAchievementViewer.ViewModels
                 IsNavigationAvailable = true
             };
 
-            _steamService.Start();
             _steamService.QueueAchievementsUpdate();
 
             if ((steamService.GetUser() is var user) && user != null)
