@@ -105,5 +105,10 @@ namespace Sav.Common.Repositories
                 Update(existingEntity);
             }
         }
+
+        public void Refresh()
+        {
+            _context.ChangeTracker.Clear();
+        }
     }
 }

@@ -17,44 +17,35 @@ namespace SteamAchievementViewer.Services
     {
         private const string XmlProfileError = "The specified profile could not be found.";
         private static readonly TimeSpan AchievementsUpdateInterval = TimeSpan.FromHours(24);
-        private const int UpdateNotifyStep = 5;
-        private const int GetAchievementsMaxAttempts = 10;
-        private static readonly string DirectoryPath = AppDomain.CurrentDomain.BaseDirectory + "data\\";
 
         private readonly Random _random;
         private readonly IClientService<XmlDocument> _xmlClient;
         private readonly IQueueService<UserGameEntity> _gameQueueService;
         private readonly IMapper _mapper;
 
-        private readonly IEntityRepository<AchievementEntity> _achievementRepository;
-        private readonly IEntityRepository<UserAchievementEntity> _userAchievementRepository;
         private readonly IEntityRepository<UserEntity> _userRepository;
         private readonly IEntityRepository<GameEntity> _gameRepository;
         private readonly IEntityRepository<UserGameEntity> _userGameRepository;
-
-        private Object _saveLock;
-
+        
         public event AchievementProgressUpdatedDelegate OnAchievementProgressUpdated;
-
         public event AvatarUpdatedDelegate OnAvatarUpdated;
 
         private string _steamID;
+        private bool _refreshRequired;
 
         public SteamService(IClientService<XmlDocument> xmlClient, IQueueService<UserGameEntity> gameQueueService, IMapper mapper,
-            IEntityRepository<AchievementEntity> achievementRepository, IEntityRepository<UserAchievementEntity> userAchievementRepository,
-            IEntityRepository<UserEntity> userRepository, IEntityRepository<GameEntity> gameRepository, IEntityRepository<UserGameEntity> userGameRepository)
+            IEntityRepository<UserEntity> userRepository, IEntityRepository<GameEntity> gameRepository, 
+            IEntityRepository<UserGameEntity> userGameRepository)
         {
             _xmlClient = xmlClient;
             _gameQueueService = gameQueueService;
             _mapper = mapper;
-            _achievementRepository = achievementRepository;
-            _userAchievementRepository = userAchievementRepository;
             _userRepository = userRepository;
             _gameRepository = gameRepository;
             _userGameRepository = userGameRepository;
 
             _random = new Random();
-            _saveLock = new object();
+            _refreshRequired = false;
         }
 
         public bool Start()
@@ -148,8 +139,18 @@ namespace SteamAchievementViewer.Services
             Settings.Default.Save();
         }
 
+        private void ValidateDBRefresh()
+        {
+            if (_refreshRequired)
+            {
+                _refreshRequired = false;
+                _userRepository.Refresh();
+            }
+        }
+
         public UserEntity GetUser()
         {
+            ValidateDBRefresh();
             return _userRepository.GetByKeys(_steamID);
         }
 
@@ -167,6 +168,11 @@ namespace SteamAchievementViewer.Services
             }
             _gameQueueService.Add(userGames.Where(ug => !string.IsNullOrEmpty(ug.StatsLink) &&
             (!ug.Game.Achievements.Any() || ug.Game.Achievements.Any(a => DateTime.Now - a.Updated >= AchievementsUpdateInterval))));
+        }
+
+        public void AchievementsDataChanged()
+        {
+            _refreshRequired = true;
         }
     }
 }

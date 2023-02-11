@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Sav.Common.Interfaces
 {
@@ -19,13 +20,15 @@ namespace Sav.Common.Interfaces
         IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
 
         IEnumerable<TEntity> GetAll();
-        
+
         void Add(TEntity entity);
-        
+
         void Update(TEntity entity);
-        
+
         void Delete(TEntity entity);
-        
+
         void AddOrUpdate(TEntity entity);
+
+        void Refresh();
     }
 }

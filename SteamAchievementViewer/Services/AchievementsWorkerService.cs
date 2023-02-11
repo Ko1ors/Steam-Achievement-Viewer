@@ -19,6 +19,7 @@ namespace SteamAchievementViewer.Services
         private static readonly TimeSpan GameIconsUpdateInterval = TimeSpan.FromHours(24);
 
         private readonly IQueueService<UserGameEntity> _queueService;
+        private readonly ISteamService _steamService;
         private readonly IEntityRepository<GameEntity> _gameRepository;
         private readonly IEntityRepository<AchievementEntity> _achievementRepository;
         private readonly IEntityRepository<UserAchievementEntity> _userAchievementRepository;
@@ -30,11 +31,12 @@ namespace SteamAchievementViewer.Services
 
         public bool IsRunning { get; set; }
 
-        public AchievementsWorkerService(IQueueService<UserGameEntity> queueService, IEntityRepository<GameEntity> gameRepository,
+        public AchievementsWorkerService(IQueueService<UserGameEntity> queueService, ISteamService steamService, IEntityRepository<GameEntity> gameRepository,
             IEntityRepository<AchievementEntity> achievementRepository, IEntityRepository<UserAchievementEntity> userAchievementRepository,
             IMapper mapper, IClientService<XmlDocument> xmlClient)
         {
             _queueService = queueService;
+            _steamService = steamService;
             _gameRepository = gameRepository;
             _achievementRepository = achievementRepository;
             _userAchievementRepository = userAchievementRepository;
@@ -132,6 +134,7 @@ namespace SteamAchievementViewer.Services
                 {
                     await _userAchievementRepository.AddOrUpdateAsync(userAchievement);
                 }
+                _steamService.AchievementsDataChanged();
             }
             catch (Exception e)
             {

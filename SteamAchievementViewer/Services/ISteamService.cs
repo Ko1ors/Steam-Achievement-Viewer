@@ -15,6 +15,8 @@ namespace SteamAchievementViewer.Services
         
         public event AvatarUpdatedDelegate OnAvatarUpdated;
 
+        public void AchievementsDataChanged();
+
         public UserEntity GetUser();
 
         public IEnumerable<GameEntity> GetUserGames();
