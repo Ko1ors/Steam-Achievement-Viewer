@@ -1,6 +1,6 @@
 ﻿using Sav.Infrastructure.Entities;
 using SteamAchievementViewer.Models;
-using SteamAchievementViewer.Services;
+using SteamAchievementViewer.Models.SteamApi;
 using System.Collections.Generic;
 using Profile = AutoMapper.Profile;
 
@@ -10,7 +10,7 @@ namespace SteamAchievementViewer.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<Models.Profile, UserEntity>()
+            CreateMap<Models.SteamApi.Profile, UserEntity>()
                 .ForMember(dest => dest.SteamID, opt => opt.MapFrom(src => src.SteamID))
                 .ForMember(dest => dest.OnlineState, opt => opt.MapFrom(src => src.OnlineState))
                 .ForMember(dest => dest.StateMessage, opt => opt.MapFrom(src => src.StateMessage))
@@ -48,6 +48,7 @@ namespace SteamAchievementViewer.Mapping
                 .ForMember(dest => dest.Achievements, opt => opt.Ignore())
                 .ForMember(dest => dest.Inserted, opt => opt.Ignore())
                 .ForMember(dest => dest.Updated, opt => opt.Ignore())
+                 .ForMember(dest => dest.UserAchievements, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<UserEntity, UserGameEntity>()
@@ -68,7 +69,7 @@ namespace SteamAchievementViewer.Mapping
                 .ForMember(dest => dest.Updated, opt => opt.Ignore())
                 .ForSourceMember(src => src.Achievements, opt => opt.DoNotValidate())
                 .ReverseMap();
-            
+
             CreateMap<UserEntity, List<UserGameEntity>>()
                 .ConvertUsing<GenericSingleToListConverter<UserEntity, UserGameEntity>>();
 
@@ -98,9 +99,35 @@ namespace SteamAchievementViewer.Mapping
                 .ForMember(dest => dest.Percent, opt => opt.Ignore())
                 .ReverseMap();
 
-
             CreateMap<GameEntity, List<AchievementEntity>>()
                 .ConvertUsing<GenericSingleToListConverter<GameEntity, AchievementEntity>>();
+
+            CreateMap<AchievementEntity, AchievementComposite>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.Percent, opt => opt.MapFrom(src => src.Percent))
+                .ForMember(dest => dest.IconOpen, opt => opt.MapFrom(src => src.IconOpen))
+                .ForMember(dest => dest.IconClosed, opt => opt.MapFrom(src => src.IconClosed))
+                .ForMember(dest => dest.Apiname, opt => opt.MapFrom(src => src.Apiname))
+                .ForMember(dest => dest.GameIcon, opt => opt.Ignore())
+                .ForMember(dest => dest.Unlocked, opt => opt.Ignore())
+                .ForMember(dest => dest.UnlockTime, opt => opt.Ignore())
+                .ReverseMap();
+
+            CreateMap<GameEntity, AchievementComposite>()
+                .ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.GameIcon, opt => opt.MapFrom(src => src.GameIcon))
+                .ForMember(dest => dest.Unlocked, opt => opt.Ignore())
+                .ForMember(dest => dest.UnlockTime, opt => opt.Ignore())
+                .ForMember(dest => dest.Description, opt => opt.Ignore())
+                .ForMember(dest => dest.Percent, opt => opt.Ignore())
+                .ForMember(dest => dest.IconOpen, opt => opt.Ignore())
+                .ForMember(dest => dest.IconClosed, opt => opt.Ignore())
+                .ForMember(dest => dest.Apiname, opt => opt.Ignore())
+                .ReverseMap();
+
+            CreateMap<GameEntity, List<AchievementComposite>>()
+                .ConvertUsing<GenericSingleToListConverter<GameEntity, AchievementComposite>>();
         }
     }
 }

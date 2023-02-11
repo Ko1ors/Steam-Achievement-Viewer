@@ -1,9 +1,8 @@
-﻿using SteamAchievementViewer.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace SteamAchievementViewer
+namespace SteamAchievementViewer.Models.SteamApi
 {
     [XmlRoot(ElementName = "achievements")]
     public class Achievements
@@ -26,22 +25,22 @@ namespace SteamAchievementViewer
         [XmlElement(ElementName = "description")]
         public string Description { get; set; }
         [XmlIgnore]
-        private DateTime unlockTime { get; set; }
+        public DateTime UnlockTime { get; set; }
         [XmlAttribute(AttributeName = "closed")]
         public string Closed { get; set; }
         [XmlElement(ElementName = "percent")]
         public float Percent { get; set; }
 
         [XmlElement(ElementName = "unlockTimestamp")]
-        public string UnlockTime
+        public string UnlockTimestamp
         {
-            get { return unlockTime.ToString("yyyy-MM-dd HH:mm"); }
+            get { return UnlockTime.ToString("yyyy-MM-dd HH:mm"); }
             set
             {
                 if (DateTime.TryParse(value, out var res))
-                    unlockTime = res;
+                    UnlockTime = res;
                 else
-                    unlockTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Double.Parse(value));
+                    UnlockTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(double.Parse(value));
             }
         }
     }
@@ -57,7 +56,7 @@ namespace SteamAchievementViewer
             Name = achievement.Name;
             Apiname = achievement.Apiname;
             Description = achievement.Description;
-            UnlockTime = achievement.UnlockTime;
+            UnlockTimestamp = achievement.UnlockTimestamp;
             Closed = achievement.Closed;
             Percent = achievement.Percent;
             GameName = game.Name;
