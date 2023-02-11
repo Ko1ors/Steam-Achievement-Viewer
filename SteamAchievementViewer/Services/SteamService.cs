@@ -1,26 +1,38 @@
-﻿using Sav.Common.Interfaces;
-using SteamAchievementViewer.Models;
+﻿using AutoMapper;
+using Sav.Common.Interfaces;
+using Sav.Common.Repositories;
+using Sav.Infrastructure.Entities;
+using SteamAchievementViewer.Mapping;
+using SteamAchievementViewer.Models.SteamApi;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using Game = SteamAchievementViewer.Models.SteamApi.Game;
+using Profile = SteamAchievementViewer.Models.SteamApi.Profile;
 
 namespace SteamAchievementViewer.Services
 {
     public class SteamService : ISteamService
     {
         private const string XmlProfileError = "The specified profile could not be found.";
+        private static readonly TimeSpan AchievementsUpdateInterval = TimeSpan.FromHours(24);
         private const int UpdateNotifyStep = 5;
         private const int GetAchievementsMaxAttempts = 10;
         private static readonly string DirectoryPath = AppDomain.CurrentDomain.BaseDirectory + "data\\";
 
         private readonly Random _random;
         private readonly IClientService<XmlDocument> _xmlClient;
-        private readonly IQueueService<Game> _gameQueueService;
-        private readonly IListRepository<Game> _gameRepository;
+        private readonly IQueueService<UserGameEntity> _gameQueueService;
+        private readonly IMapper _mapper;
+
+        private readonly IEntityRepository<AchievementEntity> _achievementRepository;
+        private readonly IEntityRepository<UserAchievementEntity> _userAchievementRepository;
+        private readonly IEntityRepository<UserEntity> _userRepository;
+        private readonly IEntityRepository<GameEntity> _gameRepository;
+        private readonly IEntityRepository<UserGameEntity> _userGameRepository;
 
         private Object _saveLock;
 
@@ -28,32 +40,23 @@ namespace SteamAchievementViewer.Services
 
         public event AvatarUpdatedDelegate OnAvatarUpdated;
 
-        public Profile Profile { get; private set; }
+        private string _steamID;
 
-        private GamesList _gamesList;
-
-        public GamesList GamesList
-        {
-            get
-            {
-                _gamesList.Games.Game = _gameRepository.GetAll().ToList();
-                return _gamesList;
-            }
-            private set
-            {
-                _gamesList = value;
-                _gameRepository.Clear();
-                _gameRepository.AddRange(_gamesList.Games.Game);
-            }
-        }
-
-        public SteamService(IClientService<XmlDocument> xmlClient, IQueueService<Game> gameQueueService, IListRepository<Game> gameRepository)
+        public SteamService(IClientService<XmlDocument> xmlClient, IQueueService<UserGameEntity> gameQueueService, IMapper mapper,
+            IEntityRepository<AchievementEntity> achievementRepository, IEntityRepository<UserAchievementEntity> userAchievementRepository,
+            IEntityRepository<UserEntity> userRepository, IEntityRepository<GameEntity> gameRepository, IEntityRepository<UserGameEntity> userGameRepository)
         {
             _xmlClient = xmlClient;
             _gameQueueService = gameQueueService;
+            _mapper = mapper;
+            _achievementRepository = achievementRepository;
+            _userAchievementRepository = userAchievementRepository;
+            _userRepository = userRepository;
             _gameRepository = gameRepository;
+            _userGameRepository = userGameRepository;
+
             _random = new Random();
-            _saveLock = new Object();
+            _saveLock = new object();
         }
 
         public bool Start()
@@ -62,234 +65,99 @@ namespace SteamAchievementViewer.Services
                 return false;
 
             LoadProfile(Settings.Default.SteamID);
-            LoadGames();
 
             return true;
         }
 
         private int GetRandomParameter() => _random.Next(0, 100000);
 
-        public async Task<bool> GetAchievementsAsync(List<Game> games)
+        public async Task<bool> UpdateGamesAsync(string steamID)
         {
-            int gameRetrieved = 0;
-            int prevUpdate = 0 - UpdateNotifyStep;
-            XmlSerializer serializer = new XmlSerializer(typeof(Achievements));
-            foreach (Game game in GamesList.Games.Game)
-            {
-                var response = await _xmlClient.SendGetRequest($"{game.StatsLink}/?xml={GetRandomParameter()}");
-                if (response.InnerText == XmlProfileError || response.InnerText == "")
-                    continue;
-                using (XmlReader reader = new XmlNodeReader(response))
-                {
-                    reader.ReadToDescendant("achievements");
-                    game.Achievements = (Achievements)serializer.Deserialize(reader);
-                }
-                if (game.Achievements == null)
-                    continue;
-                Achievements achievements = await GetGlobalAchievementPercentagesAsync(game.AppID);
-                if (achievements != null)
-                {
-                    foreach (Achievement achievement in game.Achievements.Achievement)
-                    {
-                        var achv = achievements.Achievement.Find(e => e.Name.ToLower() == achievement.Apiname.ToLower());
-                        if (achv != null)
-                            achievement.Percent = achv.Percent;
-                        else
-                            throw new Exception();
-                    }
-                }
-                gameRetrieved++;
-                if ((gameRetrieved - prevUpdate >= UpdateNotifyStep) || (gameRetrieved == GamesList.Games.Game.Count))
-                {
-                    prevUpdate = gameRetrieved;
-                    OnAchievementProgressUpdated?.Invoke(GamesList.Games.Game.Count, gameRetrieved, game.Name);
-                }
-            }
-            OnAchievementProgressUpdated?.Invoke(GamesList.Games.Game.Count, GamesList.Games.Game.Count, GamesList.Games.Game.Last().Name);
-            GamesList.Games.Game.RemoveAll(e => e.Achievements == null);
-            SaveGames();
-            return true;
-        }
-
-        public async Task<bool> GetAchievementsParallelAsync(List<Game> games)
-        {
-            int gameRetrieved = 0;
-            int gameFailed = 0;
-            int prevUpdate = 0 - UpdateNotifyStep;
-            await Parallel.ForEachAsync(GamesList.Games.Game, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 5 }, async (game, token) =>
-            {
-                int attempt = 0;
-                while (attempt < GetAchievementsMaxAttempts)
-                {
-                    try
-                    {
-                        var response = await _xmlClient.SendGetRequest($"{game.StatsLink}/?xml={GetRandomParameter()}");
-                        if (response.InnerText == XmlProfileError || response.InnerText == "")
-                            return;
-                        using (XmlReader reader = new XmlNodeReader(response))
-                        {
-                            XmlSerializer serializer = new XmlSerializer(typeof(Game));
-                            reader.ReadToDescendant("game");
-                            var game_ = (Game)serializer.Deserialize(reader);
-                            serializer = new XmlSerializer(typeof(Achievements));
-                            reader.ReadToNextSibling("achievements");
-                            game.Achievements = (Achievements)serializer.Deserialize(reader);
-                            game.GameLogoSmall = game_.GameLogoSmall;
-                            game.GameIcon = game_.GameIcon;
-                        }
-                        if (game.Achievements == null)
-                            return;
-                        Achievements achievements = await GetGlobalAchievementPercentagesAsync(game.AppID);
-                        if (achievements != null)
-                        {
-                            foreach (Achievement achievement in game.Achievements.Achievement)
-                            {
-                                var achv = achievements.Achievement.Find(e => e.Name.ToLower() == achievement.Apiname.ToLower());
-                                if (achv != null)
-                                    achievement.Percent = achv.Percent;
-                                else
-                                    achievement.Percent = -1;
-                            }
-                        }
-                        gameRetrieved++;
-                        if (gameRetrieved - prevUpdate >= UpdateNotifyStep)
-                        {
-                            prevUpdate = gameRetrieved;
-                            OnAchievementProgressUpdated?.Invoke(GamesList.Games.Game.Count, gameRetrieved, game.Name);
-                        }
-                        break;
-                    }
-                    catch
-                    {
-                        attempt++;
-                        await Task.Delay(_random.Next(500, 1000) * attempt, token);
-                    }
-                }
-                if (attempt == GetAchievementsMaxAttempts)
-                {
-                    gameFailed++;
-                    gameRetrieved++;
-                    if (gameRetrieved - prevUpdate >= UpdateNotifyStep)
-                    {
-                        prevUpdate = gameRetrieved;
-                        OnAchievementProgressUpdated?.Invoke(GamesList.Games.Game.Count, gameRetrieved, game.Name);
-                    }
-                }
-            });
-            OnAchievementProgressUpdated?.Invoke(GamesList.Games.Game.Count, GamesList.Games.Game.Count, GamesList.Games.Game.Last().Name);
-            GamesList.Games.Game.RemoveAll(e => e.Achievements == null);
-            return true;
-        }
-
-        public async Task<bool> GetGamesAsync(string steamID)
-        {
-            var response = await _xmlClient.SendGetRequest($"https://steamcommunity.com/profiles/{Profile.SteamID64}/games?tab=all&xml={GetRandomParameter()}");
+            List<GameEntity> games = null;
+            List<UserGameEntity> userGames = null;
+            var response = await _xmlClient.SendGetRequest($"https://steamcommunity.com/profiles/{steamID}/games?tab=all&xml={GetRandomParameter()}");
             if (response.InnerText == XmlProfileError)
                 return false;
-            XmlSerializer serializer = new XmlSerializer(typeof(GamesList));
+            var serializer = new XmlSerializer(typeof(GamesList));
             using (XmlReader reader = new XmlNodeReader(response))
             {
-                GamesList = (GamesList)serializer.Deserialize(reader);
+                var gamesList = (GamesList)serializer.Deserialize(reader);
+                games = _mapper.Map<List<GameEntity>>(gamesList.Games.Game);
+                var currentUser = _userRepository.GetByKeys(_steamID);
+                userGames = _mapper.MapMultiple<List<UserGameEntity>>(gamesList.Games.Game, currentUser);
+
+                // TODO: check and implement parallel add or update
+                //await Parallel.ForEachAsync(games, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 }, async (game, token) =>
+                //{
+                //    await new EntityRepository<GameEntity>().AddOrUpdateAsync(game);
+                //});
+                //await Parallel.ForEachAsync(userGames, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 }, async (userGame, token) =>
+                //{
+                //    await new EntityRepository<UserGameEntity>().AddOrUpdateAsync(userGame);
+                //});
+
+                foreach (var game in games)
+                {
+                    await _gameRepository.AddOrUpdateAsync(game);
+                }
+                foreach (var userGame in userGames)
+                {
+                    await _userGameRepository.AddOrUpdateAsync(userGame);
+                }
             }
-            if (GamesList?.Games.Game.Count == 0)
+            if (games.Count == 0)
             {
-                GamesList = null;
                 return false;
             }
-            // TODO: do not remove games that do not have achievements
-            _gameRepository.RemoveAll(e => e.GlobalStatsLink == null || e.StatsLink == null);
-            _gameQueueService.Add(GamesList.Games.Game);
+            _gameQueueService.Add(userGames);
             return true;
         }
 
-        public async Task<Achievements> GetGlobalAchievementPercentagesAsync(string appid)
+        public async Task<bool> UpdateProfileAsync(string steamID)
         {
-            Achievements achievements = null;
-            var response = await _xmlClient.SendGetRequest("https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid=" + appid + "&format=xml");
-            using (XmlReader reader = new XmlNodeReader(response))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(Achievements));
-                reader.ReadToDescendant("achievements");
-                achievements = (Achievements)serializer.Deserialize(reader);
-            }
-            return achievements;
-        }
-
-        public async Task<bool> GetProfileAsync(string steamID)
-        {
+            Profile profile = null;
             var response = await _xmlClient.SendGetRequest($"https://steamcommunity.com/profiles/{steamID}/?xml={GetRandomParameter()}");
             if (response.InnerText == XmlProfileError)
                 return false;
             XmlSerializer serializer = new XmlSerializer(typeof(Profile));
             using (XmlReader reader = new XmlNodeReader(response))
             {
-                Profile = (Profile)serializer.Deserialize(reader);
+                profile = (Profile)serializer.Deserialize(reader);
+                var user = _mapper.Map<UserEntity>(profile);
+                _userRepository.AddOrUpdate(user);
             }
-            if (Profile?.PrivacyState != "public")
+            if (profile?.PrivacyState != "public")
             {
-                Profile = null;
                 return false;
             }
-            OnAvatarUpdated?.Invoke(Profile.AvatarFull);
+            OnAvatarUpdated?.Invoke(profile.AvatarFull);
             return true;
         }
 
         public bool IsLogged()
         {
-            return Profile != null;
-        }
-
-        public void SaveGames()
-        {
-            lock (_saveLock)
-            {
-                if (!Directory.Exists(DirectoryPath + Profile.SteamID64))
-                    Directory.CreateDirectory(DirectoryPath + Profile.SteamID64);
-                var serializer = new XmlSerializer(typeof(GamesList));
-                FileStream file = File.Create(DirectoryPath + Profile.SteamID64 + "\\gameslist.xml");
-                serializer.Serialize(file, GamesList);
-            }
-        }
-
-        public void SaveProfile()
-        {
-            if (!Directory.Exists(DirectoryPath + Profile.SteamID64))
-                Directory.CreateDirectory(DirectoryPath + Profile.SteamID64);
-            XmlSerializer serializer = new XmlSerializer(typeof(Profile));
-            FileStream file = File.Create(DirectoryPath + Profile.SteamID64 + "\\profile.xml");
-            serializer.Serialize(file, Profile);
-        }
-
-        public void LoadGames()
-        {
-            if (File.Exists(DirectoryPath + Profile?.SteamID64 + "\\gameslist.xml"))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(GamesList));
-                StreamReader file = new StreamReader(DirectoryPath + Profile.SteamID64 + "\\gameslist.xml");
-                GamesList = (GamesList)serializer.Deserialize(file);
-                file.Close();
-            }
+            return !string.IsNullOrEmpty(_steamID);
         }
 
         public void LoadProfile(string steamID)
         {
-            if (File.Exists(DirectoryPath + steamID + "\\profile.xml"))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(Profile));
-                StreamReader file = new StreamReader(DirectoryPath + steamID + "\\profile.xml");
-                Profile = (Profile)serializer.Deserialize(file);
-                file.Close();
-            }
+            _steamID = steamID;
         }
 
         public void SaveSettingsInfo()
         {
-            if (Profile != null)
-            {
-                Settings.Default.SteamID = Profile.SteamID64;
-                Settings.Default.LastUpdate = DateTime.Now;
-                Settings.Default.Save();
-            }
+            Settings.Default.LastUpdate = DateTime.Now;
+            Settings.Default.Save();
+        }
+
+        public UserEntity GetUser()
+        {
+            return _userRepository.GetByKeys(_steamID);
+        }
+        
+        public IEnumerable<GameEntity> GetUserGames()
+        {
+            return GetUser().UserGames.Select(ug => ug.Game);
         }
     }
 }

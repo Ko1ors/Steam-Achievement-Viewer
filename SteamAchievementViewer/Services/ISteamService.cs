@@ -1,4 +1,5 @@
-﻿using SteamAchievementViewer.Models;
+﻿using Sav.Infrastructure.Entities;
+using SteamAchievementViewer.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,29 +15,17 @@ namespace SteamAchievementViewer.Services
         
         public event AvatarUpdatedDelegate OnAvatarUpdated;
 
-        public Profile Profile { get; }
+        public UserEntity GetUser();
 
-        public GamesList GamesList { get; }
+        public IEnumerable<GameEntity> GetUserGames();
 
         bool Start();
 
         bool IsLogged();
 
-        Task<bool> GetProfileAsync(string steamID);
+        Task<bool> UpdateProfileAsync(string steamID);
 
-        Task<bool> GetGamesAsync(string steamID);
-
-        Task<bool> GetAchievementsAsync(List<Game> games);
-
-        Task<bool> GetAchievementsParallelAsync(List<Game> games);
-
-        Task<Achievements> GetGlobalAchievementPercentagesAsync(string appid);
-
-        void SaveGames();
-
-        void SaveProfile();
-
-        void LoadGames();
+        Task<bool> UpdateGamesAsync(string steamID);
 
         void LoadProfile(string steamID);
 

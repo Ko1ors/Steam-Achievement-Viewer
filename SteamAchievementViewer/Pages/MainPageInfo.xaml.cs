@@ -1,12 +1,11 @@
 ﻿using SteamAchievementViewer.Services;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace SteamAchievementViewer.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для MainPageInfo.xaml
-    /// </summary>
+
     public partial class MainPageInfo : Page
     {
         private readonly ISteamService _steamService;
@@ -56,9 +55,11 @@ namespace SteamAchievementViewer.Pages
         {
             if (_steamService.IsLogged())
             {
+                var user = _steamService.GetUser();
+                var games = _steamService.GetUserGames();
                 infoStackPanel.Visibility = Visibility.Visible;
-                UpdateProfileName(_steamService.Profile.SteamID);
-                UpdateGameCount(_steamService.GamesList.Games.Game.Count);
+                UpdateProfileName(user.SteamID);
+                UpdateGameCount(games.Count());
                 UpdateAchievementCount(_gameAchievementsService.GetTotalAchievementsCount());
                 UpdateAchieved(_gameAchievementsService.GetCompletedAchievementsCount());
                 UpdateAchievementStatistics(_gameAchievementsService.GetCompletedAchievementsCount() * 100 / _gameAchievementsService.GetTotalAchievementsCount());

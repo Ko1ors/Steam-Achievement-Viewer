@@ -63,8 +63,8 @@ namespace SteamAchievementViewer.ViewModels
 
             _steamService.Start();
 
-            if (steamService.Profile != null)
-                UpdateAvatar(steamService.Profile.AvatarFull);
+            if ((steamService.GetUser() is var user) && user != null)
+                UpdateAvatar(user.AvatarFull);
 
             _navigationService.NavigateTo(Model.NavigationPages.Skip(1).First());
         }

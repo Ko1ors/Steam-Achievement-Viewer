@@ -67,53 +67,60 @@ namespace SteamAchievementViewer.ViewModels
 
         private async Task GetUserInformationAsync()
         {
-            await Task.Run(async () =>
+            try
             {
-                _getInformationInProcess = true;
-                ProgressBarValue = 0;
-                _navigationService.ChangeAvailability(false);
-                string steamID = SteamId;
-
-                StatusLabelContent = Properties.Resources.RetrievingProfileData;
-                await Task.Delay(1000);
-
-                if (await _steamService.GetProfileAsync(steamID))
+                await Task.Run(async () =>
                 {
-                    StatusLabelContent = Properties.Resources.ProfileDataRetrieved;
-                }
-                else
-                {
-                    StatusLabelContent = Properties.Resources.ProfileDataFailed;
-                    return;
-                }
+                    _getInformationInProcess = true;
+                    ProgressBarValue = 0;
+                    _navigationService.ChangeAvailability(false);
+                    string steamID = SteamId;
 
-                await Task.Delay(1000);
-                StatusLabelContent = Properties.Resources.RetrievingGameList;
-                await Task.Delay(1000);
+                    StatusLabelContent = Properties.Resources.RetrievingProfileData;
+                    await Task.Delay(1000);
 
-                if (await _steamService.GetGamesAsync(steamID))
-                {
-                    StatusLabelContent = Properties.Resources.GameListRetrieved;
-                }
-                else
-                {
-                    StatusLabelContent = Properties.Resources.GameListFailed;
-                    return;
-                }
+                    if (await _steamService.UpdateProfileAsync(steamID))
+                    {
+                        StatusLabelContent = Properties.Resources.ProfileDataRetrieved;
+                    }
+                    else
+                    {
+                        StatusLabelContent = Properties.Resources.ProfileDataFailed;
+                        return;
+                    }
 
-                await Task.Delay(1000);
-                StatusLabelContent = Properties.Resources.RetrievingAchievementList;
+                    await Task.Delay(1000);
+                    StatusLabelContent = Properties.Resources.RetrievingGameList;
+                    await Task.Delay(1000);
 
-                await Task.Delay(1000);
-                StatusLabelContent = Properties.Resources.ResultSaving;
+                    if (await _steamService.UpdateGamesAsync(steamID))
+                    {
+                        StatusLabelContent = Properties.Resources.GameListRetrieved;
+                    }
+                    else
+                    {
+                        StatusLabelContent = Properties.Resources.GameListFailed;
+                        return;
+                    }
 
-                _steamService.SaveProfile();
-                _steamService.SaveSettingsInfo();
+                    await Task.Delay(1000);
+                    StatusLabelContent = Properties.Resources.RetrievingAchievementList;
 
-                await Task.Delay(1000);
-                StatusLabelContent = Properties.Resources.ResultSaved;
+                    await Task.Delay(1000);
+                    StatusLabelContent = Properties.Resources.ResultSaving;
+                    
+                    _steamService.SaveSettingsInfo();
 
-            });
+                    await Task.Delay(1000);
+                    StatusLabelContent = Properties.Resources.ResultSaved;
+
+                });
+            }
+            catch (System.Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
             _navigationService.ChangeAvailability(true);
             _getInformationInProcess = false;
         }

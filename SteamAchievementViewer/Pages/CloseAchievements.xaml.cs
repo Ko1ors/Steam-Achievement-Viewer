@@ -1,4 +1,4 @@
-﻿using SteamAchievementViewer.Models;
+﻿using SteamAchievementViewer.Models.SteamApi;
 using SteamAchievementViewer.Services;
 using System;
 using System.Linq;
@@ -7,9 +7,7 @@ using System.Windows.Data;
 
 namespace SteamAchievementViewer.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для CloseAchievements.xaml
-    /// </summary>
+    
     public partial class CloseAchievements : Page
     {
         private readonly ISteamService _steamService;
@@ -22,12 +20,11 @@ namespace SteamAchievementViewer.Pages
             _gameAchievementsService = gameAchievementsService;
         }
 
-
         private void GameSelected(object sender, SelectionChangedEventArgs e)
         {
             if (GameList.SelectedItem != null)
             {
-                AchievementList.ItemsSource = _gameAchievementsService.GetClosestAchievements((GameList.SelectedItem as Game).AppID).Achievement;
+                AchievementList.ItemsSource = _gameAchievementsService.GetClosestAchievements((GameList.SelectedItem as Sav.Infrastructure.Entities.GameEntity).AppID);
                 if (AchievementList.Items.Count > 0)
                     AchievementList.ScrollIntoView(AchievementList.Items[0]);
             }
