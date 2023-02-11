@@ -23,8 +23,6 @@ namespace SteamAchievementViewer.Services
 
         public void QueueAchievementsUpdate();
 
-        bool Start();
-
         bool IsLogged();
 
         Task<bool> UpdateProfileAsync(string steamID);

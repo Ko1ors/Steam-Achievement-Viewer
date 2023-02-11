@@ -7,7 +7,7 @@ namespace Sav.Common.Repositories
 {
     public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : BaseEntity
     {
-        private readonly SteamContext _context;
+        protected readonly SteamContext _context;
 
         public EntityRepository()
         {

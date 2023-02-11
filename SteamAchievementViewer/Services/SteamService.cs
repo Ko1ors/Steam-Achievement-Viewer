@@ -23,7 +23,7 @@ namespace SteamAchievementViewer.Services
         private readonly IQueueService<UserGameEntity> _gameQueueService;
         private readonly IMapper _mapper;
 
-        private readonly IEntityRepository<UserEntity> _userRepository;
+        private readonly IUserEntityRepository _userRepository;
         private readonly IEntityRepository<GameEntity> _gameRepository;
         private readonly IEntityRepository<UserGameEntity> _userGameRepository;
         
@@ -34,7 +34,7 @@ namespace SteamAchievementViewer.Services
         private bool _refreshRequired;
 
         public SteamService(IClientService<XmlDocument> xmlClient, IQueueService<UserGameEntity> gameQueueService, IMapper mapper,
-            IEntityRepository<UserEntity> userRepository, IEntityRepository<GameEntity> gameRepository, 
+            IUserEntityRepository userRepository, IEntityRepository<GameEntity> gameRepository, 
             IEntityRepository<UserGameEntity> userGameRepository)
         {
             _xmlClient = xmlClient;
@@ -46,9 +46,10 @@ namespace SteamAchievementViewer.Services
 
             _random = new Random();
             _refreshRequired = false;
+            Start();
         }
 
-        public bool Start()
+        private bool Start()
         {
             if (Settings.Default.SteamID == "-1")
                 return false;
@@ -161,13 +162,11 @@ namespace SteamAchievementViewer.Services
 
         public void QueueAchievementsUpdate()
         {
-            var userGames = GetUser()?.UserGames;
-            if (userGames == null)
+            if (string.IsNullOrEmpty(_steamID))
             {
                 return;
             }
-            _gameQueueService.Add(userGames.Where(ug => !string.IsNullOrEmpty(ug.StatsLink) &&
-            (!ug.Game.Achievements.Any() || ug.Game.Achievements.Any(a => DateTime.Now - a.Updated >= AchievementsUpdateInterval))));
+            _gameQueueService.Add(_userRepository.GetGamesToQueue(_steamID, AchievementsUpdateInterval));
         }
 
         public void AchievementsDataChanged()
