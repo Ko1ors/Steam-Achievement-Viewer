@@ -45,6 +45,11 @@ namespace SteamAchievementViewer.Services
 
         public async Task StartAsync(CancellationToken token)
         {
+            if (IsRunning)
+            {
+                return;
+            }
+
             IsStarted = true;
             IsRunning = true;
 
@@ -121,11 +126,11 @@ namespace SteamAchievementViewer.Services
 
                 foreach (var achievement in achievements)
                 {
-                    _achievementRepository.AddOrUpdate(achievement);
+                    await _achievementRepository.AddOrUpdateAsync(achievement);
                 }
                 foreach (var userAchievement in userAchievements)
                 {
-                    _userAchievementRepository.AddOrUpdate(userAchievement);
+                    await _userAchievementRepository.AddOrUpdateAsync(userAchievement);
                 }
             }
             catch (Exception e)

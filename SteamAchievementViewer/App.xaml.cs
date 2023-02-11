@@ -34,17 +34,20 @@ namespace SteamAchievementViewer
 
         private void ConfigureServices(IServiceCollection services)
         {
+            //Factories
+            services.AddScoped(typeof(IServiceFactory<>), typeof(ServiceFactory<>));
+            
             // Services
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddTransient<IClientService<XmlDocument>, XmlClientService>();
             services.AddSingleton<ISteamService, SteamService>();
             services.AddTransient<IGameAchievementsService, GameAchievementsService>();
             services.AddSingleton(typeof(IQueueService<>), typeof(QueueService<>));
-            services.AddScoped<IAchievementsWorkerService, AchievementsWorkerService>();
+            services.AddTransient<IAchievementsWorkerService, AchievementsWorkerService>();
 
             // Repositories
             services.AddSingleton(typeof(IListRepository<>), typeof(ListRepository<>));
-            services.AddSingleton(typeof(IEntityRepository<>), typeof(EntityRepository<>));
+            services.AddTransient(typeof(IEntityRepository<>), typeof(EntityRepository<>));
 
             // Mapping
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -90,8 +93,13 @@ namespace SteamAchievementViewer
 
 
             ConfigureNavigation();
-            var workerService = ServiceProvider.GetService<IAchievementsWorkerService>();
-            Task.Run(() => workerService.StartAsync(new CancellationTokenSource().Token));
+            var workerFactory = ServiceProvider.GetService<IServiceFactory<IAchievementsWorkerService>>();
+            // TODO: move worker count to the config
+            for (int i = 0; i < 5; i++)
+            {
+                Task.Run(() => workerFactory.Create().StartAsync(new CancellationTokenSource().Token));
+            }   
+            
 
             var mainWindow = ServiceProvider.GetService<MainWindow>();
             mainWindow.Show();
