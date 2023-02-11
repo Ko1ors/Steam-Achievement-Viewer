@@ -155,7 +155,7 @@ namespace SteamAchievementViewer.Services
 
         public IEnumerable<GameEntity> GetUserGames()
         {
-            return GetUser().UserGames.Select(ug => ug.Game);
+            return GetUser()?.UserGames?.Select(ug => ug.Game) ?? Enumerable.Empty<GameEntity>();
         }
 
         public void QueueAchievementsUpdate()

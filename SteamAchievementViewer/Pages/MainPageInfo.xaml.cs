@@ -53,9 +53,8 @@ namespace SteamAchievementViewer.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (_steamService.IsLogged())
+            if (_steamService.IsLogged() && (_steamService.GetUser() is var user) && user != null)
             {
-                var user = _steamService.GetUser();
                 var games = _steamService.GetUserGames();
                 infoStackPanel.Visibility = Visibility.Visible;
                 UpdateProfileName(user.SteamID);

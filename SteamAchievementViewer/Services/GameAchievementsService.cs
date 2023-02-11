@@ -21,7 +21,6 @@ namespace SteamAchievementViewer.Services
 
         public IEnumerable<AchievementComposite> GetAchievementComposites()
         {
-            var achievements = new List<AchievementGameInfo>();
             return _steamService.GetUserGames().Select(ug =>
                _mapper.MapMultiple<IEnumerable<AchievementComposite>>(ug.Achievements, ug)
                 .GroupJoin(ug.UserAchievements,
