@@ -11,7 +11,7 @@ namespace Sav.Infrastructure.Entities
 
         public string Apiname { get; set; } = null!;
 
-        public string UnlockTime { get; set; } = null!;
+        public DateTime UnlockTime { get; set; }
 
         public virtual UserEntity User { get; set; } = null!;
 

@@ -122,7 +122,7 @@ namespace Sav.Infrastructure.Migrations
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
                     AppID = table.Column<string>(type: "TEXT", nullable: false),
                     Apiname = table.Column<string>(type: "TEXT", nullable: false),
-                    UnlockTime = table.Column<string>(type: "TEXT", nullable: false),
+                    UnlockTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Inserted = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Updated = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },

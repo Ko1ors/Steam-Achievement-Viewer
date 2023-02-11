@@ -116,8 +116,7 @@ namespace Sav.Infrastructure.Migrations
                     b.Property<DateTime>("Inserted")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UnlockTime")
-                        .IsRequired()
+                    b.Property<DateTime>("UnlockTime")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Updated")
