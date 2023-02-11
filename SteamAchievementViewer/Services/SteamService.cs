@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Sav.Common.Interfaces;
+using Sav.Common.Models;
 using Sav.Infrastructure.Entities;
 using SteamAchievementViewer.Mapping;
 using SteamAchievementViewer.Models.SteamApi;
@@ -166,12 +167,18 @@ namespace SteamAchievementViewer.Services
             {
                 return;
             }
+            
             _gameQueueService.Add(_userRepository.GetGamesToQueue(_steamID, AchievementsUpdateInterval));
         }
 
         public void AchievementsDataChanged()
         {
             _refreshRequired = true;
+        }
+
+        public IEnumerable<AchievementComposite> GetAchievementComposites()
+        {
+            return _userRepository.GetUserAchievementComposites(_steamID);
         }
     }
 }

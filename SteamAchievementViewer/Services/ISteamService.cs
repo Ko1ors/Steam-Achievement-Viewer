@@ -1,4 +1,5 @@
-﻿using Sav.Infrastructure.Entities;
+﻿using Sav.Common.Models;
+using Sav.Infrastructure.Entities;
 using SteamAchievementViewer.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,6 +21,8 @@ namespace SteamAchievementViewer.Services
         public UserEntity GetUser();
 
         public IEnumerable<GameEntity> GetUserGames();
+
+        IEnumerable<AchievementComposite> GetAchievementComposites();
 
         public void QueueAchievementsUpdate();
 

@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
+using Sav.Common.Models;
 using Sav.Infrastructure.Entities;
 using SteamAchievementViewer.Mapping;
-using SteamAchievementViewer.Models;
-using SteamAchievementViewer.Models.SteamApi;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,21 +20,7 @@ namespace SteamAchievementViewer.Services
 
         public IEnumerable<AchievementComposite> GetAchievementComposites()
         {
-            return _steamService.GetUserGames().Select(ug =>
-               _mapper.MapMultiple<IEnumerable<AchievementComposite>>(ug.Achievements, ug)
-                .GroupJoin(ug.UserAchievements,
-                    c => c.Apiname,
-                    ua => ua.Apiname,
-                    (c, ua) =>
-                    {
-                        if (ua.Any())
-                        {
-                            c.Unlocked = true;
-                            c.UnlockTime = ua.First().UnlockTime;
-                        }
-                        return c;
-                    })
-            ).SelectMany(a => a);
+            return _steamService.GetAchievementComposites();
         }
 
         public IEnumerable<AchievementComposite> GetClosestAchievements(int page, int count)
@@ -48,7 +33,7 @@ namespace SteamAchievementViewer.Services
             var game = _steamService.GetUserGames().FirstOrDefault(e => e.AppID == appid);
             if (game == null)
                 return null;
-            
+
             return game.Achievements.Where(a => !game.UserAchievements.Any(ua => ua.Apiname == a.Apiname)).OrderByDescending(e => e.Percent);
         }
 

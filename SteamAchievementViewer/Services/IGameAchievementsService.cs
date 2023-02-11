@@ -1,6 +1,5 @@
-﻿using Sav.Infrastructure.Entities;
-using SteamAchievementViewer.Models;
-using SteamAchievementViewer.Models.SteamApi;
+﻿using Sav.Common.Models;
+using Sav.Infrastructure.Entities;
 using System.Collections.Generic;
 
 namespace SteamAchievementViewer.Services

@@ -1,5 +1,5 @@
-﻿using Sav.Infrastructure.Entities;
-using SteamAchievementViewer.Models;
+﻿using Sav.Common.Models;
+using Sav.Infrastructure.Entities;
 using SteamAchievementViewer.Models.SteamApi;
 using System.Collections.Generic;
 using Profile = AutoMapper.Profile;
@@ -129,6 +129,18 @@ namespace SteamAchievementViewer.Mapping
 
             CreateMap<GameEntity, List<AchievementComposite>>()
                 .ConvertUsing<GenericSingleToListConverter<GameEntity, AchievementComposite>>();
+
+            CreateMap<EntityComposite, AchievementComposite>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Achievement.Name))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Achievement.Description))
+                .ForMember(dest => dest.Percent, opt => opt.MapFrom(src => src.Achievement.Percent ))
+                .ForMember(dest => dest.IconOpen, opt => opt.MapFrom(src => src.Achievement.IconOpen))
+                .ForMember(dest => dest.IconClosed, opt => opt.MapFrom(src => src.Achievement.IconClosed))
+                .ForMember(dest => dest.Apiname, opt => opt.MapFrom(src => src.Achievement.Apiname))
+                .ForMember(dest => dest.GameIcon, opt => opt.MapFrom(src => src.Game.GameIcon))
+                .ForMember(dest => dest.Unlocked, opt => opt.MapFrom(src => src.UserAchievement != null))
+                .ForMember(dest => dest.UnlockTime, opt => opt.MapFrom(src => src.UserAchievement != null ? src.UserAchievement.UnlockTime : default))
+                .ReverseMap();
         }
     }
 }

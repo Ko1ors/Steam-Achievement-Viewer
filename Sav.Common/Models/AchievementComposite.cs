@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace SteamAchievementViewer.Models
+﻿namespace Sav.Common.Models
 {
     public class AchievementComposite
     {
         public string GameName { get; set; }
-        
+
         public string GameIcon { get; set; }
 
         public string IconClosed { get; set; } = null!;
