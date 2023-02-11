@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Sav.Common.Interfaces;
-using Sav.Common.Repositories;
 using Sav.Infrastructure.Entities;
 using SteamAchievementViewer.Mapping;
 using SteamAchievementViewer.Models.SteamApi;
@@ -10,7 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using Game = SteamAchievementViewer.Models.SteamApi.Game;
 using Profile = SteamAchievementViewer.Models.SteamApi.Profile;
 
 namespace SteamAchievementViewer.Services
@@ -109,7 +107,7 @@ namespace SteamAchievementViewer.Services
             {
                 return false;
             }
-            _gameQueueService.Add(userGames);
+            _gameQueueService.Add(userGames.ExceptBy(_gameQueueService.GetAll().Select(ug => ug.AppID), ug => ug.AppID));
             return true;
         }
 
@@ -154,10 +152,21 @@ namespace SteamAchievementViewer.Services
         {
             return _userRepository.GetByKeys(_steamID);
         }
-        
+
         public IEnumerable<GameEntity> GetUserGames()
         {
             return GetUser().UserGames.Select(ug => ug.Game);
+        }
+
+        public void QueueAchievementsUpdate()
+        {
+            var userGames = GetUser()?.UserGames;
+            if (userGames == null)
+            {
+                return;
+            }
+            _gameQueueService.Add(userGames.Where(ug => !string.IsNullOrEmpty(ug.StatsLink) &&
+            (!ug.Game.Achievements.Any() || ug.Game.Achievements.Any(a => DateTime.Now - a.Updated >= AchievementsUpdateInterval))));
         }
     }
 }
