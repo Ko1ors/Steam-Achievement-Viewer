@@ -2,7 +2,7 @@
 using Sav.Common.Interfaces;
 using Sav.Infrastructure.Entities;
 using SteamAchievementViewer.Mapping;
-using SteamAchievementViewer.Models;
+using SteamAchievementViewer.Models.SteamApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +21,7 @@ namespace SteamAchievementViewer.Services
         private readonly IQueueService<UserGameEntity> _queueService;
         private readonly IEntityRepository<GameEntity> _gameRepository;
         private readonly IEntityRepository<AchievementEntity> _achievementRepository;
+        private readonly IEntityRepository<UserAchievementEntity> _userAchievementRepository;
         private readonly IMapper _mapper;
         private readonly IClientService<XmlDocument> _xmlClient;
         private readonly Random _random;
@@ -30,11 +31,13 @@ namespace SteamAchievementViewer.Services
         public bool IsRunning { get; set; }
 
         public AchievementsWorkerService(IQueueService<UserGameEntity> queueService, IEntityRepository<GameEntity> gameRepository,
-            IEntityRepository<AchievementEntity> achievementRepository, IMapper mapper, IClientService<XmlDocument> xmlClient)
+            IEntityRepository<AchievementEntity> achievementRepository, IEntityRepository<UserAchievementEntity> userAchievementRepository,
+            IMapper mapper, IClientService<XmlDocument> xmlClient)
         {
             _queueService = queueService;
             _gameRepository = gameRepository;
             _achievementRepository = achievementRepository;
+            _userAchievementRepository = userAchievementRepository;
             _mapper = mapper;
             _xmlClient = xmlClient;
             _random = new Random();
@@ -72,6 +75,7 @@ namespace SteamAchievementViewer.Services
                     return;
                 Achievements achievementsResponse = null;
                 List<AchievementEntity> achievements = null;
+                IEnumerable<UserAchievementEntity> userAchievements = null;
                 using (XmlReader reader = new XmlNodeReader(response))
                 {
                     var serializer = new XmlSerializer(typeof(Game));
@@ -82,6 +86,13 @@ namespace SteamAchievementViewer.Services
                     achievementsResponse = (Achievements)serializer.Deserialize(reader);
 
                     var gameEntity = _gameRepository.GetByKeys(userGame.AppID);
+                    userAchievements = achievementsResponse.Achievement.Where(a => a.Closed == "1").Select(a => new UserAchievementEntity()
+                    {
+                        UserId = userGame.UserId,
+                        AppID = userGame.AppID,
+                        Apiname = a.Apiname,
+                        UnlockTime = a.UnlockTime
+                    });
                     achievements = _mapper.MapMultiple<List<AchievementEntity>>(achievementsResponse.Achievement, gameEntity);
 
                     if (DateTime.Now - gameEntity.Updated > GameIconsUpdateInterval)
@@ -111,6 +122,10 @@ namespace SteamAchievementViewer.Services
                 foreach (var achievement in achievements)
                 {
                     _achievementRepository.AddOrUpdate(achievement);
+                }
+                foreach (var userAchievement in userAchievements)
+                {
+                    _userAchievementRepository.AddOrUpdate(userAchievement);
                 }
             }
             catch (Exception e)
