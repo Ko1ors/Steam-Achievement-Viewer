@@ -24,7 +24,7 @@ namespace SteamAchievementViewer.Pages
         {
             if (GameList.SelectedItem != null)
             {
-                AchievementList.ItemsSource = _gameAchievementsService.GetClosestAchievements((GameList.SelectedItem as Sav.Infrastructure.Entities.GameEntity).AppID);
+                AchievementList.ItemsSource = _gameAchievementsService.GetGameClosestAchievements((GameList.SelectedItem as Sav.Infrastructure.Entities.GameEntity).AppID);
                 if (AchievementList.Items.Count > 0)
                     AchievementList.ScrollIntoView(AchievementList.Items[0]);
             }

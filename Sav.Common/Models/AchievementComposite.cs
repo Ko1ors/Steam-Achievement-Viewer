@@ -2,7 +2,9 @@
 {
     public class AchievementComposite
     {
-        public string GameName { get; set; }
+        public string AppID { get; set; } = null!;
+
+        public string GameName { get; set; } = null!;
 
         public string GameIcon { get; set; }
 

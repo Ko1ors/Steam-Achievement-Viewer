@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Sav.Common.Interfaces;
-using Sav.Common.Models;
 using Sav.Infrastructure.Entities;
 using SteamAchievementViewer.Mapping;
 using SteamAchievementViewer.Models.SteamApi;
@@ -27,7 +26,7 @@ namespace SteamAchievementViewer.Services
         private readonly IUserEntityRepository _userRepository;
         private readonly IEntityRepository<GameEntity> _gameRepository;
         private readonly IEntityRepository<UserGameEntity> _userGameRepository;
-        
+
         public event AchievementProgressUpdatedDelegate OnAchievementProgressUpdated;
         public event AvatarUpdatedDelegate OnAvatarUpdated;
 
@@ -35,7 +34,7 @@ namespace SteamAchievementViewer.Services
         private bool _refreshRequired;
 
         public SteamService(IClientService<XmlDocument> xmlClient, IQueueService<UserGameEntity> gameQueueService, IMapper mapper,
-            IUserEntityRepository userRepository, IEntityRepository<GameEntity> gameRepository, 
+            IUserEntityRepository userRepository, IEntityRepository<GameEntity> gameRepository,
             IEntityRepository<UserGameEntity> userGameRepository)
         {
             _xmlClient = xmlClient;
@@ -167,7 +166,7 @@ namespace SteamAchievementViewer.Services
             {
                 return;
             }
-            
+
             _gameQueueService.Add(_userRepository.GetGamesToQueue(_steamID, AchievementsUpdateInterval));
         }
 
@@ -176,9 +175,9 @@ namespace SteamAchievementViewer.Services
             _refreshRequired = true;
         }
 
-        public IEnumerable<AchievementComposite> GetAchievementComposites()
+        public string GetUserId()
         {
-            return _userRepository.GetUserAchievementComposites(_steamID);
+            return _steamID;
         }
     }
 }

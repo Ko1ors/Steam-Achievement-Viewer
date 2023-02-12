@@ -14,7 +14,7 @@ namespace SteamAchievementViewer.Services
 
         IEnumerable<AchievementComposite> GetClosestAchievements(int page = 1, int count = 100);
 
-        IEnumerable<AchievementEntity> GetClosestAchievements(string appid);
+        IEnumerable<AchievementComposite> GetGameClosestAchievements(string appid);
 
         IEnumerable<GameEntity> GetIncompleteGames(int page = 1, int count = 100);
 

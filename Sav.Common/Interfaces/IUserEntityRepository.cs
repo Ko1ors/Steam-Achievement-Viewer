@@ -8,5 +8,19 @@ namespace Sav.Common.Interfaces
         IEnumerable<UserGameEntity> GetGamesToQueue(string userId, TimeSpan updateInterval);
 
         IEnumerable<AchievementComposite> GetUserAchievementComposites(string userId);
+
+        IEnumerable<AchievementComposite> GetUserLatestAchievements(string userId, int page, int count);
+
+        IEnumerable<AchievementComposite>  GetUserClosestAchievements(string userId, int page, int count);
+
+        IEnumerable<AchievementComposite> GetUserGameClosestAchievements(string userId, string appId);
+
+        int GetUserCompletedAchievementsCount(string userId);
+
+        IEnumerable<GameEntity> GetUserIncompleteGames(string userId, int page, int count);
+
+        IEnumerable<AchievementComposite> GetUserRarestAchievements(string userId, int page, int count);
+
+        int GetUserTotalAchievementsCount(string userId);
     }
 }

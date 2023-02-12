@@ -131,6 +131,8 @@ namespace SteamAchievementViewer.Mapping
                 .ConvertUsing<GenericSingleToListConverter<GameEntity, AchievementComposite>>();
 
             CreateMap<EntityComposite, AchievementComposite>()
+                .ForMember(dest => dest.AppID, opt => opt.MapFrom(src => src.Game.AppID))
+                .ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game.Name))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Achievement.Name))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Achievement.Description))
                 .ForMember(dest => dest.Percent, opt => opt.MapFrom(src => src.Achievement.Percent ))

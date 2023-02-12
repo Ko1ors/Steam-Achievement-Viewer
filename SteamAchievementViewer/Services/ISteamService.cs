@@ -20,9 +20,9 @@ namespace SteamAchievementViewer.Services
 
         public UserEntity GetUser();
 
-        public IEnumerable<GameEntity> GetUserGames();
+        public string GetUserId();
 
-        IEnumerable<AchievementComposite> GetAchievementComposites();
+        public IEnumerable<GameEntity> GetUserGames();
 
         public void QueueAchievementsUpdate();
 
