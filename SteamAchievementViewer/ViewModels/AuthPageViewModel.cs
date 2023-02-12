@@ -1,6 +1,10 @@
-﻿using SteamAchievementViewer.Commands;
+﻿using Sav.Common.Interfaces;
+using Sav.Infrastructure.Entities;
+using SteamAchievementViewer.Commands;
 using SteamAchievementViewer.Services;
+using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SteamAchievementViewer.ViewModels
@@ -8,13 +12,18 @@ namespace SteamAchievementViewer.ViewModels
     public class AuthPageViewModel : ViewModelBase
     {
         private const string HyperlinkUrl = "https://github.com/Ko1ors/Steam-Achievement-Viewer/blob/master/README.md#login";
+
         private readonly INavigationService _navigationService;
         private readonly ISteamService _steamService;
+        private readonly IQueueService<UserGameEntity> _queueService;
+
+        private CancellationTokenSource _cancellationTokenSource;
 
         private bool _getInformationInProcess;
         private string _statusLabelContent;
         private int _progressBarValue;
         private string _steamId;
+        private int _gamesInQueue;
 
         public string StatusLabelContent
         {
@@ -46,23 +55,50 @@ namespace SteamAchievementViewer.ViewModels
             }
         }
 
+        public int GamesInQueue
+        {
+            get { return _gamesInQueue; }
+            set
+            {
+                _gamesInQueue = value;
+                OnPropertyChanged(nameof(GamesInQueue));
+                OnPropertyChanged(nameof(HasGamesInQueue));
+            }
+        }
+
+        public bool HasGamesInQueue => GamesInQueue > 0;
+
         public RelayCommand AuthCommand { get; set; }
 
         public RelayCommand HyperlinkCommand { get; set; }
 
-        public AuthPageViewModel(INavigationService navigationService, ISteamService steamService)
+        public AuthPageViewModel(INavigationService navigationService, ISteamService steamService, IQueueService<UserGameEntity> queueService)
         {
             _navigationService = navigationService;
             _steamService = steamService;
-            _steamService.OnAchievementProgressUpdated += SteamServiceOnAchievementProgressUpdated;
+            _queueService = queueService;
+
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            Task.Run(() => RunQueuePolling());
 
             AuthCommand = new RelayCommand((obj) => _ = GetUserInformationAsync(), (obj) => CanAuth());
             HyperlinkCommand = new RelayCommand((obj) => Process.Start(new ProcessStartInfo("cmd", $"/c start {HyperlinkUrl}") { CreateNoWindow = true }));
         }
 
+
         private bool CanAuth()
         {
             return !_getInformationInProcess && !string.IsNullOrWhiteSpace(SteamId);
+        }
+
+        private async Task RunQueuePolling()
+        {
+            var timer = new PeriodicTimer(TimeSpan.FromSeconds(5));
+            while (await timer.WaitForNextTickAsync(_cancellationTokenSource.Token))
+            {
+                GamesInQueue = _queueService.Size;
+            }
         }
 
         private async Task GetUserInformationAsync()
@@ -108,7 +144,7 @@ namespace SteamAchievementViewer.ViewModels
 
                     await Task.Delay(1000);
                     StatusLabelContent = Properties.Resources.ResultSaving;
-                    
+
                     _steamService.SaveSettingsInfo();
 
                     await Task.Delay(1000);

@@ -8,6 +8,9 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="MainPage">
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Page.Resources>
     <Grid Background="#1B2838">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
@@ -24,6 +27,10 @@
                 <Label HorizontalAlignment="Center" Content="{Binding StatusLabelContent}" FontSize="15" FontFamily="Arial Black" Foreground="White" HorizontalContentAlignment="Center" MaxWidth="750"/>
                 <AchievementTest:RadialProgressBar Value="{Binding ProgressBarValue}" Height="100" Width="100" IndicatorBrush="#FFDFDEE8" VerticalAlignment="Top" HorizontalAlignment="Center"/>
             </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Visibility="{Binding HasGamesInQueue, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="10" >
+            <TextBlock Text="Games in queue: " FontSize="18" Foreground="White" FontFamily="Arial Black"/>
+            <TextBlock Text="{Binding GamesInQueue, FallbackValue= 0}" FontSize="18" Foreground="White" FontFamily="Arial Black"/>
         </StackPanel>
     </Grid>
 </Page>
