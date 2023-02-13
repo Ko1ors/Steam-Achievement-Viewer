@@ -61,8 +61,6 @@ namespace SteamAchievementViewer.ViewModels
                 IsNavigationAvailable = true
             };
 
-            _steamService.QueueAchievementsUpdate();
-
             if ((steamService.GetUser() is var user) && user != null)
                 UpdateAvatar(user.AvatarFull);
 

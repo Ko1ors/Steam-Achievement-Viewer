@@ -17,6 +17,7 @@ namespace SteamAchievementViewer.Services
     {
         private const string XmlProfileError = "The specified profile could not be found.";
         private static readonly TimeSpan AchievementsUpdateInterval = TimeSpan.FromHours(24);
+        private static readonly TimeSpan AchievementsRecentUpdateInterval = TimeSpan.FromMinutes(5);
 
         private readonly Random _random;
         private readonly IClientService<XmlDocument> _xmlClient;
@@ -99,7 +100,8 @@ namespace SteamAchievementViewer.Services
             {
                 return false;
             }
-            _gameQueueService.Add(userGames.ExceptBy(_gameQueueService.GetAll().Select(ug => ug.AppID), ug => ug.AppID));
+            QueueAchievementsUpdate();
+            
             return true;
         }
 
@@ -167,7 +169,7 @@ namespace SteamAchievementViewer.Services
                 return;
             }
 
-            _gameQueueService.Add(_userRepository.GetGamesToQueue(_steamID, AchievementsUpdateInterval));
+            _gameQueueService.Add(_userRepository.GetRecentGamesToQueue(_steamID, AchievementsRecentUpdateInterval));
         }
 
         public void AchievementsDataChanged()

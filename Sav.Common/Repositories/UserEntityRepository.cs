@@ -22,6 +22,13 @@ namespace Sav.Common.Repositories
             (!ug.Game.Achievements.Any() || ug.Game.Achievements.Any(a => a.Updated <= updateTime))).AsEnumerable();
         }
 
+        public IEnumerable<UserGameEntity> GetRecentGamesToQueue(string userId, TimeSpan updateInterval)
+        {
+            var updateTime = DateTime.Now - updateInterval;
+            return _context.UserGames.Where(ug => ug.UserId == userId && !string.IsNullOrEmpty(ug.StatsLink) &&
+            (!ug.Game.Achievements.Any() || (!string.IsNullOrEmpty(ug.Game.HoursLast2Weeks) && ug.Game.Achievements.Any(a => a.Updated <= updateTime)))).AsEnumerable();
+        }
+
         private IQueryable<GameEntity> GetUserGamesQueryable(string userId, bool haveAchievements = false)
         {
             return _context.UserGames.Where(ug => ug.UserId == userId && (!haveAchievements ||

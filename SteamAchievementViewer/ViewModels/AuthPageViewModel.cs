@@ -12,6 +12,7 @@ namespace SteamAchievementViewer.ViewModels
     public class AuthPageViewModel : ViewModelBase
     {
         private const string HyperlinkUrl = "https://github.com/Ko1ors/Steam-Achievement-Viewer/blob/master/README.md#login";
+        private static readonly TimeSpan ProfileUpdateInterval = TimeSpan.FromMinutes(5);
 
         private readonly INavigationService _navigationService;
         private readonly ISteamService _steamService;
@@ -80,12 +81,29 @@ namespace SteamAchievementViewer.ViewModels
 
             _cancellationTokenSource = new CancellationTokenSource();
 
+            UpdateSteamData();
             Task.Run(() => RunQueuePolling());
 
             AuthCommand = new RelayCommand((obj) => _ = GetUserInformationAsync(), (obj) => CanAuth());
             HyperlinkCommand = new RelayCommand((obj) => Process.Start(new ProcessStartInfo("cmd", $"/c start {HyperlinkUrl}") { CreateNoWindow = true }));
         }
 
+        private void UpdateSteamData()
+        {
+            if (!_steamService.IsLogged())
+                return;
+
+            SteamId = _steamService.GetUserId();
+            
+            var user = _steamService.GetUser();
+            if (user is null)
+                return;
+
+            if (user.Updated + ProfileUpdateInterval <= DateTime.Now)
+                _ = GetUserInformationAsync();
+            else
+                _steamService.QueueAchievementsUpdate();            
+        }
 
         private bool CanAuth()
         {
@@ -149,10 +167,9 @@ namespace SteamAchievementViewer.ViewModels
 
                     await Task.Delay(1000);
                     StatusLabelContent = Properties.Resources.ResultSaved;
-
                 });
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
             }

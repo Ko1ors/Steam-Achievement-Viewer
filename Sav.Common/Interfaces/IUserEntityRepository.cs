@@ -7,6 +7,8 @@ namespace Sav.Common.Interfaces
     {
         IEnumerable<UserGameEntity> GetGamesToQueue(string userId, TimeSpan updateInterval);
 
+        IEnumerable<UserGameEntity> GetRecentGamesToQueue(string userId, TimeSpan updateInterval);
+
         IEnumerable<AchievementComposite> GetUserAchievementComposites(string userId);
 
         IEnumerable<AchievementComposite> GetUserLatestAchievements(string userId, int page, int count);
