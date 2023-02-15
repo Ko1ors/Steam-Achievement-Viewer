@@ -100,7 +100,7 @@ namespace SteamAchievementViewer.ViewModels
                 return;
 
             if (user.Updated + ProfileUpdateInterval <= DateTime.Now)
-                _ = GetUserInformationAsync();
+                _ = GetUserInformationAsync(true);
             else
                 _steamService.QueueAchievementsUpdate();            
         }
@@ -119,7 +119,7 @@ namespace SteamAchievementViewer.ViewModels
             }
         }
 
-        private async Task GetUserInformationAsync()
+        private async Task GetUserInformationAsync(bool queueOnlyRecentGames = false)
         {
             try
             {
@@ -164,6 +164,8 @@ namespace SteamAchievementViewer.ViewModels
                     StatusLabelContent = Properties.Resources.ResultSaving;
 
                     _steamService.SaveSettingsInfo();
+
+                    _steamService.QueueAchievementsUpdate(queueOnlyRecentGames);
 
                     await Task.Delay(1000);
                     StatusLabelContent = Properties.Resources.ResultSaved;

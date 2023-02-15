@@ -5,7 +5,7 @@ namespace Sav.Common.Interfaces
 {
     public interface IUserEntityRepository : IEntityRepository<UserEntity>
     {
-        IEnumerable<UserGameEntity> GetGamesToQueue(string userId, TimeSpan updateInterval);
+        IEnumerable<UserGameEntity> GetGamesToQueue(string userId);
 
         IEnumerable<UserGameEntity> GetRecentGamesToQueue(string userId, TimeSpan updateInterval);
 

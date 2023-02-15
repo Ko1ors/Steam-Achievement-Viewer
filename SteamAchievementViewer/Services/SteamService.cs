@@ -100,8 +100,7 @@ namespace SteamAchievementViewer.Services
             {
                 return false;
             }
-            QueueAchievementsUpdate();
-            
+
             return true;
         }
 
@@ -122,6 +121,7 @@ namespace SteamAchievementViewer.Services
             {
                 return false;
             }
+            _steamID = steamID;
             OnAvatarUpdated?.Invoke(profile.AvatarFull);
             return true;
         }
@@ -139,6 +139,7 @@ namespace SteamAchievementViewer.Services
         public void SaveSettingsInfo()
         {
             Settings.Default.LastUpdate = DateTime.Now;
+            Settings.Default.SteamID = _steamID;
             Settings.Default.Save();
         }
 
@@ -162,14 +163,17 @@ namespace SteamAchievementViewer.Services
             return GetUser()?.UserGames?.Select(ug => ug.Game) ?? Enumerable.Empty<GameEntity>();
         }
 
-        public void QueueAchievementsUpdate()
+        public void QueueAchievementsUpdate(bool onlyRecentGames = true)
         {
             if (string.IsNullOrEmpty(_steamID))
             {
                 return;
             }
 
-            _gameQueueService.Add(_userRepository.GetRecentGamesToQueue(_steamID, AchievementsRecentUpdateInterval));
+            if (onlyRecentGames)
+                _gameQueueService.Add(_userRepository.GetRecentGamesToQueue(_steamID, AchievementsRecentUpdateInterval));
+            else
+                _gameQueueService.Add(_userRepository.GetGamesToQueue(_steamID));
         }
 
         public void AchievementsDataChanged()

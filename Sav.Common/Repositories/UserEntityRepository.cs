@@ -15,11 +15,9 @@ namespace Sav.Common.Repositories
             _mapper = mapper;
         }
 
-        public IEnumerable<UserGameEntity> GetGamesToQueue(string userId, TimeSpan updateInterval)
+        public IEnumerable<UserGameEntity> GetGamesToQueue(string userId)
         {
-            var updateTime = DateTime.Now - updateInterval;
-            return _context.UserGames.Where(ug => ug.UserId == userId && !string.IsNullOrEmpty(ug.StatsLink) &&
-            (!ug.Game.Achievements.Any() || ug.Game.Achievements.Any(a => a.Updated <= updateTime))).AsEnumerable();
+            return _context.UserGames.Where(ug => ug.UserId == userId && !string.IsNullOrEmpty(ug.StatsLink)).AsEnumerable();
         }
 
         public IEnumerable<UserGameEntity> GetRecentGamesToQueue(string userId, TimeSpan updateInterval)
@@ -47,6 +45,7 @@ namespace Sav.Common.Repositories
                                         join ua in _context.UserAchievements
                                         on new { a.AppID, a.Apiname } equals new { ua.AppID, ua.Apiname } into uaj
                                         from ua in uaj.DefaultIfEmpty()
+                                        where ua.UserId == userId || ua == null 
                                         select new EntityComposite { Game = query, Achievement = a, UserAchievement = ua };
             return entityCompositesQuery.ProjectTo<AchievementComposite>(_mapper.ConfigurationProvider);
         }
@@ -68,7 +67,7 @@ namespace Sav.Common.Repositories
 
         public int GetUserCompletedAchievementsCount(string userId)
         {
-            return GetUserGamesQueryable(userId, true).Sum(g => g.UserAchievements.Count);
+            return GetUserGamesQueryable(userId, true).SelectMany(g => g.UserAchievements).Where(ua => ua.UserId == userId).Count();
         }
 
         public IEnumerable<GameEntity> GetUserIncompleteGames(string userId, int page, int count)

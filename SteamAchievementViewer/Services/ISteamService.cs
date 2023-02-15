@@ -24,7 +24,7 @@ namespace SteamAchievementViewer.Services
 
         public IEnumerable<GameEntity> GetUserGames();
 
-        public void QueueAchievementsUpdate();
+        public void QueueAchievementsUpdate(bool onlyRecentGames = true);
 
         bool IsLogged();
 
