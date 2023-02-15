@@ -1,4 +1,5 @@
-﻿using SteamAchievementViewer.Models.SteamApi;
+﻿using Sav.Infrastructure.Entities;
+using SteamAchievementViewer.Models.SteamApi;
 using SteamAchievementViewer.Services;
 using System;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace SteamAchievementViewer.Pages
         {
             if (GameList.SelectedItem != null)
             {
-                AchievementList.ItemsSource = _gameAchievementsService.GetGameClosestAchievements((GameList.SelectedItem as Sav.Infrastructure.Entities.GameEntity).AppID);
+                AchievementList.ItemsSource = _gameAchievementsService.GetGameClosestAchievements((GameList.SelectedItem as GameEntity).AppID);
                 if (AchievementList.Items.Count > 0)
                     AchievementList.ScrollIntoView(AchievementList.Items[0]);
             }
@@ -37,7 +38,7 @@ namespace SteamAchievementViewer.Pages
             if (string.IsNullOrEmpty(textBoxSearch.Text))
                 return true;
             else
-                return (item as Game).Name.Contains(textBoxSearch.Text, StringComparison.OrdinalIgnoreCase);
+                return (item as GameEntity).Name.Contains(textBoxSearch.Text, StringComparison.OrdinalIgnoreCase);
         }
 
         private void textBoxSearch_TextChanged(object sender, TextChangedEventArgs e)
@@ -49,7 +50,7 @@ namespace SteamAchievementViewer.Pages
         {
             if (_steamService.IsLogged())
             {
-                GameList.ItemsSource = _gameAchievementsService.GetIncompleteGames().ToList();
+                GameList.ItemsSource = _gameAchievementsService.GetIncompleteGames(1, int.MaxValue).ToList();
                 ListCollectionView view = (ListCollectionView)CollectionViewSource.GetDefaultView(GameList.ItemsSource);
                 view.Filter = GameSearchFilter;
             }

@@ -16,7 +16,6 @@ namespace SteamAchievementViewer.Services
     public class AchievementsWorkerService : IAchievementsWorkerService
     {
         private const string XmlProfileError = "The specified profile could not be found.";
-        private static readonly TimeSpan GameIconsUpdateInterval = TimeSpan.FromHours(24);
 
         private readonly IQueueService<UserGameEntity> _queueService;
         private readonly ISteamService _steamService;
@@ -102,12 +101,9 @@ namespace SteamAchievementViewer.Services
                     });
                     achievements = _mapper.MapMultiple<List<AchievementEntity>>(achievementsResponse.Achievement, gameEntity);
 
-                    if (DateTime.Now - gameEntity.Updated > GameIconsUpdateInterval)
-                    {
-                        gameEntity.GameLogoSmall = game_.GameLogoSmall;
-                        gameEntity.GameIcon = game_.GameIcon;
-                        await _gameRepository.UpdateAsync(gameEntity);
-                    }
+                    gameEntity.GameLogoSmall = game_.GameLogoSmall;
+                    gameEntity.GameIcon = game_.GameIcon;
+                    await _gameRepository.UpdateAsync(gameEntity);
                 }
                 if (achievements == null)
                     return;
