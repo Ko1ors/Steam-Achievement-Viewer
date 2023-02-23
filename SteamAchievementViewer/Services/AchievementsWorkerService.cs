@@ -30,7 +30,7 @@ namespace SteamAchievementViewer.Services
 
         public bool IsRunning { get; set; }
 
-        public AchievementsWorkerService(IQueueService<UserGameEntity> queueService, ISteamService steamService, IEntityRepository<GameEntity> gameRepository,
+        public AchievementsWorkerService(IQueueService<UserGameEntity> queueService, ISteamService steamService, IGameEntityRepository gameRepository,
             IEntityRepository<AchievementEntity> achievementRepository, IEntityRepository<UserAchievementEntity> userAchievementRepository,
             IMapper mapper, IClientService<XmlDocument> xmlClient)
         {

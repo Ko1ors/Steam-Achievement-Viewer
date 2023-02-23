@@ -40,7 +40,7 @@ namespace Sav.Common.Repositories
             return _context.SaveChangesAsync();
         }
 
-        public async Task AddOrUpdateAsync(TEntity entity)
+        public virtual async Task AddOrUpdateAsync(TEntity entity)
         {
             var existingEntity = _context.Set<TEntity>().Find(entity.GetKeys());
 

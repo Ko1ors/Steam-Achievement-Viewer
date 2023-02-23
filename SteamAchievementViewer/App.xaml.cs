@@ -49,6 +49,7 @@ namespace SteamAchievementViewer
             services.AddSingleton(typeof(IListRepository<>), typeof(ListRepository<>));
             services.AddTransient(typeof(IEntityRepository<>), typeof(EntityRepository<>));
             services.AddTransient<IUserEntityRepository, UserEntityRepository>();
+            services.AddTransient<IGameEntityRepository, GameEntityRepository>();
 
             // Mapping
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

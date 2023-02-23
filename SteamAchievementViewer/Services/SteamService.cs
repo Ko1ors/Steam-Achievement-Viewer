@@ -35,7 +35,7 @@ namespace SteamAchievementViewer.Services
         private bool _refreshRequired;
 
         public SteamService(IClientService<XmlDocument> xmlClient, IQueueService<UserGameEntity> gameQueueService, IMapper mapper,
-            IUserEntityRepository userRepository, IEntityRepository<GameEntity> gameRepository,
+            IUserEntityRepository userRepository, IGameEntityRepository gameRepository,
             IEntityRepository<UserGameEntity> userGameRepository)
         {
             _xmlClient = xmlClient;
