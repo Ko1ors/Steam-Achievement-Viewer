@@ -1,8 +1,9 @@
 ﻿using Sav.Common.Models;
 using SteamAchievementViewer.Commands;
 using SteamAchievementViewer.Services;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace SteamAchievementViewer.ViewModels
 {
@@ -12,15 +13,15 @@ namespace SteamAchievementViewer.ViewModels
         private readonly IGameAchievementsService _gameAchievementsService;
 
         private int _currentPage;
-        private int _pageSize;
+        private readonly int _pageSize;
         private bool _isMoreGameAvailable;
+        private readonly Dispatcher _dispatcher;
 
-        public ObservableCollection<CompletionGameComposite> CompletionGameCollection { get; set; }
+        public BindingList<CompletionGameComposite> CompletionGameCollection { get; set; }
 
         public RelayCommand ViewLoadedCommand { get; set; }
 
         public RelayCommand LoadMoreGamesCommand { get; set; }
-
 
         public bool IsMoreGameAvailable
         {
@@ -42,7 +43,8 @@ namespace SteamAchievementViewer.ViewModels
 
             _currentPage = 1;
             _pageSize = 50;
-            CompletionGameCollection = new ObservableCollection<CompletionGameComposite>();
+            _dispatcher = Dispatcher.CurrentDispatcher;
+            CompletionGameCollection = new BindingList<CompletionGameComposite>();
 
             ViewLoadedCommand = new RelayCommand((obj) => OnViewLoaded());
             LoadMoreGamesCommand = new RelayCommand((obj) => LoadMoreGames(), (obj) => IsMoreGameAvailable);
@@ -50,22 +52,33 @@ namespace SteamAchievementViewer.ViewModels
 
         private void OnViewLoaded()
         {
-            LoadGames();
+            Task.Run(() => LoadGamesAsync());
         }
 
         private void LoadMoreGames()
         {
+            IsMoreGameAvailable = false;
             _currentPage++;
-            LoadGames();
+            Task.Run(() => LoadGamesAsync());
         }
 
-        public void LoadGames()
+        public async Task LoadGamesAsync()
         {
             if (_steamService.IsLogged())
             {
-                var pagedResult = _gameAchievementsService.GetPagedEasiestGamesToComplete(_currentPage, _pageSize);
+                CompletionGameCollection.RaiseListChangedEvents = false;
+
+                var pagedResult = await _gameAchievementsService.GetPagedEasiestGamesToCompleteAsync(_currentPage, _pageSize);
                 IsMoreGameAvailable = pagedResult.Count * pagedResult.Page < pagedResult.TotalCount;
-                pagedResult.Items.ToList().ForEach(g => CompletionGameCollection.Add(g));
+                var list = pagedResult.Items;
+
+                foreach (var game in list)
+                {
+                    CompletionGameCollection.Add(game);
+                }
+
+                CompletionGameCollection.RaiseListChangedEvents = true;
+                _dispatcher.Invoke(CompletionGameCollection.ResetBindings, DispatcherPriority.Render);
             }
         }
     }

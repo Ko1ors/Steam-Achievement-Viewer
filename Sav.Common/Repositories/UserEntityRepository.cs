@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using Sav.Common.Interfaces;
 using Sav.Common.Models;
 using Sav.Infrastructure.Entities;
@@ -101,7 +102,7 @@ namespace Sav.Common.Repositories
                     LowestAchievementPercentage = g.Achievements.Min(a => a.Percent)
                 }).OrderByDescending(cgc => cgc.LowestAchievementPercentage);
         }
-        
+
         public IEnumerable<CompletionGameComposite> GetUserEasiestGamesToComplete(string userId, int page, int count)
         {
             return GetUserEasiestGamesToCompleteQueryable(userId).Skip((page - 1) * count).Take(count).ToList();
@@ -114,6 +115,24 @@ namespace Sav.Common.Repositories
             pagedResult.Page = page;
             pagedResult.TotalCount = queryable.Count();
             pagedResult.Items = queryable.Skip((page - 1) * count).Take(count);
+
+            // Another way to get items and total count in one query execution
+            //var queryableResult = queryable.Select(g => new { Game = g, TotalCount = queryable.Count() }).Skip((page - 1) * count).Take(count);
+            //pagedResult.TotalCount = queryableResult.FirstOrDefault()?.TotalCount ?? 0;
+            //pagedResult.Items = queryableResult.Select(g => g.Game);
+
+            pagedResult.Count = pagedResult.Items.Count();
+            return pagedResult;
+        }
+
+        public async Task<PagedResult<CompletionGameComposite>> GetPagedUserEasiestGamesToCompleteAsync(string userId, int page, int count)
+        {
+            var pagedResult = new PagedResult<CompletionGameComposite>();
+            var queryable = GetUserEasiestGamesToCompleteQueryable(userId);
+            pagedResult.Page = page;
+            pagedResult.TotalCount = await queryable.CountAsync();
+            pagedResult.Items = await queryable.Skip((page - 1) * count).Take(count).ToListAsync();
+
             pagedResult.Count = pagedResult.Items.Count();
             return pagedResult;
         }

@@ -22,7 +22,7 @@
         <DataTemplate x:Key="GameTemplate" d:DataType="models:CompletionGameComposite">
             <Grid Background="#1B2838" Height="70" Margin="10">
                 <StackPanel Width="500" Margin="5" Orientation="Horizontal">
-                    <Image Width="25" Height="25" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0" Source="{Binding Path=GameIcon}"/>
+                    <Image Width="25" Height="25" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0" Source="{Binding Path=GameIcon, TargetNullValue={x:Null}}"/>
                     <StackPanel Orientation="Vertical" VerticalAlignment="Center" >
                         <TextBlock Foreground="White" FontWeight="Bold" FontSize="16" TextTrimming="CharacterEllipsis" FontFamily="Arial Black" Text="{Binding Path=Name}"/>
                         <TextBlock Margin="0 5 0 0" Foreground="White" FontWeight="Bold" FontSize="10" TextWrapping="Wrap" FontFamily="Arial Black">
@@ -39,7 +39,7 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    <ScrollViewer BorderBrush="Transparent" Background="#FF171A21">
+    <ScrollViewer BorderBrush="Transparent" Background="#FF171A21" VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="5">
             <ListBox BorderBrush="Transparent" Background="#FF171A21" d:ItemsSource="{d:SampleData}" ItemsSource="{Binding CompletionGameCollection}" HorizontalAlignment="Stretch" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource GameTemplate}" >
                     <ListBox.ItemsPanel>
