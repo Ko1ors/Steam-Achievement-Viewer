@@ -16,6 +16,10 @@ namespace SteamAchievementViewer.Services
 
         IEnumerable<AchievementComposite> GetGameClosestAchievements(string appid);
 
+        IEnumerable<CompletionGameComposite> GetEasiestGamesToComplete(int page = 1, int count = 100);
+
+        PagedResult<CompletionGameComposite> GetPagedEasiestGamesToComplete(int page = 1, int count = 100);
+
         IEnumerable<GameEntity> GetIncompleteGames(int page = 1, int count = 100);
 
         int GetCompletedAchievementsCount();

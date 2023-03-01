@@ -59,5 +59,15 @@ namespace SteamAchievementViewer.Services
         {
             return _userRepository.GetUserTotalAchievementsCount(_steamService.GetUserId());
         }
+
+        public IEnumerable<CompletionGameComposite> GetEasiestGamesToComplete(int page = 1, int count = 100)
+        {
+            return _userRepository.GetUserEasiestGamesToComplete(_steamService.GetUserId(), page, count);
+        }
+
+        public PagedResult<CompletionGameComposite> GetPagedEasiestGamesToComplete(int page = 1, int count = 100)
+        {
+            return _userRepository.GetPagedUserEasiestGamesToComplete(_steamService.GetUserId(), page, count);
+        }
     }
 }

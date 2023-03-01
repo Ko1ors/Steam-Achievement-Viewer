@@ -1,0 +1,54 @@
+﻿<Page x:Class="SteamAchievementViewer.Pages.EasiestGamesToCompletePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:viewmodels="clr-namespace:SteamAchievementViewer.ViewModels" 
+      xmlns:models="clr-namespace:Sav.Common.Models;assembly=Sav.Common" 
+      d:DataContext="{d:DesignInstance Type=viewmodels:EasiestGamesToCompleteViewModel}"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="EasiestGamesToCompletePage">
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction
+                CommandParameter="{Binding}"
+                Command="{Binding ViewLoadedCommand}"/>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <DataTemplate x:Key="GameTemplate" d:DataType="models:CompletionGameComposite">
+            <Grid Background="#1B2838" Height="70" Margin="10">
+                <StackPanel Width="500" Margin="5" Orientation="Horizontal">
+                    <Image Width="25" Height="25" Stretch="UniformToFill" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,10,0" Source="{Binding Path=GameIcon}"/>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center" >
+                        <TextBlock Foreground="White" FontWeight="Bold" FontSize="16" TextTrimming="CharacterEllipsis" FontFamily="Arial Black" Text="{Binding Path=Name}"/>
+                        <TextBlock Margin="0 5 0 0" Foreground="White" FontWeight="Bold" FontSize="10" TextWrapping="Wrap" FontFamily="Arial Black">
+                            <Run Text="Hardest achievement achieved by " />
+                            <Run Text="{Binding LowestAchievementPercentage, StringFormat='{}{0}%'}"/>
+                            <Run Text=" of users" />
+                        </TextBlock>
+                        <TextBlock Margin="0 5 0 0" Foreground="White" FontWeight="Bold" FontSize="10" TextWrapping="Wrap" FontFamily="Arial Black">
+                            <Run Text="Average achieved percentage - " />
+                            <Run Text="{Binding AverageAchievementsPercentage, StringFormat='{}{0}%'}"/>
+                        </TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    <ScrollViewer BorderBrush="Transparent" Background="#FF171A21">
+        <StackPanel Margin="5">
+            <ListBox BorderBrush="Transparent" Background="#FF171A21" d:ItemsSource="{d:SampleData}" ItemsSource="{Binding CompletionGameCollection}" HorizontalAlignment="Stretch" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource GameTemplate}" >
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+            <Button Content="Load more" FontSize="16" Height="40" Width="120" Command="{Binding LoadMoreGamesCommand}" Visibility="{Binding IsMoreGameAvailable, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource OverButtonStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </StackPanel>
+        </ScrollViewer>
+</Page>

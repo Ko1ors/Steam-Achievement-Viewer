@@ -108,6 +108,16 @@ namespace SteamAchievementViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to EASIEST GAMES
+        /// TO 100%.
+        /// </summary>
+        public static string EasiestGamesToCompletePage {
+            get {
+                return ResourceManager.GetString("EasiestGamesToCompletePage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enter your Steam ID.
         /// </summary>
         public static string EnterSteamID {

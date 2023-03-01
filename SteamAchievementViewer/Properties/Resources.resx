@@ -134,6 +134,10 @@
     <value>CLOSEST
  ACHIEVEMENTS</value>
   </data>
+  <data name="EasiestGamesToCompletePage" xml:space="preserve">
+    <value>EASIEST GAMES
+ TO 100%</value>
+  </data>
   <data name="EnterSteamID" xml:space="preserve">
     <value>Enter your Steam ID</value>
   </data>

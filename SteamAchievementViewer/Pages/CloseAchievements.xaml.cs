@@ -1,5 +1,4 @@
 ﻿using Sav.Infrastructure.Entities;
-using SteamAchievementViewer.Models.SteamApi;
 using SteamAchievementViewer.Services;
 using System;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Windows.Data;
 
 namespace SteamAchievementViewer.Pages
 {
-    
+
     public partial class CloseAchievements : Page
     {
         private readonly ISteamService _steamService;

@@ -20,7 +20,7 @@
                 </WrapPanel>
                 <StackPanel Height="60" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
                     <TextBox FontSize="20" VerticalContentAlignment="Center" Text="{Binding SteamId, UpdateSourceTrigger=PropertyChanged}" Height="40" BorderBrush="White" BorderThickness="2" Width="400" Background="#FF1B2838" FontFamily="Arial Black" Foreground="White"/>
-                    <Button Content="Enter" FontSize="16"  Style="{StaticResource OverButtonStyle}" Command="{Binding AuthCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                    <Button Content="Enter" FontSize="16" Width="90" Style="{StaticResource OverButtonStyle}" Command="{Binding AuthCommand}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel>

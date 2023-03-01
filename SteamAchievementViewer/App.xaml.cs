@@ -57,6 +57,7 @@ namespace SteamAchievementViewer
             // ViewModels
             services.AddScoped<MainWindowViewModel>();
             services.AddScoped<AuthPageViewModel>();
+            services.AddScoped<EasiestGamesToCompleteViewModel>();
 
             // Pages
             services.AddTransient<AuthPage>();
@@ -66,6 +67,7 @@ namespace SteamAchievementViewer
             services.AddTransient<MainPageInfo>();
             services.AddTransient<RareAchievements>();
             services.AddTransient<SettingsPage>();
+            services.AddTransient<EasiestGamesToCompletePage>();
 
             // Windows
             services.AddSingleton<MainWindow>();
@@ -80,6 +82,8 @@ namespace SteamAchievementViewer
             navigationService.AddPageElement(new NavigationPageElement { Type = typeof(CloseAchievements), Title = SteamAchievementViewer.Properties.Resources.ClosestPage });
             navigationService.AddPageElement(new NavigationPageElement { Type = typeof(CloseAllAchievements), Title = SteamAchievementViewer.Properties.Resources.ClosestAllPage });
             navigationService.AddPageElement(new NavigationPageElement { Type = typeof(RareAchievements), Title = SteamAchievementViewer.Properties.Resources.RarestPage });
+            navigationService.AddPageElement(new NavigationPageElement { Type = typeof(EasiestGamesToCompletePage), Title = SteamAchievementViewer.Properties.Resources.EasiestGamesToCompletePage });
+            
         }
 
         protected override void OnStartup(StartupEventArgs e)
