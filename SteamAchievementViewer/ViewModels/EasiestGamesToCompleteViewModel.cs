@@ -12,10 +12,11 @@ namespace SteamAchievementViewer.ViewModels
         private readonly ISteamService _steamService;
         private readonly IGameAchievementsService _gameAchievementsService;
 
-        private int _currentPage;
         private readonly int _pageSize;
-        private bool _isMoreGameAvailable;
         private readonly Dispatcher _dispatcher;
+        private int _currentPage;
+        private bool _isMoreGameAvailable;
+        private bool _isLoaded;
 
         public BindingList<CompletionGameComposite> CompletionGameCollection { get; set; }
 
@@ -44,14 +45,16 @@ namespace SteamAchievementViewer.ViewModels
             _currentPage = 1;
             _pageSize = 50;
             _dispatcher = Dispatcher.CurrentDispatcher;
+            _isLoaded = false;
             CompletionGameCollection = new BindingList<CompletionGameComposite>();
 
-            ViewLoadedCommand = new RelayCommand((obj) => OnViewLoaded());
+            ViewLoadedCommand = new RelayCommand((obj) => OnViewLoaded(), (obj) => !_isLoaded);
             LoadMoreGamesCommand = new RelayCommand((obj) => LoadMoreGames(), (obj) => IsMoreGameAvailable);
         }
 
         private void OnViewLoaded()
         {
+            _isLoaded = true;
             Task.Run(() => LoadGamesAsync());
         }
 
