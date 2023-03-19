@@ -11,6 +11,10 @@ namespace Sav.Infrastructure.Entities
 
         public string? StatsLink { get; set; }
 
+        public string? HoursLast2Weeks { get; set; }
+
+        public string? HoursOnRecord { get; set; }
+
         public virtual UserEntity User { get; set; } = null!;
 
         public virtual GameEntity Game { get; set; } = null!;

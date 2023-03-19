@@ -19,10 +19,6 @@ namespace Sav.Infrastructure.Entities
 
         public string StoreLink { get; set; } = null!;
 
-        public string? HoursLast2Weeks { get; set; }
-
-        public string? HoursOnRecord { get; set; }
-
         public string? GlobalStatsLink { get; set; }
 
         public virtual ICollection<UserGameEntity> UserGames { get; set; } = null!;

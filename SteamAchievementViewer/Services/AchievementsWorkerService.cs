@@ -91,10 +91,7 @@ namespace SteamAchievementViewer.Services
                     reader.ReadToNextSibling("achievements");
                     achievementsResponse = (Achievements)serializer.Deserialize(reader);
                     if (achievementsResponse is null)
-                    {
-                        _queueService.Add(userGame);
                         return;
-                    }
 
                     var gameEntity = _gameRepository.GetByKeys(userGame.AppID);
                     userAchievements = achievementsResponse.Achievement.Where(a => a.Closed == "1").Select(a => new UserAchievementEntity()

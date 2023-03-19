@@ -25,9 +25,9 @@ namespace Sav.Common.Repositories
         {
             var updateTime = DateTime.Now - updateInterval;
             return _context.UserGames.Where(ug => ug.UserId == userId && !string.IsNullOrEmpty(ug.StatsLink) &&
-            (!ug.Game.Achievements.Any() || (!string.IsNullOrEmpty(ug.Game.HoursLast2Weeks) && ug.Game.Achievements.Any(a => a.Updated <= updateTime)))).AsEnumerable();
+            (!ug.Game.Achievements.Any() || (!string.IsNullOrEmpty(ug.HoursLast2Weeks) && ug.Game.Achievements.Any(a => a.Updated <= updateTime)))).AsEnumerable();
         }
-
+        
         private IQueryable<GameEntity> GetUserGamesQueryable(string userId, bool haveAchievements = false)
         {
             return _context.UserGames.Where(ug => ug.UserId == userId && (!haveAchievements ||
