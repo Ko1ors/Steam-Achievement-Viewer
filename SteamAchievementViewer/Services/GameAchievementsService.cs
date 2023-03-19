@@ -4,6 +4,7 @@ using Sav.Common.Models;
 using Sav.Infrastructure.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SteamAchievementViewer.Services
 {
@@ -58,6 +59,21 @@ namespace SteamAchievementViewer.Services
         public int GetTotalAchievementsCount()
         {
             return _userRepository.GetUserTotalAchievementsCount(_steamService.GetUserId());
+        }
+
+        public IEnumerable<CompletionGameComposite> GetEasiestGamesToComplete(int page = 1, int count = 100)
+        {
+            return _userRepository.GetUserEasiestGamesToComplete(_steamService.GetUserId(), page, count);
+        }
+
+        public PagedResult<CompletionGameComposite> GetPagedEasiestGamesToComplete(int page = 1, int count = 100)
+        {
+            return _userRepository.GetPagedUserEasiestGamesToComplete(_steamService.GetUserId(), page, count);
+        }
+
+        public Task<PagedResult<CompletionGameComposite>> GetPagedEasiestGamesToCompleteAsync(int page = 1, int count = 100)
+        {
+            return _userRepository.GetPagedUserEasiestGamesToCompleteAsync(_steamService.GetUserId(), page, count);
         }
     }
 }

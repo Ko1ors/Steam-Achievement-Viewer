@@ -23,6 +23,12 @@ namespace Sav.Common.Interfaces
 
         IEnumerable<AchievementComposite> GetUserRarestAchievements(string userId, int page, int count);
 
+        IEnumerable<CompletionGameComposite> GetUserEasiestGamesToComplete(string userId, int page, int count);
+
+        PagedResult<CompletionGameComposite> GetPagedUserEasiestGamesToComplete(string userId, int page, int count);
+        
+        Task<PagedResult<CompletionGameComposite>> GetPagedUserEasiestGamesToCompleteAsync(string userId, int page, int count);
+
         int GetUserTotalAchievementsCount(string userId);
     }
 }
