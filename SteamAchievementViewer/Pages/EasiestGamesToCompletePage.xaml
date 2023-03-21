@@ -4,6 +4,8 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:behaviors="clr-namespace:SteamAchievementViewer.Behaviors" 
       xmlns:viewmodels="clr-namespace:SteamAchievementViewer.ViewModels" 
       xmlns:models="clr-namespace:Sav.Common.Models;assembly=Sav.Common" 
       d:DataContext="{d:DesignInstance Type=viewmodels:EasiestGamesToCompleteViewModel}"
@@ -41,8 +43,12 @@
     </Page.Resources>
     <ScrollViewer BorderBrush="Transparent" Background="#FF171A21" VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="5">
+
             <ListBox BorderBrush="Transparent" Background="#FF171A21" d:ItemsSource="{d:SampleData}" ItemsSource="{Binding CompletionGameCollection}" HorizontalAlignment="Stretch" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource GameTemplate}" >
-                    <ListBox.ItemsPanel>
+                <i:Interaction.Behaviors>
+                    <behaviors:IgnoreMouseWheelBehavior />
+                </i:Interaction.Behaviors>
+                <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" />
                         </ItemsPanelTemplate>
