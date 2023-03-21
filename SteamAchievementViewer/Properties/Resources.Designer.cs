@@ -108,6 +108,15 @@ namespace SteamAchievementViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to COMPLETED GAMES.
+        /// </summary>
+        public static string CompletedGamesPage {
+            get {
+                return ResourceManager.GetString("CompletedGamesPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to EASIEST GAMES
         /// TO 100%.
         /// </summary>

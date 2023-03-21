@@ -27,11 +27,17 @@ namespace Sav.Common.Repositories
             return _context.UserGames.Where(ug => ug.UserId == userId && !string.IsNullOrEmpty(ug.StatsLink) &&
             (!ug.Game.Achievements.Any() || (!string.IsNullOrEmpty(ug.HoursLast2Weeks) && ug.Game.Achievements.Any(a => a.Updated <= updateTime)))).AsEnumerable();
         }
-        
+
         private IQueryable<GameEntity> GetUserGamesQueryable(string userId, bool haveAchievements = false)
         {
             return _context.UserGames.Where(ug => ug.UserId == userId && (!haveAchievements ||
             (!string.IsNullOrEmpty(ug.StatsLink) && ug.Game.Achievements.Any()))).Select(ug => ug.Game).AsQueryable();
+        }
+
+        private IQueryable<UserGameEntity> GetUserUserGamesQueryable(string userId, bool haveAchievements = false)
+        {
+            return _context.UserGames.Where(ug => ug.UserId == userId && (!haveAchievements ||
+            (!string.IsNullOrEmpty(ug.StatsLink) && ug.Game.Achievements.Any()))).AsQueryable();
         }
 
         public IEnumerable<AchievementComposite> GetUserAchievementComposites(string userId)
@@ -68,12 +74,12 @@ namespace Sav.Common.Repositories
 
         public int GetUserCompletedAchievementsCount(string userId)
         {
-            return GetUserGamesQueryable(userId, true).SelectMany(g => g.UserAchievements).Where(ua => ua.UserId == userId).Count();
+            return GetUserUserGamesQueryable(userId, true).SelectMany(ug => ug.UserAchievements).Where(ua => ua.UserId == userId).Count();
         }
 
         private IQueryable<GameEntity> GetUserIncompleteGamesQueryable(string userId)
         {
-            return GetUserGamesQueryable(userId, true).Where(u => u.UserAchievements.Count < u.Achievements.Count);
+            return GetUserUserGamesQueryable(userId, true).Where(ug => ug.UserAchievements.Count < ug.Game.Achievements.Count).Select(ug => ug.Game).AsQueryable();
         }
 
         public IEnumerable<GameEntity> GetUserIncompleteGames(string userId, int page, int count)
@@ -134,6 +140,26 @@ namespace Sav.Common.Repositories
             pagedResult.Items = await queryable.Skip((page - 1) * count).Take(count).ToListAsync();
 
             pagedResult.Count = pagedResult.Items.Count();
+            return pagedResult;
+        }
+
+        public async Task<PagedResult<CompletedGameComposite>> GetPagedUserCompletedGamesAsync(string userId, int page, int count)
+        {
+            var pagedResult = new PagedResult<CompletedGameComposite>();
+            var queryable = GetUserUserGamesQueryable(userId, true).AsNoTracking()
+                .Where(ug => ug.UserAchievements.Count == ug.Game.Achievements.Count)
+            .Select(ug => new CompletedGameComposite
+            {
+                UserGame = ug,
+                Game = ug.Game,
+                Achievements = ug.Game.Achievements,
+                CompletedAt = ug.UserAchievements.Max(ua => ua.UnlockTime)
+            })
+            .OrderByDescending(c => c.CompletedAt);
+
+            pagedResult.Page = page;
+            pagedResult.TotalCount = await queryable.CountAsync();
+            pagedResult.Items = await queryable.Skip((page - 1) * count).Take(count).ToListAsync();
             return pagedResult;
         }
     }

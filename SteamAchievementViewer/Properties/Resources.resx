@@ -134,6 +134,9 @@
     <value>CLOSEST
  ACHIEVEMENTS</value>
   </data>
+  <data name="CompletedGamesPage" xml:space="preserve">
+    <value>COMPLETED GAMES</value>
+  </data>
   <data name="EasiestGamesToCompletePage" xml:space="preserve">
     <value>EASIEST GAMES
  TO 100%</value>
