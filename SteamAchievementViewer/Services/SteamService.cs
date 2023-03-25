@@ -142,7 +142,7 @@ namespace SteamAchievementViewer.Services
             {
                 return false;
             }
-            if(user is not null)
+            if (user is not null)
                 avatarModel ??= new AvatarModel() { AvatarUrl = user.AvatarFull, FrameUrl = user.AvatarFrame };
             _steamID = steamID;
             OnAvatarUpdated?.Invoke(avatarModel);

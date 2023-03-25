@@ -1,7 +1,4 @@
-﻿using Sav.Common.Models;
-using SteamAchievementViewer.Services;
-using SteamAchievementViewer.ViewModels;
-using System.Collections.ObjectModel;
+﻿using SteamAchievementViewer.ViewModels;
 using System.Windows.Controls;
 
 namespace SteamAchievementViewer.Pages

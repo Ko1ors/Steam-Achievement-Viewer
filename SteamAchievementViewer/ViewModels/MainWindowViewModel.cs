@@ -46,7 +46,7 @@ namespace SteamAchievementViewer.ViewModels
         {
             _synchronizationContext.Post((avatarUrl) => UpdateAvatar(model.AvatarUrl, model.FrameUrl), model);
         }
-        
+
         private void UpdateAvatar(string avatarUrl, string frameUrl)
         {
             Model.AvatarSource = avatarUrl;

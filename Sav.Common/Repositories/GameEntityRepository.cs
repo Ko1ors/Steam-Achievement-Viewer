@@ -17,7 +17,7 @@ namespace Sav.Common.Repositories
             {
                 entity.GameIcon ??= existingEntity.GameIcon;
                 entity.GameLogoSmall ??= existingEntity.GameLogoSmall;
-                
+
                 _context.Entry(existingEntity).CurrentValues.SetValues(entity);
                 await UpdateAsync(existingEntity);
             }

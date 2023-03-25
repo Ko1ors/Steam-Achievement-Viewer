@@ -25,7 +25,7 @@ namespace SteamAchievementViewer.Services
 
         IEnumerable<GameEntity> GetIncompleteGames(int page = 1, int count = 100);
 
-        Task<PagedResult<CompletedGameComposite>> GetPagedCompletedGamesAsync(int page = 1, int count = 25);          
+        Task<PagedResult<CompletedGameComposite>> GetPagedCompletedGamesAsync(int page = 1, int count = 25);
 
         int GetCompletedAchievementsCount();
 

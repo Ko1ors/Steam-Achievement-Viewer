@@ -1,5 +1,4 @@
-﻿using Sav.Common.Models;
-using Sav.Infrastructure.Entities;
+﻿using Sav.Infrastructure.Entities;
 using SteamAchievementViewer.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,7 +12,7 @@ namespace SteamAchievementViewer.Services
     public interface ISteamService
     {
         public event AchievementProgressUpdatedDelegate OnAchievementProgressUpdated;
-        
+
         public event AvatarUpdatedDelegate OnAvatarUpdated;
 
         public void AchievementsDataChanged();

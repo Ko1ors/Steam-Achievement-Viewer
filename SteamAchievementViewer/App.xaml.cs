@@ -36,7 +36,7 @@ namespace SteamAchievementViewer
         {
             //Factories
             services.AddScoped(typeof(IServiceFactory<>), typeof(ServiceFactory<>));
-            
+
             // Services
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddTransient<IClientService<XmlDocument>, XmlClientService>();
@@ -107,8 +107,8 @@ namespace SteamAchievementViewer
             for (int i = 0; i < 5; i++)
             {
                 Task.Run(() => workerFactory.Create().StartAsync(new CancellationTokenSource().Token));
-            }   
-            
+            }
+
 
             var mainWindow = ServiceProvider.GetService<MainWindow>();
             mainWindow.Show();
