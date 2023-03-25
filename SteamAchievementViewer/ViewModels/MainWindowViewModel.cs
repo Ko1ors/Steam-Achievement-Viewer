@@ -13,30 +13,7 @@ namespace SteamAchievementViewer.ViewModels
         private readonly ISteamService _steamService;
         private readonly SynchronizationContext _synchronizationContext;
 
-        private Page _currentPage;
-        private string _avatarSource;
-
         public MainWindowModel Model { get; set; }
-
-        public Page CurrentPage
-        {
-            get { return _currentPage; }
-            set
-            {
-                _currentPage = value;
-                OnPropertyChanged(nameof(CurrentPage));
-            }
-        }
-
-        public string AvatarSource
-        {
-            get { return _avatarSource; }
-            set
-            {
-                _avatarSource = value;
-                OnPropertyChanged(nameof(AvatarSource));
-            }
-        }
 
         public RelayCommand NavigationCommand { get; set; }
 
@@ -60,24 +37,25 @@ namespace SteamAchievementViewer.ViewModels
             };
 
             if ((steamService.GetUser() is var user) && user != null)
-                UpdateAvatar(user.AvatarFull);
+                UpdateAvatar(user.AvatarFull, user.AvatarFrame);
 
             _navigationService.NavigateTo(Model.NavigationPages.Skip(1).First());
         }
 
-        private void SteamServiceOnAvatarUpdated(string avatarUrl)
+        private void SteamServiceOnAvatarUpdated(AvatarModel model)
         {
-            _synchronizationContext.Post((avatarUrl) => UpdateAvatar(avatarUrl.ToString()), avatarUrl);
+            _synchronizationContext.Post((avatarUrl) => UpdateAvatar(model.AvatarUrl, model.FrameUrl), model);
         }
 
-        private void UpdateAvatar(string avatarUrl)
+        private void UpdateAvatar(string avatarUrl, string frameUrl)
         {
-            AvatarSource = avatarUrl;
+            Model.AvatarSource = avatarUrl;
+            Model.FrameSource = frameUrl;
         }
 
         private void NavigationService_NavigationChanged(Page page)
         {
-            CurrentPage = page;
+            Model.CurrentPage = page;
         }
 
         private void NavigationService_AvailabilityChanged(bool isAvailable)

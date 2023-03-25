@@ -16,7 +16,7 @@ namespace Sav.Infrastructure
         public DbSet<AchievementEntity> Achievements { get; set; }
 
         private readonly string _dbPath;
-        
+
         public SteamContext()
         {
         }

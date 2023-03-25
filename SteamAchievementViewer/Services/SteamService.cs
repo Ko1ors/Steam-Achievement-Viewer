@@ -3,6 +3,7 @@ using HtmlAgilityPack;
 using Sav.Common.Interfaces;
 using Sav.Infrastructure.Entities;
 using SteamAchievementViewer.Mapping;
+using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Models.SteamApi;
 using System;
 using System.Collections.Generic;
@@ -119,6 +120,8 @@ namespace SteamAchievementViewer.Services
         public async Task<bool> UpdateProfileAsync(string steamID)
         {
             Profile profile = null;
+            UserEntity user = null;
+            AvatarModel avatarModel = null;
             var response = await _xmlClient.SendGetRequest($"https://steamcommunity.com/profiles/{steamID}/?xml={GetRandomParameter()}");
             if (response.InnerText == XmlProfileError)
                 return false;
@@ -126,22 +129,27 @@ namespace SteamAchievementViewer.Services
             using (XmlReader reader = new XmlNodeReader(response))
             {
                 profile = (Profile)serializer.Deserialize(reader);
-                var user = _mapper.Map<UserEntity>(profile);
-                var profileAvatarUrl = await GetDataFromSteamProfileAsync(profile.SteamID);
-                if (!string.IsNullOrWhiteSpace(profileAvatarUrl))
-                    user.AvatarFull = profileAvatarUrl;
+                user = _mapper.Map<UserEntity>(profile);
+                avatarModel = await GetDataFromSteamProfileAsync(profile.SteamID);
+                if (avatarModel is not null)
+                {
+                    user.AvatarFull = avatarModel.AvatarUrl;
+                    user.AvatarFrame = avatarModel.FrameUrl;
+                }
                 _userRepository.AddOrUpdate(user);
             }
             if (profile?.PrivacyState != "public")
             {
                 return false;
             }
+            if (user is not null)
+                avatarModel ??= new AvatarModel() { AvatarUrl = user.AvatarFull, FrameUrl = user.AvatarFrame };
             _steamID = steamID;
-            OnAvatarUpdated?.Invoke(profile.AvatarFull);
+            OnAvatarUpdated?.Invoke(avatarModel);
             return true;
         }
 
-        private async Task<string> GetDataFromSteamProfileAsync(string steamID)
+        private async Task<AvatarModel> GetDataFromSteamProfileAsync(string steamID)
         {
             try
             {
@@ -159,12 +167,17 @@ namespace SteamAchievementViewer.Services
 
                 if (avatarDiv != null)
                 {
-                    // Extract the avatar URL from the <img> element
-                    return avatarDiv.SelectSingleNode("img")?.GetAttributeValue("src", "");
+                    return new AvatarModel
+                    {
+                        AvatarUrl = avatarDiv.SelectSingleNode("img")?.GetAttributeValue("src", ""),
+
+                        FrameUrl = avatarDiv.SelectSingleNode("//div[@class='profile_avatar_frame']")
+                            ?.SelectSingleNode("img")?.GetAttributeValue("src", "")
+                    };
                 }
                 return default;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return default;
             }

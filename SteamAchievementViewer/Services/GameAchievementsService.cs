@@ -3,7 +3,6 @@ using Sav.Common.Interfaces;
 using Sav.Common.Models;
 using Sav.Infrastructure.Entities;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SteamAchievementViewer.Services

@@ -8,7 +8,7 @@ namespace Sav.Infrastructure.Entities
     {
         [Key]
         public string SteamID64 { get; set; } = null!;
-        
+
         public string SteamID { get; set; } = null!;
 
         public string OnlineState { get; set; } = null!;
@@ -24,6 +24,8 @@ namespace Sav.Infrastructure.Entities
         public string AvatarMedium { get; set; } = null!;
 
         public string AvatarFull { get; set; } = null!;
+
+        public string? AvatarFrame { get; set; }
 
         public int VacBanned { get; set; }
 
