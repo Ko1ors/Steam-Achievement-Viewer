@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:gif="http://wpfanimatedgif.codeplex.com"
         xmlns:behaviors="clr-namespace:SteamAchievementViewer.Behaviors" 
         xmlns:viewmodels="clr-namespace:SteamAchievementViewer.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         mc:Ignorable="d" 
@@ -146,7 +147,7 @@
                     </ListView>
                 </ScrollViewer>
                 <Border Grid.Column="1" BorderThickness="3" BorderBrush="#1B2838" Width="50" Height="50">
-                    <Image Source="{Binding AvatarSource}" Stretch="Fill" HorizontalAlignment="Center"/>
+                    <Image gif:ImageBehavior.AnimatedSource="{Binding AvatarSource}" />
                 </Border>
             </Grid>
 
