@@ -8,7 +8,7 @@ namespace SteamAchievementViewer.Services
 {
     public delegate void AchievementProgressUpdatedDelegate(int totalGames, int currentGameCount, string lastGameName);
 
-    public delegate void AvatarUpdatedDelegate(string avatarUrl);
+    public delegate void AvatarUpdatedDelegate(AvatarModel model);
 
     public interface ISteamService
     {

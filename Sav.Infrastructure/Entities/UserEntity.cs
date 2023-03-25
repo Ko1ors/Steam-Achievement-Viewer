@@ -24,6 +24,8 @@ namespace Sav.Infrastructure.Entities
         public string AvatarMedium { get; set; } = null!;
 
         public string AvatarFull { get; set; } = null!;
+        
+        public string? AvatarFrame { get; set; }
 
         public int VacBanned { get; set; }
 

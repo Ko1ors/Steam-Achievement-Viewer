@@ -6,6 +6,7 @@
         xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:gif="http://wpfanimatedgif.codeplex.com"
+        xmlns:apng="clr-namespace:ApngImage;assembly=ApngImage"
         xmlns:behaviors="clr-namespace:SteamAchievementViewer.Behaviors" 
         xmlns:viewmodels="clr-namespace:SteamAchievementViewer.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowViewModel}"
         mc:Ignorable="d" 
@@ -146,13 +147,16 @@
                         </ListView.ItemTemplate>
                     </ListView>
                 </ScrollViewer>
-                <Border Grid.Column="1" BorderThickness="3" BorderBrush="#1B2838" Width="50" Height="50">
-                    <Image gif:ImageBehavior.AnimatedSource="{Binding AvatarSource}" />
+                <Border Grid.Column="1" BorderThickness="{Binding Model.AvatarBorderThickness}" BorderBrush="#1B2838" Width="50" Height="50">
+                    <Grid>
+                        <Image Width="{Binding Model.AvatarImageSize}" Height="{Binding Model.AvatarImageSize}" gif:ImageBehavior.AnimatedSource="{Binding Model.AvatarSource}" />
+                        <apng:ApngImage Visibility="{Binding Model.FrameVisibility}" Background="Transparent" Source="{Binding Model.FrameSource}"/>
+                    </Grid>
                 </Border>
             </Grid>
 
             <Grid Grid.Row="2" x:Name="InformationPages"  Background="#1B2838" >
-                <Frame Content="{Binding CurrentPage}" NavigationUIVisibility="Hidden"/>
+                <Frame Content="{Binding Model.CurrentPage}" NavigationUIVisibility="Hidden"/>
             </Grid>
 
         </Grid>
