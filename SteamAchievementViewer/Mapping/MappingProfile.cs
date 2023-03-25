@@ -56,6 +56,7 @@ namespace SteamAchievementViewer.Mapping
                 .ForMember(dest => dest.StatsLink, opt => opt.Ignore())
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.Game, opt => opt.Ignore())
+                .ForMember(dest => dest.UserAchievements, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<Game, UserGameEntity>()

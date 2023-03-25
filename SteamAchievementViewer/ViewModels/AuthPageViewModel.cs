@@ -94,7 +94,7 @@ namespace SteamAchievementViewer.ViewModels
                 return;
 
             SteamId = _steamService.GetUserId();
-            
+
             var user = _steamService.GetUser();
             if (user is null)
                 return;
@@ -102,7 +102,7 @@ namespace SteamAchievementViewer.ViewModels
             if (user.Updated + ProfileUpdateInterval <= DateTime.Now)
                 _ = GetUserInformationAsync(true);
             else
-                _steamService.QueueAchievementsUpdate();            
+                _steamService.QueueAchievementsUpdate();
         }
 
         private bool CanAuth()
@@ -169,7 +169,10 @@ namespace SteamAchievementViewer.ViewModels
 
                     await Task.Delay(1000);
                     StatusLabelContent = Properties.Resources.ResultSaved;
-                });
+                }).ContinueWith((t) =>
+                {
+                    if (t.IsFaulted) throw t.Exception;
+                }, TaskScheduler.FromCurrentSynchronizationContext());
             }
             catch (Exception ex)
             {

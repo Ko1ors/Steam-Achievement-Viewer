@@ -22,7 +22,7 @@ namespace Sav.Infrastructure
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseLazyLoadingProxies().UseSqlite($"Data Source=sav.db");
+        => optionsBuilder.UseLazyLoadingProxies().UseSqlite($"Data Source=sav.db").EnableSensitiveDataLogging();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +36,7 @@ namespace Sav.Infrastructure
             modelBuilder.Entity<UserEntity>().HasMany(u => u.UserAchievements).WithOne(ua => ua.User);
             modelBuilder.Entity<AchievementEntity>().HasMany(a => a.UserAchievements).WithOne(ua => ua.Achievement);
             modelBuilder.Entity<GameEntity>().HasMany(g => g.Achievements).WithOne(a => a.Game);
+            modelBuilder.Entity<UserGameEntity>().HasMany(ug => ug.UserAchievements);
         }
     }
 }

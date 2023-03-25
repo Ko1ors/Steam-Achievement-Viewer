@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Sav.Infrastructure;
 
@@ -10,9 +11,11 @@ using Sav.Infrastructure;
 namespace Sav.Infrastructure.Migrations
 {
     [DbContext(typeof(SteamContext))]
-    partial class SteamContextModelSnapshot : ModelSnapshot
+    [Migration("20230325120332_UserAchievements")]
+    partial class UserAchievements
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
