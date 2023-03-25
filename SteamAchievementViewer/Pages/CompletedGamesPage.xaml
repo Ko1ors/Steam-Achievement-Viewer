@@ -1,0 +1,87 @@
+﻿<Page x:Class="SteamAchievementViewer.Pages.CompletedGamesPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:viewmodels="clr-namespace:SteamAchievementViewer.ViewModels" 
+      xmlns:models="clr-namespace:Sav.Common.Models;assembly=Sav.Common" 
+      d:DataContext="{d:DesignInstance Type=viewmodels:CompletedGamesViewModel}"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="CompletedGamesPage">
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction
+                CommandParameter="{Binding}"
+                Command="{Binding ViewLoadedCommand}"/>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <DataTemplate x:Key="AchievementTemplate" d:DataType="models:AchievementEntity">
+            <Image Width="32" Height="32" Grid.Column="0" Stretch="Fill"  Source="{Binding IconOpen, TargetNullValue={x:Null}}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="GameTemplate" d:DataType="models:CompletionGameComposite">
+            <Border Background="#16202D" Padding="10" Margin="5" Height="140" MaxWidth="936">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="259" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0" Stretch="Uniform" Source="{Binding LogoUrl, TargetNullValue={x:Null}}"/>
+                    <StackPanel Grid.Column="1" >
+                        <TextBlock Text="{Binding Path=Game.Name}" Foreground="White" FontSize="20" Margin="10"/>
+                        <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="32" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Column="0" Text="TOTAL PLAYED" Foreground="White" FontSize="12" Margin="10 0"/>
+                                <TextBlock Grid.Column="1" Text="COMPLETED AT" Foreground="White" FontSize="12" Margin="10 0"/>
+                                <TextBlock Grid.Column="2" Foreground="White" Margin="10 0">
+                                <Run Text="ACHIEVEMENTS" Foreground="White" FontSize="12"/>
+                                <Run Text="{Binding Achievements.Count, Mode=OneWay}" Foreground="White" FontSize="12"/><Run Text="/" Foreground="White" FontSize="12"/><Run Text="{Binding Achievements.Count, Mode=OneWay}" Foreground="White" FontSize="12"/>
+                                </TextBlock>
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Foreground="White" FontSize="12" Margin="10 0">
+                                <Run Text="{Binding HoursPlayed, Mode=OneWay}"/>
+                                <Run Text="hours"/>
+                                </TextBlock>
+                                <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding CompletedAt, StringFormat='{}{0:d MMMM yyyy}'}" Foreground="White" FontSize="12" Margin="10 0"/>
+                                <Rectangle Grid.Column="2" Grid.Row="1" Fill="#1A9FFF" RadiusX="2" RadiusY="2" Height="6" Margin="10 0"/>
+                            </Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <ListBox BorderBrush="Transparent" Background="Transparent" d:ItemsSource="{d:SampleData}" ItemsSource="{Binding PreviewAchievements}" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource AchievementTemplate}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel IsItemsHost="True" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+                            <Grid Grid.Column="4" Width="32" Height="32">
+                                <Rectangle  Fill="#2e3238"/>
+                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" Foreground="#fff">
+                                    <Run Text="+"/><Run Text="{Binding PreviewCount, Mode=OneWay}"/>
+                                </TextBlock>
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+    </Page.Resources>
+    <ScrollViewer BorderBrush="Transparent" Background="#FF171A21" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="5">
+            <ListBox BorderBrush="Transparent" Background="#FF171A21" d:ItemsSource="{d:SampleData}" HorizontalContentAlignment="Stretch" ItemsSource="{Binding CompletedGameCompositeCollection}" HorizontalAlignment="Stretch" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource GameTemplate}" />
+            <Button Content="Load more" FontSize="16" Height="40" Width="120" Command="{Binding LoadMoreGamesCommand}" Visibility="{Binding IsMoreGameAvailable, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource OverButtonStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

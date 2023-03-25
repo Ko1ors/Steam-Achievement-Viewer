@@ -75,5 +75,10 @@ namespace SteamAchievementViewer.Services
         {
             return _userRepository.GetPagedUserEasiestGamesToCompleteAsync(_steamService.GetUserId(), page, count);
         }
+
+        public async Task<PagedResult<CompletedGameComposite>> GetPagedCompletedGamesAsync(int page = 1, int count = 25)
+        {
+            return await _userRepository.GetPagedUserCompletedGamesAsync(_steamService.GetUserId(), page, count);
+        }
     }
 }

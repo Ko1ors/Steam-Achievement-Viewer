@@ -46,7 +46,6 @@ namespace SteamAchievementViewer.Mapping
                 .ForMember(dest => dest.Achievements, opt => opt.Ignore())
                 .ForMember(dest => dest.Inserted, opt => opt.Ignore())
                 .ForMember(dest => dest.Updated, opt => opt.Ignore())
-                .ForMember(dest => dest.UserAchievements, opt => opt.Ignore())
                 .ReverseMap();
 
             CreateMap<UserEntity, UserGameEntity>()
@@ -69,6 +68,7 @@ namespace SteamAchievementViewer.Mapping
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
                 .ForMember(dest => dest.Inserted, opt => opt.Ignore())
                 .ForMember(dest => dest.Updated, opt => opt.Ignore())
+                .ForMember(dest => dest.UserAchievements, opt => opt.Ignore())
                 .ForSourceMember(src => src.Achievements, opt => opt.DoNotValidate())
                 .ReverseMap();
 

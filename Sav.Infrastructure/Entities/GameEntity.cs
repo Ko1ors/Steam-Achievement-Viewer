@@ -25,8 +25,6 @@ namespace Sav.Infrastructure.Entities
 
         public virtual ICollection<AchievementEntity> Achievements { get; set; } = null!;
 
-        public virtual ICollection<UserAchievementEntity> UserAchievements { get; set; } = null!;
-
         public override object[] GetKeys()
         {
             return new object[] { AppID };

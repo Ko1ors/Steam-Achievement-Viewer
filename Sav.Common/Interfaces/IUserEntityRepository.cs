@@ -29,6 +29,8 @@ namespace Sav.Common.Interfaces
         
         Task<PagedResult<CompletionGameComposite>> GetPagedUserEasiestGamesToCompleteAsync(string userId, int page, int count);
 
+        Task<PagedResult<CompletedGameComposite>> GetPagedUserCompletedGamesAsync(string userId, int page, int count);
+
         int GetUserTotalAchievementsCount(string userId);
     }
 }
