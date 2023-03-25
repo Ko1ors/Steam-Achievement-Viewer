@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HtmlAgilityPack;
 using Sav.Common.Interfaces;
 using Sav.Infrastructure.Entities;
 using SteamAchievementViewer.Mapping;
@@ -6,6 +7,7 @@ using SteamAchievementViewer.Models.SteamApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -33,6 +35,16 @@ namespace SteamAchievementViewer.Services
 
         private string _steamID;
         private bool _refreshRequired;
+        private HttpClient _httpClient;
+
+        private HttpClient httpClient
+        {
+            get
+            {
+                _httpClient ??= new HttpClient();
+                return _httpClient;
+            }
+        }
 
         public SteamService(IClientService<XmlDocument> xmlClient, IQueueService<UserGameEntity> gameQueueService, IMapper mapper,
             IUserEntityRepository userRepository, IGameEntityRepository gameRepository,
@@ -115,6 +127,9 @@ namespace SteamAchievementViewer.Services
             {
                 profile = (Profile)serializer.Deserialize(reader);
                 var user = _mapper.Map<UserEntity>(profile);
+                var profileAvatarUrl = await GetDataFromSteamProfileAsync(profile.SteamID);
+                if (!string.IsNullOrWhiteSpace(profileAvatarUrl))
+                    user.AvatarFull = profileAvatarUrl;
                 _userRepository.AddOrUpdate(user);
             }
             if (profile?.PrivacyState != "public")
@@ -124,6 +139,35 @@ namespace SteamAchievementViewer.Services
             _steamID = steamID;
             OnAvatarUpdated?.Invoke(profile.AvatarFull);
             return true;
+        }
+
+        private async Task<string> GetDataFromSteamProfileAsync(string steamID)
+        {
+            try
+            {
+                string profileUrl = $"https://steamcommunity.com/id/{steamID}";
+
+                // Download the HTML content of the user's Steam profile page
+                string htmlContent = await httpClient.GetStringAsync(profileUrl);
+
+                // Load the HTML content into an HtmlDocument object
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(htmlContent);
+
+                // Find the <div> element that contains the user's avatar
+                HtmlNode avatarDiv = doc.DocumentNode.SelectSingleNode("//div[@class='playerAvatarAutoSizeInner']");
+
+                if (avatarDiv != null)
+                {
+                    // Extract the avatar URL from the <img> element
+                    return avatarDiv.SelectSingleNode("img")?.GetAttributeValue("src", "");
+                }
+                return default;
+            }
+            catch(Exception e)
+            {
+                return default;
+            }
         }
 
         public bool IsLogged()

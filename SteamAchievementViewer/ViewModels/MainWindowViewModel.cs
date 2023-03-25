@@ -1,11 +1,9 @@
 ﻿using SteamAchievementViewer.Commands;
 using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Services;
-using System;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 
 namespace SteamAchievementViewer.ViewModels
 {
@@ -16,7 +14,7 @@ namespace SteamAchievementViewer.ViewModels
         private readonly SynchronizationContext _synchronizationContext;
 
         private Page _currentPage;
-        private BitmapImage _avatarSource;
+        private string _avatarSource;
 
         public MainWindowModel Model { get; set; }
 
@@ -30,7 +28,7 @@ namespace SteamAchievementViewer.ViewModels
             }
         }
 
-        public BitmapImage AvatarSource
+        public string AvatarSource
         {
             get { return _avatarSource; }
             set
@@ -74,7 +72,7 @@ namespace SteamAchievementViewer.ViewModels
 
         private void UpdateAvatar(string avatarUrl)
         {
-            AvatarSource = new BitmapImage(new Uri(avatarUrl));
+            AvatarSource = avatarUrl;
         }
 
         private void NavigationService_NavigationChanged(Page page)
