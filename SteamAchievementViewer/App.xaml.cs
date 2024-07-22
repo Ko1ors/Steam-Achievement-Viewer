@@ -60,6 +60,7 @@ namespace SteamAchievementViewer
             services.AddScoped<AuthPageViewModel>();
             services.AddScoped<EasiestGamesToCompleteViewModel>();
             services.AddScoped<CompletedGamesViewModel>();
+            services.AddScoped<MainInfoViewModel>();
 
             // Pages
             services.AddTransient<AuthPage>();
