@@ -44,6 +44,7 @@ namespace SteamAchievementViewer
             services.AddTransient<IGameAchievementsService, GameAchievementsService>();
             services.AddSingleton(typeof(IQueueService<>), typeof(QueueService<>));
             services.AddTransient<IAchievementsWorkerService, AchievementsWorkerService>();
+            services.AddSingleton<IImageService, ImageService>();
 
             // Repositories
             services.AddSingleton(typeof(IListRepository<>), typeof(ListRepository<>));
@@ -59,6 +60,7 @@ namespace SteamAchievementViewer
             services.AddScoped<AuthPageViewModel>();
             services.AddScoped<EasiestGamesToCompleteViewModel>();
             services.AddScoped<CompletedGamesViewModel>();
+            services.AddScoped<MainInfoViewModel>();
 
             // Pages
             services.AddTransient<AuthPage>();

@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:viewmodels="clr-namespace:SteamAchievementViewer.ViewModels" 
-      xmlns:models="clr-namespace:Sav.Common.Models;assembly=Sav.Common" 
+      xmlns:models="clr-namespace:Sav.Common.Models;assembly=Sav.Common" xmlns:converters="clr-namespace:SteamAchievementViewer.Converters"
       d:DataContext="{d:DesignInstance Type=viewmodels:CompletedGamesViewModel}"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
@@ -19,8 +19,11 @@
     </b:Interaction.Triggers>
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:LoadImageConverter x:Key="LoadImageConverter" />
         <DataTemplate x:Key="AchievementTemplate" d:DataType="models:AchievementEntity">
-            <Image Width="32" Height="32" Grid.Column="0" Stretch="Fill"  Source="{Binding IconOpen, TargetNullValue={x:Null}}"/>
+            <Border Background="White">
+                <Image Width="32" Height="32" Grid.Column="0" Stretch="Fill"  Source="{Binding IconClosed, Converter={StaticResource LoadImageConverter}, TargetNullValue={x:Null}, IsAsync=true}"/>
+            </Border>
         </DataTemplate>
         <DataTemplate x:Key="GameTemplate" d:DataType="models:CompletionGameComposite">
             <Border Background="#16202D" Padding="10" Margin="5" Height="140" MaxWidth="936">
@@ -29,7 +32,7 @@
                         <ColumnDefinition Width="259" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Image Grid.Column="0" Stretch="Uniform" Source="{Binding LogoUrl, TargetNullValue={x:Null}}"/>
+                    <Image Grid.Column="0" Stretch="Uniform" Source="{Binding LogoUrl, Converter={StaticResource LoadImageConverter}, TargetNullValue={x:Null}, IsAsync=true}"/>
                     <StackPanel Grid.Column="1" >
                         <TextBlock Text="{Binding Path=Game.Name}" Foreground="White" FontSize="20" Margin="10"/>
                         <Grid>
@@ -78,10 +81,14 @@
             </Border>
         </DataTemplate>
     </Page.Resources>
-    <ScrollViewer BorderBrush="Transparent" Background="#FF171A21" VerticalScrollBarVisibility="Auto">
-        <StackPanel Margin="5">
-            <ListBox BorderBrush="Transparent" Background="#FF171A21" d:ItemsSource="{d:SampleData}" HorizontalContentAlignment="Stretch" ItemsSource="{Binding CompletedGameCompositeCollection}" HorizontalAlignment="Stretch" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled"  ItemTemplate="{StaticResource GameTemplate}" />
-            <Button Content="Load more" FontSize="16" Height="40" Width="120" Command="{Binding LoadMoreGamesCommand}" Visibility="{Binding IsMoreGameAvailable, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource OverButtonStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
-        </StackPanel>
+    <ScrollViewer BorderBrush="Transparent" Background="#FF171A21" VerticalScrollBarVisibility="Disabled">
+        <Grid Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="90*"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+            <ListBox BorderBrush="Transparent" Background="#FF171A21" d:ItemsSource="{d:SampleData}" HorizontalContentAlignment="Stretch" ItemsSource="{Binding CompletedGameCompositeCollection}" HorizontalAlignment="Stretch" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemTemplate="{StaticResource GameTemplate}" />
+            <Button Grid.Row="1" Content="Load more" FontSize="16" Height="40" Width="120" Command="{Binding LoadMoreGamesCommand}" Visibility="{Binding IsMoreGameAvailable, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource OverButtonStyle}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </Grid>
     </ScrollViewer>
 </Page>
