@@ -81,11 +81,30 @@ namespace SteamAchievementViewer.ViewModels
 
             _cancellationTokenSource = new CancellationTokenSource();
 
+            UpdateNavigationAvailability();
             UpdateSteamData();
             Task.Run(() => RunQueuePolling());
 
             AuthCommand = new RelayCommand((obj) => _ = GetUserInformationAsync(), (obj) => CanAuth());
             HyperlinkCommand = new RelayCommand((obj) => Process.Start(new ProcessStartInfo("cmd", $"/c start {HyperlinkUrl}") { CreateNoWindow = true }));
+        }
+
+        private void UpdateNavigationAvailability()
+        {
+            if (!_steamService.IsLogged())
+            {
+                _navigationService.ChangeAvailability(false);
+                return;
+            }
+
+            var user = _steamService.GetUser();
+            if (user is null)
+            {
+                _navigationService.ChangeAvailability(false);
+                return;
+            }
+
+            _navigationService.ChangeAvailability(true);
         }
 
         private void UpdateSteamData()
@@ -178,9 +197,11 @@ namespace SteamAchievementViewer.ViewModels
             {
                 Debug.WriteLine(ex.Message);
             }
-
-            _navigationService.ChangeAvailability(true);
-            _getInformationInProcess = false;
+            finally
+            {
+                _getInformationInProcess = false;
+                UpdateNavigationAvailability();
+            }
         }
 
         private void SteamServiceOnAchievementProgressUpdated(int totalGames, int currentGameCount, string lastGameName)
