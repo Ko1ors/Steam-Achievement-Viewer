@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sav.Common.Logs;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -11,6 +12,8 @@ namespace SteamAchievementViewer.Services
     {
         public async Task<XmlDocument> SendGetRequest(string requestUrl)
         {
+            Log.Logger.Information("Requesting {RequestUrl}", requestUrl);
+
             XmlDocument doc = new XmlDocument();
             try
             {
@@ -25,10 +28,12 @@ namespace SteamAchievementViewer.Services
                 response.EnsureSuccessStatusCode();
 
                 doc.Load(new StreamReader(await response.Content.ReadAsStreamAsync(), Encoding.UTF8));
+                Log.Logger.Information("Request successful, {RequestUrl}", requestUrl);
                 return doc;
             }
             catch (Exception e)
             {
+                Log.Logger.Error(e, "Failed to request {RequestUrl}", requestUrl);
                 return doc;
             }
         }

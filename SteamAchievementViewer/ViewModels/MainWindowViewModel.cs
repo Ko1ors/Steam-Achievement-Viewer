@@ -1,4 +1,5 @@
-﻿using SteamAchievementViewer.Commands;
+﻿using Sav.Common.Logs;
+using SteamAchievementViewer.Commands;
 using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Services;
 using System.Linq;
@@ -51,16 +52,19 @@ namespace SteamAchievementViewer.ViewModels
         {
             Model.AvatarSource = avatarUrl;
             Model.FrameSource = frameUrl;
+            Log.Logger.Information("Avatar updated, avatarUrl: {avatarUrl}, frameUrl: {frameUrl}", avatarUrl, frameUrl);
         }
 
         private void NavigationService_NavigationChanged(Page page)
         {
             Model.CurrentPage = page;
+            Log.Logger.Information("Navigation changed to {PageType}", page.GetType().Name);
         }
 
         private void NavigationService_AvailabilityChanged(bool isAvailable)
         {
             Model.IsNavigationAvailable = isAvailable;
+            Log.Logger.Information("Navigation availability changed to {IsAvailable}", isAvailable);
         }
 
         private bool CanNavigate()

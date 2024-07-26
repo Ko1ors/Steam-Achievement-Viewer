@@ -1,4 +1,5 @@
-﻿using SteamAchievementViewer.Commands;
+﻿using Sav.Common.Logs;
+using SteamAchievementViewer.Commands;
 using SteamAchievementViewer.Models.SteamApi;
 using SteamAchievementViewer.Services;
 using System.Linq;
@@ -121,6 +122,7 @@ namespace SteamAchievementViewer.ViewModels
 
         public async Task LoadInfoAsync()
         {
+            Log.Logger.Information("Loading main info");
             if (!_steamService.IsLogged())
                 return;
 
@@ -133,6 +135,7 @@ namespace SteamAchievementViewer.ViewModels
             TotalAchievementCount = _gameAchievementsService.GetTotalAchievementsCount();
             AchievementCount = _gameAchievementsService.GetCompletedAchievementsCount();
             LoadingData = false;
+            Log.Logger.Information("Main info loaded name: {0}, game count: {1}, total achievements: {2}, completed achievements: {3}", ProfileName, GameCount, TotalAchievementCount, AchievementCount);
         }
     }
 

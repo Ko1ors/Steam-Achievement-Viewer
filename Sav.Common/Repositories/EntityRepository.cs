@@ -1,4 +1,5 @@
 ﻿using Sav.Common.Interfaces;
+using Sav.Common.Logs;
 using Sav.Infrastructure;
 using Sav.Infrastructure.Entities;
 using System.Linq.Expressions;
@@ -16,6 +17,7 @@ namespace Sav.Common.Repositories
 
         public async Task<TEntity?> GetByKeysAsync(params object[] keys)
         {
+            Log.Logger.Information("Getting entity {Entity} by keys {Keys}", typeof(TEntity).Name, keys);   
             return await _context.Set<TEntity>().FindAsync(keys);
         }
 
@@ -57,16 +59,19 @@ namespace Sav.Common.Repositories
 
         public TEntity? GetByKeys(params object[] keys)
         {
+            Log.Logger.Information("Getting entity {Entity} by keys {Keys}", typeof(TEntity).Name, keys);
             return _context.Set<TEntity>().Find(keys);
         }
 
         public IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> predicate)
         {
+            Log.Logger.Information("Getting entities {Entity} by predicate {Predicate}", typeof(TEntity).Name, predicate);
             return _context.Set<TEntity>().Where(predicate).AsEnumerable();
         }
 
         public IEnumerable<TEntity> GetAll()
         {
+            Log.Logger.Information("Getting all entities {Entity}", typeof(TEntity).Name);
             return _context.Set<TEntity>().ToList();
         }
 
@@ -108,6 +113,7 @@ namespace Sav.Common.Repositories
 
         public void Refresh()
         {
+            Log.Logger.Information("Refreshing context");
             _context.ChangeTracker.Clear();
         }
     }

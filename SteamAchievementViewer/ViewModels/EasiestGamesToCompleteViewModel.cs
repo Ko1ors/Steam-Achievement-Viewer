@@ -1,7 +1,9 @@
-﻿using Sav.Common.Models;
+﻿using Sav.Common.Logs;
+using Sav.Common.Models;
 using SteamAchievementViewer.Commands;
 using SteamAchievementViewer.Services;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
@@ -67,6 +69,7 @@ namespace SteamAchievementViewer.ViewModels
 
         public async Task LoadGamesAsync()
         {
+            Log.Logger.Information("Loading games for page {0}", _currentPage);
             if (_steamService.IsLogged())
             {
                 CompletionGameCollection.RaiseListChangedEvents = false;
@@ -82,6 +85,7 @@ namespace SteamAchievementViewer.ViewModels
 
                 CompletionGameCollection.RaiseListChangedEvents = true;
                 _dispatcher.Invoke(CompletionGameCollection.ResetBindings, DispatcherPriority.Render);
+                Log.Logger.Information("Games loaded successfully, count: {0}", list.Count());
             }
         }
     }

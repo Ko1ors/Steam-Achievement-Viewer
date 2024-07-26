@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Logging;
 using Sav.Common.Interfaces;
+using Sav.Common.Logs;
 using Sav.Infrastructure.Entities;
+using Serilog.Core;
 using SteamAchievementViewer.Mapping;
 using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Models.SteamApi;
@@ -65,11 +68,17 @@ namespace SteamAchievementViewer.Services
 
         private bool Start()
         {
+            Log.Logger.Information("SteamService started");
+
             if (Settings.Default.SteamID == "-1")
+            {
+                Log.Logger.Information("SteamID is not set");
                 return false;
+            }
 
             LoadProfile(Settings.Default.SteamID);
 
+            Log.Logger.Information("SteamService started successfully");
             return true;
         }
 
@@ -190,6 +199,7 @@ namespace SteamAchievementViewer.Services
 
         public void LoadProfile(string steamID)
         {
+            Log.Logger.Information("Loading profile for SteamID: {SteamID}", steamID);
             _steamID = steamID;
         }
 
@@ -198,10 +208,12 @@ namespace SteamAchievementViewer.Services
             Settings.Default.LastUpdate = DateTime.Now;
             Settings.Default.SteamID = _steamID;
             Settings.Default.Save();
+            Log.Logger.Information("Settings saved {SteamID}, {LastUpdate}", _steamID, Settings.Default.LastUpdate);
         }
 
         private void ValidateDBRefresh()
         {
+            Log.Logger.Information("Validating DB refresh, {RefreshRequired}", _refreshRequired);
             if (_refreshRequired)
             {
                 _refreshRequired = false;
@@ -217,11 +229,13 @@ namespace SteamAchievementViewer.Services
 
         public IEnumerable<GameEntity> GetUserGames()
         {
+            Log.Logger.Information("Getting user games");
             return GetUser()?.UserGames?.Select(ug => ug.Game) ?? Enumerable.Empty<GameEntity>();
         }
 
         public void QueueAchievementsUpdate(bool onlyRecentGames = true)
         {
+            Log.Logger.Information("Queueing achievements update for SteamID: {SteamID}", _steamID);
             if (string.IsNullOrEmpty(_steamID))
             {
                 return;
@@ -235,11 +249,13 @@ namespace SteamAchievementViewer.Services
 
         public void AchievementsDataChanged()
         {
+            Log.Logger.Information("Achievements data changed for SteamID: {SteamID}", _steamID);
             _refreshRequired = true;
         }
 
         public string GetUserId()
         {
+            Log.Logger.Information("Getting user ID: {SteamID}", _steamID);
             return _steamID;
         }
     }
