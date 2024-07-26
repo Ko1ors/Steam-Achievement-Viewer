@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Sav.Common.Interfaces;
+using Sav.Common.Logs;
 using Sav.Infrastructure.Entities;
 using SteamAchievementViewer.Mapping;
 using SteamAchievementViewer.Models.SteamApi;
@@ -46,8 +47,10 @@ namespace SteamAchievementViewer.Services
 
         public async Task StartAsync(CancellationToken token)
         {
+            Log.Logger.Information("AchievementsWorkerService starting");
             if (IsRunning)
             {
+                Log.Logger.Information("AchievementsWorkerService already running");
                 return;
             }
 
@@ -59,6 +62,7 @@ namespace SteamAchievementViewer.Services
                 await ExecuteWorkAsync();
                 await Task.Delay(1000, token);
             }
+            Log.Logger.Warning("AchievementsWorkerService stopping");
             IsRunning = false;
         }
 
@@ -76,9 +80,15 @@ namespace SteamAchievementViewer.Services
                 if (userGame is null)
                     return;
 
+                Log.Logger.Information("Processing user game {UserId}, {AppID}", userGame.UserId, userGame.AppID);
+
                 var response = await _xmlClient.SendGetRequest($"{userGame.StatsLink}/?xml={GetRandomParameter()}");
                 if (response.InnerText == XmlProfileError || response.InnerText == "")
+                {
+                    Log.Logger.Warning("Failed to get achievements for {UserId}, {AppID}", userGame.UserId, userGame.AppID);
                     return;
+                }
+
                 Achievements achievementsResponse = null;
                 List<AchievementEntity> achievements = null;
                 IEnumerable<UserAchievementEntity> userAchievements = null;
@@ -91,7 +101,10 @@ namespace SteamAchievementViewer.Services
                     reader.ReadToNextSibling("achievements");
                     achievementsResponse = (Achievements)serializer.Deserialize(reader);
                     if (achievementsResponse is null)
+                    {
+                        Log.Logger.Warning("Failed to deserialize achievements for {UserId}, {AppID}", userGame.UserId, userGame.AppID);
                         return;
+                    }
 
                     var gameEntity = _gameRepository.GetByKeys(userGame.AppID);
                     userAchievements = achievementsResponse.Achievement.Where(a => a.Closed == "1").Select(a => new UserAchievementEntity()
@@ -106,8 +119,9 @@ namespace SteamAchievementViewer.Services
                     gameEntity.GameLogoSmall = game_.GameLogoSmall;
                     gameEntity.GameIcon = game_.GameIcon;
                     await _gameRepository.UpdateAsync(gameEntity);
+                    Log.Logger.Information("Game {AppID} updated, achievements count: {Count}", userGame.AppID, achievements.Count);
                 }
-                if (achievements == null)
+                if (achievements == null) 
                     return;
 
                 // TODO: move GetGlobalAchievementPercentages to separate worker service
@@ -133,9 +147,11 @@ namespace SteamAchievementViewer.Services
                     await _userAchievementRepository.AddOrUpdateAsync(userAchievement);
                 }
                 _steamService.AchievementsDataChanged();
+                Log.Logger.Information("User game {UserId}, {AppID} processed", userGame.UserId, userGame.AppID);
             }
             catch (Exception e)
             {
+                Log.Logger.Error(e, "Failed to process user game {UserId}, {AppID}", userGame?.UserId, userGame?.AppID);
                 if (userGame is not null)
                     _queueService.Add(userGame);
             }
@@ -143,6 +159,7 @@ namespace SteamAchievementViewer.Services
 
         private async Task<Achievements> GetGlobalAchievementPercentagesAsync(string appid)
         {
+            Log.Logger.Information("Getting global achievement percentages for {AppID}", appid);
             Achievements achievements = null;
             var response = await _xmlClient.SendGetRequest("https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v0002/?gameid=" + appid + "&format=xml");
             using (XmlReader reader = new XmlNodeReader(response))
@@ -151,6 +168,7 @@ namespace SteamAchievementViewer.Services
                 reader.ReadToDescendant("achievements");
                 achievements = (Achievements)serializer.Deserialize(reader);
             }
+            Log.Logger.Information("Got global achievement percentages for {AppID}", appid);
             return achievements;
         }
     }

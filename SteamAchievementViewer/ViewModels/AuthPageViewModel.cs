@@ -1,4 +1,5 @@
 ﻿using Sav.Common.Interfaces;
+using Sav.Common.Logs;
 using Sav.Infrastructure.Entities;
 using SteamAchievementViewer.Commands;
 using SteamAchievementViewer.Services;
@@ -109,6 +110,8 @@ namespace SteamAchievementViewer.ViewModels
 
         private void UpdateSteamData()
         {
+            Log.Logger.Information("Updating Steam data");
+
             if (!_steamService.IsLogged())
                 return;
 
@@ -144,6 +147,8 @@ namespace SteamAchievementViewer.ViewModels
             {
                 await Task.Run(async () =>
                 {
+                    Log.Logger.Information("Getting user information {SteamId}", SteamId);
+
                     _getInformationInProcess = true;
                     ProgressBarValue = 0;
                     _navigationService.ChangeAvailability(false);
@@ -155,32 +160,39 @@ namespace SteamAchievementViewer.ViewModels
                     if (await _steamService.UpdateProfileAsync(steamID))
                     {
                         StatusLabelContent = Properties.Resources.ProfileDataRetrieved;
+                        Log.Logger.Information("Profile data retrieved {SteamId}", SteamId);
                     }
                     else
                     {
                         StatusLabelContent = Properties.Resources.ProfileDataFailed;
+                        Log.Logger.Error("Profile data failed {SteamId}", SteamId);
                         return;
                     }
 
                     await Task.Delay(1000);
                     StatusLabelContent = Properties.Resources.RetrievingGameList;
+                    Log.Logger.Information("Retrieving game list {SteamId}", SteamId);
                     await Task.Delay(1000);
 
                     if (await _steamService.UpdateGamesAsync(steamID))
                     {
                         StatusLabelContent = Properties.Resources.GameListRetrieved;
+                        Log.Logger.Information("Game list retrieved {SteamId}", SteamId);
                     }
                     else
                     {
                         StatusLabelContent = Properties.Resources.GameListFailed;
+                        Log.Logger.Error("Game list failed {SteamId}", SteamId);
                         return;
                     }
 
                     await Task.Delay(1000);
                     StatusLabelContent = Properties.Resources.RetrievingAchievementList;
+                    Log.Logger.Information("Retrieving achievement list {SteamId}", SteamId);
 
                     await Task.Delay(1000);
                     StatusLabelContent = Properties.Resources.ResultSaving;
+                    Log.Logger.Information("Saving settings {SteamId}", SteamId);
 
                     _steamService.SaveSettingsInfo();
 
@@ -190,16 +202,22 @@ namespace SteamAchievementViewer.ViewModels
                     StatusLabelContent = Properties.Resources.ResultSaved;
                 }).ContinueWith((t) =>
                 {
-                    if (t.IsFaulted) throw t.Exception;
+                    if (t.IsFaulted) 
+                    { 
+                        Log.Logger.Error(t.Exception, "Error while getting user information {SteamId}", SteamId);
+                        throw t.Exception;
+                    }
                 }, TaskScheduler.FromCurrentSynchronizationContext());
             }
             catch (Exception ex)
             {
+                Log.Logger.Error(ex, "Error while getting user information {SteamId}", SteamId);
                 Debug.WriteLine(ex.Message);
             }
             finally
             {
                 _getInformationInProcess = false;
+                Log.Logger.Information("Getting user information finished {SteamId}", SteamId);
                 UpdateNavigationAvailability();
             }
         }

@@ -1,4 +1,5 @@
-﻿using SteamAchievementViewer.Models;
+﻿using Sav.Common.Logs;
+using SteamAchievementViewer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace SteamAchievementViewer.Services
 
         public void ChangeAvailability(bool isAvailable)
         {
+            Log.Logger.Information("Availability changed to {IsAvailable}", isAvailable);
             AvailabilityChanged?.Invoke(isAvailable);
         }
 
@@ -42,6 +44,7 @@ namespace SteamAchievementViewer.Services
 
         public void NavigateTo(NavigationPageElement element)
         {
+            Log.Logger.Information("Navigating to {PageType}", element.Type.Name);
             _pageElements.Where(npe => npe.Selected is true && npe != element).ToList().ForEach(npe => npe.Selected = false);
             element.Selected = true;
             NavigationChanged?.Invoke(App.ServiceProvider.GetService(element.Type) as Page);

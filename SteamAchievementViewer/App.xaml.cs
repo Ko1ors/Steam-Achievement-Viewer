@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Sav.Common.Interfaces;
+using Sav.Common.Logs;
 using Sav.Common.Repositories;
 using Sav.Common.Services;
 using Sav.Infrastructure;
+using Serilog;
 using SteamAchievementViewer.Mapping;
 using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Pages;
@@ -15,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
+using Log = Sav.Common.Logs.Log;
 
 namespace SteamAchievementViewer
 {
@@ -25,9 +29,15 @@ namespace SteamAchievementViewer
     {
         public static ServiceProvider ServiceProvider { get; private set; }
 
+
         public App()
         {
             var serviceCollection = new ServiceCollection();
+            Serilog.Log.Logger = new LoggerConfiguration()
+                .WriteTo.File("logs/log-.log", rollingInterval: RollingInterval.Day,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {SourceContext} {MemberName}() | {Message} {Exception}{NewLine}")
+                .CreateLogger();
+
             ConfigureServices(serviceCollection);
             ServiceProvider = serviceCollection.BuildServiceProvider();
         }
@@ -75,6 +85,14 @@ namespace SteamAchievementViewer
 
             // Windows
             services.AddSingleton<MainWindow>();
+
+            // Logging
+            services.AddLogging(configure =>
+            {
+                configure.AddSerilog(dispose: true);
+                configure.AddDebug();
+                configure.AddConsole();
+            });
         }
 
         private void ConfigureNavigation()
@@ -116,6 +134,19 @@ namespace SteamAchievementViewer
             mainWindow.Show();
 
             //System.Threading.Thread.CurrentThread.CurrentUICulture = System.Globalization.CultureInfo.GetCultureInfo("en");
+        }
+
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Log.Logger.Fatal(e.ExceptionObject as Exception, "Unhandled Exception: ");
+        }
+
+        private void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            Log.Logger.Fatal(e.Exception, "UI Thread Unhandled Exception: ");
+            Current.Shutdown();
+            e.Handled = true;
         }
     }
 }

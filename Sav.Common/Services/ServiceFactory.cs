@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Sav.Common.Interfaces;
+using Sav.Common.Logs;
 
 namespace Sav.Common.Services
 {
@@ -14,6 +15,7 @@ namespace Sav.Common.Services
 
         public T Create()
         {
+            Log.Logger.Information("Creating service {Service}", typeof(T).Name);
             return _serviceProvider.GetRequiredService<T>();
         }
     }
