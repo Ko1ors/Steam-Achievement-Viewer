@@ -9,7 +9,7 @@
 Steam achievement viewer (SAV) is an application that helps players to keep track of their achievement progress for different games.
 
 ## Table of Contents
-* [General Info](#general-information)
+* [General Information](#general-information)
 * [Technologies Used](#technologies-used)
 * [Features](#features)
 * [Login](#login)
@@ -26,42 +26,39 @@ The application makes it easier to view all player's achievemts by gathering inf
 
 
 ## Technologies used
-- .NET 6.0
-- WPF
+- .NET 8.0
+- WPF (Windows Presentation Foundation)
 
 
 ## Features
 SAV provides users with functionality like:
 - Viewing achievements for a specific game.
-- Checking player's last achievements.
-- Viewing player's rarest achievements.
-- Checking how far are a player from completing all achievements for a game.
-- Checking players' closest achievements for a specific game.
-- Checking players' closest achievements across all games in the library.
-
+- Check the latest achievements of the player.
+- View the player's rarest achievements.
+- Track progress towards completing all achievements for a game.
+- View closest achievements for a specific game.
+- View closest achievements across all games in the library.
+- View the list of completed games.
 
 ## Login
-In order to see all achievements user have to provide a steam id. It can be found By checking your steam account details.
->Simply click on your profile icon in upper right-corner and then click account details, right beneath your account's name you will find steam id.
+In order to see all achievements user have to provide their Steam ID. It can be found By checking your steam account details:
+1. Click on your profile icon in the upper right corner.
+2. Click on "Account details".
+3. Your Steam ID is displayed beneath your account name (highlighted in green).
 
 <img src="images\steam_id_example_SteamProfile.png" width="550"> 
 
->(id is marked by the green rectangle)
->
-
 ## Setup
 > For developers:
-- Install Visual Studio 2022 with .Net Development Pack (SDK)
-- Clone repository
-- Open the cloned solution in VS 2022
-- Build the SAV solution
-- ????
-- profit
+- Install Visual Studio 2022 with .Net Development Pack (SDK).
+- Clone the repository.
+- Open the cloned solution in Visual Studio 2022.
+- Build the SAV solution.
 
 >For users
 - Download the latest release from the project page on Github
-- unarchive downloaded rar file
-- run SteamAchievementViewer.exe
+- Unarchive the downloaded RAR file.
+- Run SteamAchievementViewer.exe.
 
 
 ## Usage
@@ -87,12 +84,12 @@ To view all rarest achievements we have to click on the RAREST ACHIEVED tab:
 <img src="images\image_5.png" width="700">
 
 ## Project Status
-Project is: _in progress_ 
+The project is currently in progress.
 
 
 ## Room for Improvement
-Core functionality of the project is built. But we are planning to improve current functionality and develop new features.
-You can check the [main issues](https://github.com/Ko1ors/Steam-Achievement-Viewer/issues) to see current and future tasks.
+The core functionality of the project is built. Future plans include enhancing existing features and developing new ones.
+Check the [main issues](https://github.com/Ko1ors/Steam-Achievement-Viewer/issues) to see current and upcoming tasks.
 
 ## Acknowledgements
 - Many thanks to [Steam](https://store.steampowered.com/)
