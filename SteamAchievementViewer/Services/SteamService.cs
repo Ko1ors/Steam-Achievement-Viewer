@@ -139,7 +139,7 @@ namespace SteamAchievementViewer.Services
             {
                 profile = (Profile)serializer.Deserialize(reader);
                 user = _mapper.Map<UserEntity>(profile);
-                avatarModel = await GetDataFromSteamProfileAsync(profile.SteamID);
+                avatarModel = await GetDataFromSteamProfileAsync(profile.SteamID64);
                 if (avatarModel is not null)
                 {
                     user.AvatarFull = avatarModel.AvatarUrl;
@@ -162,7 +162,7 @@ namespace SteamAchievementViewer.Services
         {
             try
             {
-                string profileUrl = $"https://steamcommunity.com/id/{steamID}";
+                string profileUrl = $"https://steamcommunity.com/profiles/{steamID}";
 
                 // Download the HTML content of the user's Steam profile page
                 string htmlContent = await httpClient.GetStringAsync(profileUrl);
