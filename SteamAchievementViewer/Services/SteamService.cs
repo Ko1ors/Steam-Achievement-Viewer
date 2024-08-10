@@ -27,6 +27,7 @@ namespace SteamAchievementViewer.Services
 
         private readonly Random _random;
         private readonly IClientService<XmlDocument> _xmlClient;
+        private readonly ISteamApiClientService _steamApiClientService;
         private readonly IQueueService<UserGameEntity> _gameQueueService;
         private readonly IMapper _mapper;
 
@@ -50,11 +51,12 @@ namespace SteamAchievementViewer.Services
             }
         }
 
-        public SteamService(IClientService<XmlDocument> xmlClient, IQueueService<UserGameEntity> gameQueueService, IMapper mapper,
+        public SteamService(IClientService<XmlDocument> xmlClient, ISteamApiClientService steamApiClientService, IQueueService<UserGameEntity> gameQueueService, IMapper mapper,
             IUserEntityRepository userRepository, IGameEntityRepository gameRepository,
             IEntityRepository<UserGameEntity> userGameRepository)
         {
             _xmlClient = xmlClient;
+            _steamApiClientService = steamApiClientService;
             _gameQueueService = gameQueueService;
             _mapper = mapper;
             _userRepository = userRepository;
@@ -88,36 +90,49 @@ namespace SteamAchievementViewer.Services
         {
             List<GameEntity> games = null;
             List<UserGameEntity> userGames = null;
+
+            var currentUser = _userRepository.GetByKeys(_steamID);
             var response = await _xmlClient.SendGetRequest($"https://steamcommunity.com/profiles/{steamID}/games?tab=all&xml={GetRandomParameter()}");
-            if (response.InnerText == XmlProfileError)
-                return false;
-            var serializer = new XmlSerializer(typeof(GamesList));
-            using (XmlReader reader = new XmlNodeReader(response))
+            if (response.InnerText == XmlProfileError || string.IsNullOrEmpty(response.InnerText))
             {
-                var gamesList = (GamesList)serializer.Deserialize(reader);
-                games = _mapper.Map<List<GameEntity>>(gamesList.Games.Game);
-                var currentUser = _userRepository.GetByKeys(_steamID);
-                userGames = _mapper.MapMultiple<List<UserGameEntity>>(gamesList.Games.Game, currentUser);
+                if (string.IsNullOrWhiteSpace(Settings.Default.SteamApiKey))
+                    return false;
 
-                // TODO: check and implement parallel add or update
-                //await Parallel.ForEachAsync(games, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 }, async (game, token) =>
-                //{
-                //    await new EntityRepository<GameEntity>().AddOrUpdateAsync(game);
-                //});
-                //await Parallel.ForEachAsync(userGames, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 }, async (userGame, token) =>
-                //{
-                //    await new EntityRepository<UserGameEntity>().AddOrUpdateAsync(userGame);
-                //});
-
-                foreach (var game in games)
+                var ownedGames = await _steamApiClientService.GetOwnedGamesAsync(steamID, Settings.Default.SteamApiKey);
+                games = _mapper.Map<List<GameEntity>>(ownedGames);
+                userGames = _mapper.MapMultiple<List<UserGameEntity>>(ownedGames, currentUser);
+            }
+            else
+            {
+                var serializer = new XmlSerializer(typeof(GamesList));
+                using (XmlReader reader = new XmlNodeReader(response))
                 {
-                    await _gameRepository.AddOrUpdateAsync(game);
-                }
-                foreach (var userGame in userGames)
-                {
-                    await _userGameRepository.AddOrUpdateAsync(userGame);
+                    var gamesList = (GamesList)serializer.Deserialize(reader);
+                    games = _mapper.Map<List<GameEntity>>(gamesList.Games.Game); 
+                    userGames = _mapper.MapMultiple<List<UserGameEntity>>(gamesList.Games.Game, currentUser);
                 }
             }
+       
+
+            // TODO: check and implement parallel add or update
+            //await Parallel.ForEachAsync(games, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 }, async (game, token) =>
+            //{
+            //    await new EntityRepository<GameEntity>().AddOrUpdateAsync(game);
+            //});
+            //await Parallel.ForEachAsync(userGames, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 10 }, async (userGame, token) =>
+            //{
+            //    await new EntityRepository<UserGameEntity>().AddOrUpdateAsync(userGame);
+            //});
+
+            foreach (var game in games)
+            {
+                await _gameRepository.AddOrUpdateAsync(game);
+            }
+            foreach (var userGame in userGames)
+            {
+                await _userGameRepository.AddOrUpdateAsync(userGame);
+            }
+
             if (games.Count == 0)
             {
                 return false;
@@ -132,7 +147,7 @@ namespace SteamAchievementViewer.Services
             UserEntity user = null;
             AvatarModel avatarModel = null;
             var response = await _xmlClient.SendGetRequest($"https://steamcommunity.com/profiles/{steamID}/?xml={GetRandomParameter()}");
-            if (response.InnerText == XmlProfileError)
+            if (response.InnerText == XmlProfileError || string.IsNullOrEmpty(response.InnerText))
                 return false;
             XmlSerializer serializer = new XmlSerializer(typeof(Profile));
             using (XmlReader reader = new XmlNodeReader(response))

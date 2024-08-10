@@ -50,6 +50,7 @@ namespace SteamAchievementViewer
             // Services
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddTransient<IClientService<XmlDocument>, XmlClientService>();
+            services.AddTransient<ISteamApiClientService, SteamApiClientService>();
             services.AddSingleton<ISteamService, SteamService>();
             services.AddTransient<IGameAchievementsService, GameAchievementsService>();
             services.AddSingleton(typeof(IQueueService<>), typeof(QueueService<>));
