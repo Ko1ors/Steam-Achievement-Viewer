@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SteamAchievementViewer.Services
@@ -13,6 +14,8 @@ namespace SteamAchievementViewer.Services
     {
         public static readonly string SteamApiBaseUrl = "https://api.steampowered.com";
         public static readonly string SteamApiGetOwnedGames = "/IPlayerService/GetOwnedGames/v0001/?key={0}&steamid={1}&format=json&include_appinfo=1&include_played_free_games=1&skip_unvetted_apps=0&format=json";
+        private static string ApiKeyParameterPattern = @"(?<=\bkey=)[^&]*";
+
 
         public async Task<IEnumerable<Game>> GetOwnedGamesAsync(string steamId, string steamApiKey)
         {
@@ -56,13 +59,13 @@ namespace SteamAchievementViewer.Services
                 using var client = new HttpClient();
                 var response = await client.GetAsync(requestUrl);
                 response.EnsureSuccessStatusCode();
-                Log.Logger.Information("Request successful, {RequestUrl}", requestUrl);
+                Log.Logger.Information("Request successful, {RequestUrl}", Regex.Replace(requestUrl, ApiKeyParameterPattern, "***"));
                 return await response.Content.ReadAsStringAsync();
 
             }
             catch (Exception e)
             {
-                Log.Logger.Error(e, "Failed to request {RequestUrl}", requestUrl);
+                Log.Logger.Error(e, "Failed to request {RequestUrl}", Regex.Replace(requestUrl, ApiKeyParameterPattern, "***"));
                 return string.Empty;
             }
         }
