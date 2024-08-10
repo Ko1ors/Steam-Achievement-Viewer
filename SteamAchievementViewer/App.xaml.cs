@@ -50,6 +50,7 @@ namespace SteamAchievementViewer
             // Services
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddTransient<IClientService<XmlDocument>, XmlClientService>();
+            services.AddTransient<ISteamApiClientService, SteamApiClientService>();
             services.AddSingleton<ISteamService, SteamService>();
             services.AddTransient<IGameAchievementsService, GameAchievementsService>();
             services.AddSingleton(typeof(IQueueService<>), typeof(QueueService<>));
@@ -71,6 +72,7 @@ namespace SteamAchievementViewer
             services.AddScoped<EasiestGamesToCompleteViewModel>();
             services.AddScoped<CompletedGamesViewModel>();
             services.AddScoped<MainInfoViewModel>();
+            services.AddScoped<SettingsPageViewModel>();
 
             // Pages
             services.AddTransient<AuthPage>();
@@ -106,6 +108,7 @@ namespace SteamAchievementViewer
             navigationService.AddPageElement(new NavigationPageElement { Type = typeof(RareAchievements), Title = SteamAchievementViewer.Properties.Resources.RarestPage });
             navigationService.AddPageElement(new NavigationPageElement { Type = typeof(EasiestGamesToCompletePage), Title = SteamAchievementViewer.Properties.Resources.EasiestGamesToCompletePage });
             navigationService.AddPageElement(new NavigationPageElement { Type = typeof(CompletedGamesPage), Title = SteamAchievementViewer.Properties.Resources.CompletedGamesPage });
+            navigationService.AddPageElement(new NavigationPageElement { Type = typeof(SettingsPage), Title = SteamAchievementViewer.Properties.Resources.SettingsPage });
 
         }
 

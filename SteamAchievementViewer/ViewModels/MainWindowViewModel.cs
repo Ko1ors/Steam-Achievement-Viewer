@@ -1,6 +1,7 @@
 ﻿using Sav.Common.Logs;
 using SteamAchievementViewer.Commands;
 using SteamAchievementViewer.Models;
+using SteamAchievementViewer.Pages;
 using SteamAchievementViewer.Services;
 using System.Linq;
 using System.Threading;
@@ -29,7 +30,7 @@ namespace SteamAchievementViewer.ViewModels
 
             _steamService.OnAvatarUpdated += SteamServiceOnAvatarUpdated;
 
-            NavigationCommand = new RelayCommand((obj) => Navigate(obj as NavigationPageElement), (obj) => CanNavigate());
+            NavigationCommand = new RelayCommand((obj) => Navigate(obj as NavigationPageElement), (obj) => CanNavigate(obj as NavigationPageElement));
 
             Model = new MainWindowModel
             {
@@ -67,9 +68,9 @@ namespace SteamAchievementViewer.ViewModels
             Log.Logger.Information("Navigation availability changed to {IsAvailable}", isAvailable);
         }
 
-        private bool CanNavigate()
+        private bool CanNavigate(NavigationPageElement element)
         {
-            return Model.IsNavigationAvailable;
+            return Model.IsNavigationAvailable || element.Type == typeof(SettingsPage);
         }
 
         private void Navigate(NavigationPageElement element)
