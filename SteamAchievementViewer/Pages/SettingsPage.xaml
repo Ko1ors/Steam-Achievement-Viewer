@@ -22,14 +22,14 @@
             <TextBox Text="{Binding SteamID}" FontSize="16" Foreground="Black" Background="White" Width="200" Margin="0 8 0 0" HorizontalAlignment="Left" />
 
             <TextBlock Text="Auto Update Interval" FontSize="16" Foreground="White" Margin="0 16 0 0"/>
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0 8 0 0">
                 <TextBox Text="{Binding AutoUpdateIntervalHours}" FontSize="16" Foreground="Black" Background="White" Margin="0 0 6 0" Width="40" />
                 <TextBlock FontSize="16" Foreground="White" FontWeight="Bold" Margin="0 0 8 0">h</TextBlock>
                 <TextBox Text="{Binding AutoUpdateIntervalMinutes}" FontSize="16" Foreground="Black" Background="White" Margin="0 0 6 0" Width="40" />
                 <TextBlock FontSize="16" Foreground="White" FontWeight="Bold">m</TextBlock>
             </StackPanel>
             <TextBlock Text="Update Type" FontSize="16" Foreground="White" Margin="0 16 0 0"/>
-            <ComboBox SelectedIndex="{Binding UpdateType}" FontSize="16" Foreground="Black" Background="White" Width="240" HorizontalAlignment="Left">
+            <ComboBox SelectedIndex="{Binding UpdateType}" FontSize="16" Foreground="Black" Background="White" Width="240" Margin="0 8 0 0" HorizontalAlignment="Left">
                 <ComboBoxItem Content="Full Update" />
                 <ComboBoxItem Content="Only Recently Played Games" />
             </ComboBox>
