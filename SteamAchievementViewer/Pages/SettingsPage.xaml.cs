@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using SteamAchievementViewer.ViewModels;
+using System.Windows.Controls;
 
 namespace SteamAchievementViewer.Pages
 {
@@ -7,9 +8,10 @@ namespace SteamAchievementViewer.Pages
     /// </summary>
     public partial class SettingsPage : Page
     {
-        public SettingsPage()
+        public SettingsPage(SettingsPageViewModel viewModel)
         {
             InitializeComponent();
+            DataContext = viewModel;
         }
     }
 }

@@ -7,62 +7,45 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="SettingsPage">
-    <Page.Resources>
-        <!--<DataTemplate x:Key="SettingItem">
-            <Grid Background="#1B2838" Width="100" Height="100" Margin="10">
-                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                    <Image Width="30" Height="30" HorizontalAlignment="Center" VerticalAlignment="Top" Source="{Binding Path=OptionIcon}"/>
-                    <TextBlock MaxWidth="600" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" TextWrapping="Wrap" FontFamily="Arial Black" Text="{Binding Path=Name}"/>
-                    <TextBlock MaxWidth="600" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" HorizontalAlignment="Left" Foreground="White" FontWeight="Bold" FontFamily="Arial Black" FontSize="10" Text="{Binding Path=Description}" TextWrapping="WrapWithOverflow">
-                        <TextBlock.ToolTip>
-                            <ToolTip Background="#1B2838" Foreground="White">
-                                <TextBlock MaxWidth="250" TextWrapping="Wrap" Text="{Binding Description}"/>
-                            </ToolTip>
-                        </TextBlock.ToolTip>
-                    </TextBlock>
-                    <TextBlock MaxWidth="600" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="10" TextWrapping="Wrap" FontFamily="Arial Black" Text="{Binding Percent, StringFormat='{}{0}%'}"/>
-                </StackPanel>
-            </Grid>
-        </DataTemplate>
-        <ItemsPanelTemplate x:Key="SettingsTableList">
-            <WrapPanel/>
-        </ItemsPanelTemplate>-->
-        <Style TargetType="Button" x:Key="MainButtonStyle">
-            <Setter Property="FontFamily" Value="Arial Black"/>
-            <Setter Property="Background" Value="#14141f"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Height" Value="auto"/>
-            <Setter Property="Margin" Value="10"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Grid>
-                            <Border x:Name="NavButton" CornerRadius="10" BorderBrush="White" BorderThickness="0" Height="100" Width="100"/>
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <!--<Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="NavButton" Property="BorderBrush" Value="#FFE6DDDD"/>
-                                <Setter TargetName="NavButton" Property="Background" Value="Gray"/>
-                                <Setter TargetName="NavButton" Property="Control.Foreground" Value="Gray"/>
-                            </Trigger>-->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Control.Foreground" Value="Gray" />
-                                <Setter Property="Control.FontWeight" Value="Bold" />
-                                <Setter Property="BorderBrush" Value="GhostWhite" />
-                            </Trigger>
-                            <!--<Trigger Property="IsFocused" Value="True">
-                                <Setter Property="Control.Foreground" Value="Gray"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="NavButton" Property="Background" Value="#232423"/>
-                            </Trigger>-->
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Page.Resources>
     <Grid Background="#1B2838">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Margin="10 10 6 0" HorizontalAlignment="Left">
+            <TextBlock Text="Last Saved Steam ID" FontSize="16" Foreground="White"/>
+            <TextBox Text="{Binding SteamID}" FontSize="16" Foreground="Black" Background="White" Width="200" Margin="0 8 0 0" HorizontalAlignment="Left" />
+
+            <TextBlock Text="Auto Update Interval" FontSize="16" Foreground="White" Margin="0 16 0 0"/>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBox Text="{Binding AutoUpdateIntervalHours}" FontSize="16" Foreground="Black" Background="White" Margin="0 0 6 0" Width="40" />
+                <TextBlock FontSize="16" Foreground="White" FontWeight="Bold" Margin="0 0 8 0">h</TextBlock>
+                <TextBox Text="{Binding AutoUpdateIntervalMinutes}" FontSize="16" Foreground="Black" Background="White" Margin="0 0 6 0" Width="40" />
+                <TextBlock FontSize="16" Foreground="White" FontWeight="Bold">m</TextBlock>
+            </StackPanel>
+            <TextBlock Text="Update Type" FontSize="16" Foreground="White" Margin="0 16 0 0"/>
+            <ComboBox SelectedIndex="{Binding UpdateType}" FontSize="16" Foreground="Black" Background="White" Width="240" HorizontalAlignment="Left">
+                <ComboBoxItem Content="Full Update" />
+                <ComboBoxItem Content="Only Recently Played Games" />
+            </ComboBox>
+        </StackPanel>
+
+        <StackPanel Margin="0 10 10 0" HorizontalAlignment="Left" Grid.Column="1">
+            <TextBlock Text="Steam Web API Key" FontSize="16" Foreground="White"/>
+            <TextBlock FontSize="12" Foreground="White" TextWrapping="Wrap">
+                <Run>Optional. Used to retrieve game and achievement data from Steam when the public Steam API fails.   Get your API key from</Run>
+                <Hyperlink Command="{Binding HyperlinkCommand}" >
+                    <Run Text="https://steamcommunity.com/dev/apikey"/>
+                </Hyperlink>
+            </TextBlock>
+            <TextBox Text="{Binding APIKey}" FontSize="16" Foreground="Black" Background="White" Width="300" Margin="0 8 0 0" HorizontalAlignment="Left" />
+        </StackPanel>
+
+        <Button Content="Save Settings" FontSize="16" MinWidth="150" Height="40" Style="{StaticResource OverButtonStyle}" Command="{Binding AuthCommand}" HorizontalAlignment="Left" Grid.Row="1" />
     </Grid>
 </Page>
