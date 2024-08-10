@@ -24,6 +24,7 @@ namespace SteamAchievementViewer.ViewModels
                 {
                     _steamID = value;
                     OnPropertyChanged(nameof(SteamID));
+                    OnPropertyChanged(nameof(HasChanges));
                 }
             }
         }
@@ -37,6 +38,7 @@ namespace SteamAchievementViewer.ViewModels
                 {
                     _apiKey = value;
                     OnPropertyChanged(nameof(APIKey));
+                    OnPropertyChanged(nameof(HasChanges));
                 }
             }
         }
@@ -50,6 +52,7 @@ namespace SteamAchievementViewer.ViewModels
                 {
                     _autoUpdateIntervalHours = value;
                     OnPropertyChanged(nameof(AutoUpdateIntervalHours));
+                    OnPropertyChanged(nameof(HasChanges));
                 }
             }
         }
@@ -63,6 +66,7 @@ namespace SteamAchievementViewer.ViewModels
                 {
                     _autoUpdateIntervalMinutes = value;
                     OnPropertyChanged(nameof(AutoUpdateIntervalMinutes));
+                    OnPropertyChanged(nameof(HasChanges));
                 }
             }
         }
@@ -76,11 +80,17 @@ namespace SteamAchievementViewer.ViewModels
                 {
                     _updateType = value;
                     OnPropertyChanged(nameof(UpdateType));
+                    OnPropertyChanged(nameof(HasChanges));
                 }
             }
         }
 
-        public ICommand AuthCommand { get; }
+        public bool HasChanges => SteamID != Settings.Default.SteamID || APIKey != Settings.Default.SteamApiKey 
+            || AutoUpdateIntervalHours != Settings.Default.UpdateInterval.Hours 
+            || AutoUpdateIntervalMinutes != Settings.Default.UpdateInterval.Minutes 
+            || UpdateType != (Settings.Default.UpdateOnlyRecentGames ? 1 : 0);
+
+        public ICommand SaveCommand { get; }
 
         public ICommand HyperlinkCommand { get; }
 
@@ -92,7 +102,7 @@ namespace SteamAchievementViewer.ViewModels
             AutoUpdateIntervalHours = updateInterval.Hours;
             AutoUpdateIntervalMinutes = updateInterval.Minutes;
             UpdateType = Settings.Default.UpdateOnlyRecentGames ? 1 : 0;
-            AuthCommand = new RelayCommand(SaveSettings);
+            SaveCommand = new RelayCommand(SaveSettings, (obj) => HasChanges);
             HyperlinkCommand = new RelayCommand((obj) => Process.Start(new ProcessStartInfo("cmd", $"/c start {HyperlinkUrl}") { CreateNoWindow = true }));
         }
 

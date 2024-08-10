@@ -46,6 +46,6 @@
             <TextBox Text="{Binding APIKey}" FontSize="16" Foreground="Black" Background="White" Width="300" Margin="0 8 0 0" HorizontalAlignment="Left" />
         </StackPanel>
 
-        <Button Content="Save Settings" FontSize="16" MinWidth="150" Height="40" Style="{StaticResource OverButtonStyle}" Command="{Binding AuthCommand}" HorizontalAlignment="Left" Grid.Row="1" />
+        <Button Content="Save Settings" FontSize="16" MinWidth="150" Height="40" Style="{StaticResource OverButtonStyle}" Command="{Binding SaveCommand}" HorizontalAlignment="Left" Grid.Row="1" />
     </Grid>
 </Page>
