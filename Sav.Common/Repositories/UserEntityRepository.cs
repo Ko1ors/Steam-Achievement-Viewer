@@ -162,24 +162,17 @@ namespace Sav.Common.Repositories
             return pagedResult;
         }
 
-        public async Task<PagedResult<CompletedGameComposite>> GetPagedUserCompletedGamesAsync(string userId, int page, int count)
+        public async Task<PagedResult<CompletedGameComposite>> GetPagedUserCompletedGamesAsync(string userId, int take, int skip)
         {
-            Log.Logger.Information("Getting paged completed games for user {UserId}, {Page}, {Count}", userId, page, count);
+            Log.Logger.Information("Getting paged completed games for user {UserId}, {Take}, {Skip}", userId, take, skip);
             var pagedResult = new PagedResult<CompletedGameComposite>();
             var queryable = GetUserUserGamesQueryable(userId, true).AsNoTracking()
                 .Where(ug => ug.UserAchievements.Count == ug.Game.Achievements.Count)
-            .Select(ug => new CompletedGameComposite
-            {
-                UserGame = ug,
-                Game = ug.Game,
-                Achievements = ug.Game.Achievements,
-                CompletedAt = ug.UserAchievements.Max(ua => ua.UnlockTime)
-            })
-            .OrderByDescending(c => c.CompletedAt);
+            .OrderByDescending(ug => ug.UserAchievements.Max(ua => ua.UnlockTime));
 
-            pagedResult.Page = page;
+            pagedResult.Page = skip > 0 ? skip / take + 1 : 1;
             pagedResult.TotalCount = await queryable.CountAsync();
-            pagedResult.Items = await queryable.Skip((page - 1) * count).Take(count).ToListAsync();
+            pagedResult.Items = await queryable.Skip(skip).Take(take).Select(ug => new CompletedGameComposite(ug)).ToListAsync();
             Log.Logger.Information("Completed games count: {Count}", pagedResult.TotalCount);
             return pagedResult;
         }

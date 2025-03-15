@@ -75,9 +75,9 @@ namespace Sav.Common.Services
             return _userRepository.GetPagedUserEasiestGamesToCompleteAsync(_steamService.GetUserId(), page, count);
         }
 
-        public async Task<PagedResult<CompletedGameComposite>> GetPagedCompletedGamesAsync(int page = 1, int count = 25)
+        public async Task<PagedResult<CompletedGameComposite>> GetPagedCompletedGamesAsync(string steamId, int take = 25, int skip = 0)
         {
-            return await _userRepository.GetPagedUserCompletedGamesAsync(_steamService.GetUserId(), page, count);
+            return await _userRepository.GetPagedUserCompletedGamesAsync(steamId, take, skip);
         }
     }
 }

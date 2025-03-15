@@ -1,8 +1,12 @@
-﻿using ElectronNET.API;
+﻿using AutoMapper;
+using ElectronNET.API;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Sav.Common.Interfaces;
+using Sav.Common.Mapping;
 using Sav.Common.Repositories;
 using Sav.Common.Services;
+using Sav.Infrastructure;
 using Serilog;
 using System.Xml;
 
@@ -82,6 +86,16 @@ namespace Sav.WebApp
                 configure.AddDebug();
                 configure.AddConsole();
             });
+
+            // Database
+            using (var context = new SteamContext())
+            {
+                context.Database.Migrate();
+            }
+
+            var config = new MapperConfiguration(cfg => { cfg.AddProfile<MappingProfile>(); }).CreateMapper();
+            config.ConfigurationProvider.AssertConfigurationIsValid();
+
         }
     }
 }

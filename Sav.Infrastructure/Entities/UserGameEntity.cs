@@ -19,7 +19,7 @@ namespace Sav.Infrastructure.Entities
 
         public virtual GameEntity Game { get; set; } = null!;
 
-        public virtual ICollection<UserAchievementEntity> UserAchievements { get; set; } = null!;
+        public virtual ICollection<UserAchievementEntity> UserAchievements { get; set; } = new List<UserAchievementEntity>();
 
         public override object[] GetKeys()
         {
