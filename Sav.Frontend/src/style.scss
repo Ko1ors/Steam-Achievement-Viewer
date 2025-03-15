@@ -17,3 +17,41 @@ $breakpoints: (
     @content;
   }
 }
+
+
+// flex flex-column w-full
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.object-contain {
+  object-fit: contain;
+}
+
+.object-cover {
+  object-fit: cover;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.p-3 {
+  padding: 12px;
+} 
+
+.max-w-sm {
+  max-width: 200px;
+}

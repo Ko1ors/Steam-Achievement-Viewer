@@ -5,11 +5,19 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="sav.db" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="ElectronNET.API" Version="23.6.2" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.14" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sav.Common\Sav.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="sav.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Content Update="electron.manifest.json">

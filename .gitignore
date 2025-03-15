@@ -341,3 +341,5 @@ healthchecksdb
 Sav.WebApp/sav.db
 Sav.WebApp/sav.db-shm
 Sav.WebApp/sav.db-wal
+Sav.WebApp/wwwroot/index.html
+/Sav.WebApp/wwwroot/assets

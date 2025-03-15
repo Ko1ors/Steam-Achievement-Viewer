@@ -15,7 +15,7 @@ namespace Sav.Common.Models
 
         public string HoursPlayed => UserGame.HoursOnRecord ?? "0";
 
-        public IEnumerable<AchievementDto> PreviewAchievements => Achievements.OrderByDescending(ua => ua.Percent).Take(10);
+        public IEnumerable<AchievementDto> PreviewAchievements => Achievements.OrderByDescending(ua => ua.Percent).Take(5);
 
         public int PreviewCount => Achievements.Count() - PreviewAchievements.Count();
 

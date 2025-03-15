@@ -13,10 +13,13 @@ import "primeicons/primeicons.css";
 import "./assets/fontawesome/css/all.css";
 
 import { createPinia } from 'pinia';
+import { PageTypes } from './helpers/routing';
+import CompletedGamesPage from '@/components/pages/CompletedGamesPage.vue';
 
 
 const routes = [
  // { path: PageTypes.Home, component: MasterPage },
+  { path: PageTypes.CompletedGames, component: CompletedGamesPage },
   { path: '/:pathMatch(.*)*', component: MasterPage },
 ]
 

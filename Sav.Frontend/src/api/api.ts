@@ -1,3 +1,5 @@
+import { CompletedGameComposite } from "@/models/API/CompletedGameComposite";
+import { PagedResult } from "@/models/API/PagedResult";
 import moment from "moment";
 
 export const baseUrl = import.meta.env.VITE_SERVICE_API_URL ?? window.location.origin;
@@ -9,6 +11,14 @@ export interface Response<T> {
     status?: number;
     data: T | null;
 }
+
+// Games
+
+export const getCompletedGamesAsync = async function(steamId: string, take: number = 25, skip: number = 0) : Promise<Response<PagedResult<CompletedGameComposite>>> {
+    const response = await getAsync<PagedResult<CompletedGameComposite>>(apiUrl + "/games/GetCompletedGames?steamId=" + steamId + "&take=" + take + "&skip=" + skip);
+    return response;
+}
+
 
 
 // Shared

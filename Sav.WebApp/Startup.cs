@@ -18,6 +18,14 @@ namespace Sav.WebApp
         {
             // Configure the HTTP request pipeline.
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddCors(o => o.AddPolicy("DefaultPolicy", builder =>
+            {
+                builder.SetIsOriginAllowed(origin => true)
+                       .AllowAnyMethod()
+                       .AllowAnyHeader()
+                       .AllowCredentials();
+            }));
+
             builder.WebHost.UseElectron(args);
 
             builder.Services.AddElectron();
@@ -27,6 +35,11 @@ namespace Sav.WebApp
             ConfigureServices(builder.Services);
 
             var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseCors("DefaultPolicy");
+            }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

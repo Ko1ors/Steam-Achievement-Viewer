@@ -14,9 +14,9 @@ namespace Sav.WebApp.Controllers
 
 
         [HttpGet]
-        public IActionResult GetCompletedGames(string steamId, int take = 25, int skip = 0)
+        public async Task<IActionResult> GetCompletedGames(string steamId, int take = 25, int skip = 0)
         {
-            return Ok(_gameAchievementsService.GetPagedCompletedGamesAsync(steamId, take, skip));
+            return Ok(await _gameAchievementsService.GetPagedCompletedGamesAsync(steamId, take, skip));
         }
     }
 }
