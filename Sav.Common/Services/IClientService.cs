@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace SteamAchievementViewer.Services
+namespace Sav.Common.Services
 {
     public interface IClientService<T> where T : class
     {

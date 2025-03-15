@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace SteamAchievementViewer.Services
+namespace Sav.Common.Services
 {
     public class XmlClientService : IClientService<XmlDocument>
     {

@@ -3,9 +3,11 @@ using HtmlAgilityPack;
 using Microsoft.Extensions.Logging;
 using Sav.Common.Interfaces;
 using Sav.Common.Logs;
+using Sav.Common.Mapping;
+using Sav.Common.Models;
+using Sav.Common.Models.SteamApi;
 using Sav.Infrastructure.Entities;
 using Serilog.Core;
-using SteamAchievementViewer.Mapping;
 using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Models.SteamApi;
 using System;
@@ -17,7 +19,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Profile = SteamAchievementViewer.Models.SteamApi.Profile;
 
-namespace SteamAchievementViewer.Services
+namespace Sav.Common.Services
 {
     public class SteamService : ISteamService
     {
@@ -36,7 +38,6 @@ namespace SteamAchievementViewer.Services
         private readonly IEntityRepository<UserGameEntity> _userGameRepository;
 
         public event AchievementProgressUpdatedDelegate OnAchievementProgressUpdated;
-        public event AvatarUpdatedDelegate OnAvatarUpdated;
 
         private string _steamID;
         private bool _refreshRequired;
@@ -65,24 +66,23 @@ namespace SteamAchievementViewer.Services
 
             _random = new Random();
             _refreshRequired = false;
-            Start();
         }
 
-        private bool Start()
-        {
-            Log.Logger.Information("SteamService started");
+        //private bool Start()
+        //{
+        //    Log.Logger.Information("SteamService started");
 
-            if (Settings.Default.SteamID == "-1")
-            {
-                Log.Logger.Information("SteamID is not set");
-                return false;
-            }
+        //    if (Settings.Default.SteamID == "-1")
+        //    {
+        //        Log.Logger.Information("SteamID is not set");
+        //        return false;
+        //    }
 
-            LoadProfile(Settings.Default.SteamID);
+        //    LoadProfile(Settings.Default.SteamID);
 
-            Log.Logger.Information("SteamService started successfully");
-            return true;
-        }
+        //    Log.Logger.Information("SteamService started successfully");
+        //    return true;
+        //}
 
         private int GetRandomParameter() => _random.Next(0, 100000);
 
@@ -95,10 +95,10 @@ namespace SteamAchievementViewer.Services
             var response = await _xmlClient.SendGetRequest($"https://steamcommunity.com/profiles/{steamID}/games?tab=all&xml={GetRandomParameter()}");
             if (response.InnerText == XmlProfileError || string.IsNullOrEmpty(response.InnerText))
             {
-                if (string.IsNullOrWhiteSpace(Settings.Default.SteamApiKey))
+                //if (string.IsNullOrWhiteSpace(Settings.Default.SteamApiKey))
                     return false;
 
-                var ownedGames = await _steamApiClientService.GetOwnedGamesAsync(steamID, Settings.Default.SteamApiKey);
+                var ownedGames = await _steamApiClientService.GetOwnedGamesAsync(steamID, "Settings.Default.SteamApiKey");
                 games = _mapper.Map<List<GameEntity>>(ownedGames);
                 userGames = _mapper.MapMultiple<List<UserGameEntity>>(ownedGames, currentUser);
             }
@@ -169,7 +169,6 @@ namespace SteamAchievementViewer.Services
             if (user is not null)
                 avatarModel ??= new AvatarModel() { AvatarUrl = user.AvatarFull, FrameUrl = user.AvatarFrame };
             _steamID = steamID;
-            OnAvatarUpdated?.Invoke(avatarModel);
             return true;
         }
 
@@ -220,10 +219,10 @@ namespace SteamAchievementViewer.Services
 
         public void SaveSettingsInfo()
         {
-            Settings.Default.LastUpdate = DateTime.Now;
-            Settings.Default.SteamID = _steamID;
-            Settings.Default.Save();
-            Log.Logger.Information("Settings saved {SteamID}, {LastUpdate}", _steamID, Settings.Default.LastUpdate);
+            //Settings.Default.LastUpdate = DateTime.Now;
+            //Settings.Default.SteamID = _steamID;
+            //Settings.Default.Save();
+            //Log.Logger.Information("Settings saved {SteamID}, {LastUpdate}", _steamID, Settings.Default.LastUpdate);
         }
 
         private void ValidateDBRefresh()

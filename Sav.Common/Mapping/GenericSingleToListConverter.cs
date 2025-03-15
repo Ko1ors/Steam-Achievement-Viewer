@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SteamAchievementViewer.Mapping
+namespace Sav.Common.Mapping
 {
     public class GenericSingleToListConverter<T1, T2> : ITypeConverter<T1, List<T2>>
     {

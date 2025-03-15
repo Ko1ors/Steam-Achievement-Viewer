@@ -1,4 +1,6 @@
 ﻿using Sav.Common.Logs;
+using Sav.Common.Models;
+using Sav.Common.Services;
 using SteamAchievementViewer.Commands;
 using SteamAchievementViewer.Models;
 using SteamAchievementViewer.Pages;
@@ -27,8 +29,6 @@ namespace SteamAchievementViewer.ViewModels
 
             _navigationService.AvailabilityChanged += NavigationService_AvailabilityChanged;
             _navigationService.NavigationChanged += NavigationService_NavigationChanged;
-
-            _steamService.OnAvatarUpdated += SteamServiceOnAvatarUpdated;
 
             NavigationCommand = new RelayCommand((obj) => Navigate(obj as NavigationPageElement), (obj) => CanNavigate(obj as NavigationPageElement));
 

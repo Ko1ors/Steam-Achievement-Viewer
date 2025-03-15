@@ -1,7 +1,7 @@
 ﻿using Sav.Common.Logs;
 using Sav.Common.Models;
+using Sav.Common.Services;
 using SteamAchievementViewer.Commands;
-using SteamAchievementViewer.Services;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;

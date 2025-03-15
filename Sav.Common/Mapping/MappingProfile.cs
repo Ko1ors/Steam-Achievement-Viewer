@@ -1,16 +1,15 @@
 ﻿using Sav.Common.Models;
+using Sav.Common.Models.SteamApi;
 using Sav.Infrastructure.Entities;
-using SteamAchievementViewer.Models.SteamApi;
-using System.Collections.Generic;
 using Profile = AutoMapper.Profile;
 
-namespace SteamAchievementViewer.Mapping
+namespace Sav.Common.Mapping
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
-            CreateMap<Models.SteamApi.Profile, UserEntity>()
+            CreateMap<SteamAchievementViewer.Models.SteamApi.Profile, UserEntity>()
                 .ForMember(dest => dest.SteamID, opt => opt.MapFrom(src => src.SteamID))
                 .ForMember(dest => dest.OnlineState, opt => opt.MapFrom(src => src.OnlineState))
                 .ForMember(dest => dest.StateMessage, opt => opt.MapFrom(src => src.StateMessage))

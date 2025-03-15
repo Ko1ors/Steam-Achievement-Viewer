@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace SteamAchievementViewer.Models.SteamApi
+namespace Sav.Common.Models.SteamApi
 {
     public class GetOwnedGamesResponse
     {

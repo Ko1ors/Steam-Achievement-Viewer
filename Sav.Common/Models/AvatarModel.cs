@@ -1,4 +1,4 @@
-﻿namespace SteamAchievementViewer.Models
+﻿namespace Sav.Common.Models
 {
     public class AvatarModel
     {

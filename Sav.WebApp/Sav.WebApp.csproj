@@ -9,6 +9,9 @@
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.14" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Sav.Common\Sav.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Update="electron.manifest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

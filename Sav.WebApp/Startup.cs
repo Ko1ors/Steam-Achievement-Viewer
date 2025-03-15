@@ -1,5 +1,10 @@
 ﻿using ElectronNET.API;
 using Microsoft.Extensions.FileProviders;
+using Sav.Common.Interfaces;
+using Sav.Common.Repositories;
+using Sav.Common.Services;
+using Serilog;
+using System.Xml;
 
 namespace Sav.WebApp
 {
@@ -15,12 +20,13 @@ namespace Sav.WebApp
 
             builder.Services.AddControllers();
 
+            ConfigureServices(builder.Services);
+
             var app = builder.Build();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseAuthorization();
-
             app.MapControllerRoute(
                 name: "default",
                 pattern: "/api/{controller=Home}/{action=Index}/{id?}");
@@ -45,6 +51,37 @@ namespace Sav.WebApp
                 await Electron.WindowManager.CreateWindowAsync();
 
             app.WaitForShutdown();
+        }
+
+        private void ConfigureServices(IServiceCollection services)
+        {
+            //Factories
+            services.AddScoped(typeof(IServiceFactory<>), typeof(ServiceFactory<>));
+
+            // Services
+            services.AddTransient<IClientService<XmlDocument>, XmlClientService>();
+            services.AddTransient<ISteamApiClientService, SteamApiClientService>();
+            services.AddSingleton<ISteamService, SteamService>();
+            services.AddTransient<IGameAchievementsService, GameAchievementsService>();
+            services.AddSingleton(typeof(IQueueService<>), typeof(QueueService<>));
+            services.AddTransient<IAchievementsWorkerService, AchievementsWorkerService>();
+
+            // Repositories
+            services.AddSingleton(typeof(IListRepository<>), typeof(ListRepository<>));
+            services.AddTransient(typeof(IEntityRepository<>), typeof(EntityRepository<>));
+            services.AddTransient<IUserEntityRepository, UserEntityRepository>();
+            services.AddTransient<IGameEntityRepository, GameEntityRepository>();
+
+            // Mapping
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // Logging
+            services.AddLogging(configure =>
+            {
+                configure.AddSerilog(dispose: true);
+                configure.AddDebug();
+                configure.AddConsole();
+            });
         }
     }
 }

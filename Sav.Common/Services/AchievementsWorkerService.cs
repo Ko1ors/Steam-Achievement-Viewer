@@ -1,18 +1,13 @@
 ﻿using AutoMapper;
 using Sav.Common.Interfaces;
 using Sav.Common.Logs;
+using Sav.Common.Mapping;
+using Sav.Common.Models.SteamApi;
 using Sav.Infrastructure.Entities;
-using SteamAchievementViewer.Mapping;
-using SteamAchievementViewer.Models.SteamApi;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace SteamAchievementViewer.Services
+namespace Sav.Common.Services
 {
     public class AchievementsWorkerService : IAchievementsWorkerService
     {
@@ -121,7 +116,7 @@ namespace SteamAchievementViewer.Services
                     await _gameRepository.UpdateAsync(gameEntity);
                     Log.Logger.Information("Game {AppID} updated, achievements count: {Count}", userGame.AppID, achievements.Count);
                 }
-                if (achievements == null) 
+                if (achievements == null)
                     return;
 
                 // TODO: move GetGlobalAchievementPercentages to separate worker service

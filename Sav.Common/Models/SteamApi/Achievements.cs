@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
-namespace SteamAchievementViewer.Models.SteamApi
+namespace Sav.Common.Models.SteamApi
 {
     [XmlRoot(ElementName = "achievements")]
     public class Achievements

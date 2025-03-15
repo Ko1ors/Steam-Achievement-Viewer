@@ -5,7 +5,7 @@ using Sav.Infrastructure.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SteamAchievementViewer.Services
+namespace Sav.Common.Services
 {
     public class GameAchievementsService : IGameAchievementsService
     {

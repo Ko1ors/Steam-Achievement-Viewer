@@ -1,8 +1,6 @@
-﻿using SteamAchievementViewer.Models.SteamApi;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Sav.Common.Models.SteamApi;
 
-namespace SteamAchievementViewer.Services
+namespace Sav.Common.Services
 {
     public interface ISteamApiClientService : IClientService<string>
     {

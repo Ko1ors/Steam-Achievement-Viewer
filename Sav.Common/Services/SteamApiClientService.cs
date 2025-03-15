@@ -1,14 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Sav.Common.Logs;
-using SteamAchievementViewer.Models.SteamApi;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+using Sav.Common.Models.SteamApi;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-namespace SteamAchievementViewer.Services
+namespace Sav.Common.Services
 {
     public class SteamApiClientService : ISteamApiClientService
     {
@@ -24,12 +19,12 @@ namespace SteamAchievementViewer.Services
             {
                 var requestUrl = string.Format(SteamApiGetOwnedGames, steamApiKey, steamId);
                 var responseString = await SendGetRequest(SteamApiBaseUrl + requestUrl);
-                if(string.IsNullOrWhiteSpace(responseString))
+                if (string.IsNullOrWhiteSpace(responseString))
                     return defaultResult;
 
                 var response = JsonConvert.DeserializeObject<GetOwnedGamesResponse>(responseString);
 
-                if(response.Response == null)
+                if (response.Response == null)
                     return defaultResult;
 
                 foreach (var game in response.Response.Games)

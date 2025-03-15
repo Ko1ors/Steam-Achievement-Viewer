@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace SteamAchievementViewer.Mapping
+namespace Sav.Common.Mapping
 {
     public static class MappingExtension
     {

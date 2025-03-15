@@ -1,5 +1,5 @@
-﻿using Sav.Infrastructure.Entities;
-using SteamAchievementViewer.Services;
+﻿using Sav.Common.Services;
+using Sav.Infrastructure.Entities;
 using System;
 using System.Linq;
 using System.Windows.Controls;
