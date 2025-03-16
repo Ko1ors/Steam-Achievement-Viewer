@@ -1,6 +1,7 @@
+import { AchievementComposite } from "@/models/API/AchievementComposite";
 import { CompletedGameComposite } from "@/models/API/CompletedGameComposite";
+import { GameDto } from "@/models/API/GameDto";
 import { PagedResult } from "@/models/API/PagedResult";
-import moment from "moment";
 
 export const baseUrl = import.meta.env.VITE_SERVICE_API_URL ?? window.location.origin;
 export const apiUrl = baseUrl + "/api";
@@ -16,6 +17,16 @@ export interface Response<T> {
 
 export const getCompletedGamesAsync = async function(steamId: string, take: number = 25, skip: number = 0) : Promise<Response<PagedResult<CompletedGameComposite>>> {
     const response = await getAsync<PagedResult<CompletedGameComposite>>(apiUrl + "/games/GetCompletedGames?steamId=" + steamId + "&take=" + take + "&skip=" + skip);
+    return response;
+}
+
+export const getIncompleteGamesAsync = async function(steamId: string, take: number = 25, skip: number = 0) : Promise<Response<GameDto[]>> {
+    const response = await getAsync<GameDto[]>(apiUrl + "/games/GetIncompleteGames?steamId=" + steamId + "&take=" + take + "&skip=" + skip);
+    return response;
+}
+
+export const getGameClosestAchievementsAsync = async function(steamId: string, gameId: string) : Promise<Response<AchievementComposite[]>> {
+    const response = await getAsync<AchievementComposite[]>(apiUrl + "/games/GetGameClosestAchievements?steamId=" + steamId + "&appId=" + gameId);
     return response;
 }
 

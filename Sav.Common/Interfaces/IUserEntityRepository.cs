@@ -19,7 +19,7 @@ namespace Sav.Common.Interfaces
 
         int GetUserCompletedAchievementsCount(string userId);
 
-        IEnumerable<GameEntity> GetUserIncompleteGames(string userId, int page, int count);
+        IEnumerable<GameEntity> GetUserIncompleteGames(string userId, int take, int skip);
 
         IEnumerable<AchievementComposite> GetUserRarestAchievements(string userId, int page, int count);
 

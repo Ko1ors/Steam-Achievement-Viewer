@@ -49,7 +49,7 @@ namespace SteamAchievementViewer.Pages
         {
             if (_steamService.IsLogged())
             {
-                GameList.ItemsSource = _gameAchievementsService.GetIncompleteGames(1, int.MaxValue).ToList();
+                GameList.ItemsSource = _gameAchievementsService.GetIncompleteGames(_steamService.GetUserId(), int.MaxValue, 0).ToList();
                 ListCollectionView view = (ListCollectionView)CollectionViewSource.GetDefaultView(GameList.ItemsSource);
                 view.Filter = GameSearchFilter;
             }

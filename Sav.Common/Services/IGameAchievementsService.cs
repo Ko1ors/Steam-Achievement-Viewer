@@ -15,7 +15,7 @@ namespace Sav.Common.Services
 
         IEnumerable<AchievementComposite> GetClosestAchievements(int page = 1, int count = 100);
 
-        IEnumerable<AchievementComposite> GetGameClosestAchievements(string appid);
+        IEnumerable<AchievementComposite> GetGameClosestAchievements(string steamId, string appid);
 
         IEnumerable<CompletionGameComposite> GetEasiestGamesToComplete(int page = 1, int count = 100);
 
@@ -23,7 +23,7 @@ namespace Sav.Common.Services
 
         Task<PagedResult<CompletionGameComposite>> GetPagedEasiestGamesToCompleteAsync(int page = 1, int count = 100);
 
-        IEnumerable<GameEntity> GetIncompleteGames(int page = 1, int count = 100);
+        IEnumerable<GameEntity> GetIncompleteGames(string steamId, int take = 25, int skip = 0);
 
         Task<PagedResult<CompletedGameComposite>> GetPagedCompletedGamesAsync(string steamId, int take = 25, int skip = 0);
 

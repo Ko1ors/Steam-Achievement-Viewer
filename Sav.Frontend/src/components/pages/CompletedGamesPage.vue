@@ -33,7 +33,6 @@ const fetchCompletedGamesAsync = async () => {
   if(!response.success || !response.data)
     return;
   
-
   completedGames.value.push(...response.data.items ?? []);
   isMoreGameAvailable.value = response.data.totalCount > skip.value + take.value;
 };

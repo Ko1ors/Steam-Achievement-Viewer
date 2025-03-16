@@ -30,9 +30,9 @@ namespace Sav.Common.Services
             return _userRepository.GetUserClosestAchievements(_steamService.GetUserId(), page, count);
         }
 
-        public IEnumerable<AchievementComposite> GetGameClosestAchievements(string appid)
+        public IEnumerable<AchievementComposite> GetGameClosestAchievements(string steamId, string appid)
         {
-            return _userRepository.GetUserGameClosestAchievements(_steamService.GetUserId(), appid);
+            return _userRepository.GetUserGameClosestAchievements(steamId, appid);
         }
 
         public int GetCompletedAchievementsCount()
@@ -40,9 +40,9 @@ namespace Sav.Common.Services
             return _userRepository.GetUserCompletedAchievementsCount(_steamService.GetUserId());
         }
 
-        public IEnumerable<GameEntity> GetIncompleteGames(int page, int count)
+        public IEnumerable<GameEntity> GetIncompleteGames(string steamId, int take = 25, int skip = 0)
         {
-            return _userRepository.GetUserIncompleteGames(_steamService.GetUserId(), page, count);
+            return _userRepository.GetUserIncompleteGames(steamId, take, skip);
         }
 
         public IEnumerable<AchievementComposite> GetLatestAchievements(int page, int count)

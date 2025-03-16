@@ -93,10 +93,10 @@ namespace Sav.Common.Repositories
             return GetUserUserGamesQueryable(userId, true).Where(ug => ug.UserAchievements.Count < ug.Game.Achievements.Count).Select(ug => ug.Game).AsQueryable();
         }
 
-        public IEnumerable<GameEntity> GetUserIncompleteGames(string userId, int page, int count)
+        public IEnumerable<GameEntity> GetUserIncompleteGames(string userId, int take, int skip)
         {
-            Log.Logger.Information("Getting incomplete games for user {UserId}, {Page}, {Count}", userId, page, count);
-            return GetUserIncompleteGamesQueryable(userId).Skip((page - 1) * count).Take(count).ToList();
+            Log.Logger.Information("Getting incomplete games for user {UserId}, {Take}, {Skip}", userId, take, skip);
+            return GetUserIncompleteGamesQueryable(userId).Skip(skip).Take(take).ToList();
         }
 
         public IEnumerable<AchievementComposite> GetUserRarestAchievements(string userId, int page, int count)
