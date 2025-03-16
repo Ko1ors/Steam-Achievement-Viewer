@@ -31,5 +31,11 @@ namespace Sav.WebApp.Controllers
         {
             return Ok(_gameAchievementsService.GetGameClosestAchievements(steamId, appid));
         }
+
+        [HttpGet]
+        public IActionResult GetClosestAchievements(string steamId, int take = 25, int skip = 0)
+        {
+            return Ok(_gameAchievementsService.GetClosestAchievements(steamId, take, skip));
+        }
     }
 }

@@ -16,11 +16,13 @@ import { createPinia } from 'pinia';
 import { PageTypes } from './helpers/routing';
 import CompletedGamesPage from '@/components/pages/CompletedGamesPage.vue';
 import ClosestAchievementsPage from '@/components/pages/ClosestAchievementsPage.vue';
+import AllClosestAchievementsPage from '@/components/pages/AllClosestAchievementsPage.vue';
 
 const routes = [
  // { path: PageTypes.Home, component: MasterPage },
   { path: PageTypes.CompletedGames, component: CompletedGamesPage },
   { path: PageTypes.ClosestAchievements, component: ClosestAchievementsPage },
+  { path: PageTypes.AllClosestAchievements, component: AllClosestAchievementsPage },
   { path: '/:pathMatch(.*)*', component: MasterPage },
 ]
 

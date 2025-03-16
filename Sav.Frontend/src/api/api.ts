@@ -30,6 +30,11 @@ export const getGameClosestAchievementsAsync = async function(steamId: string, g
     return response;
 }
 
+export const getClosestAchievementsAsync = async function(steamId: string, take: number = 25, skip: number = 0) : Promise<Response<AchievementComposite[]>> {
+    const response = await getAsync<AchievementComposite[]>(apiUrl + "/games/GetClosestAchievements?steamId=" + steamId + "&take=" + take + "&skip=" + skip);
+    return response;
+}
+
 
 
 // Shared

@@ -25,9 +25,9 @@ namespace Sav.Common.Services
             return _userRepository.GetUserAchievementComposites(_steamService.GetUserId());
         }
 
-        public IEnumerable<AchievementComposite> GetClosestAchievements(int page, int count)
+        public IEnumerable<AchievementComposite> GetClosestAchievements(string steamId, int take = 25, int skip = 0)
         {
-            return _userRepository.GetUserClosestAchievements(_steamService.GetUserId(), page, count);
+            return _userRepository.GetUserClosestAchievements(steamId, take, skip);
         }
 
         public IEnumerable<AchievementComposite> GetGameClosestAchievements(string steamId, string appid)

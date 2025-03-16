@@ -69,10 +69,10 @@ namespace Sav.Common.Repositories
             return GetUserAchievementCompositesQueryable(userId).OrderByDescending(e => e.UnlockTime).Where(e => e.Unlocked).Skip((page - 1) * count).Take(count).ToList();
         }
 
-        public IEnumerable<AchievementComposite> GetUserClosestAchievements(string userId, int page, int count)
+        public IEnumerable<AchievementComposite> GetUserClosestAchievements(string userId, int take, int skip)
         {
-            Log.Logger.Information("Getting closest achievements for user {UserId}, {Page}, {Count}", userId, page, count);
-            return GetUserAchievementCompositesQueryable(userId).OrderByDescending(e => e.Percent).Where(e => !e.Unlocked).Skip((page - 1) * count).Take(count).ToList();
+            Log.Logger.Information("Getting closest achievements for user {UserId}, {Take}, {Skip}", userId, take, skip);
+            return GetUserAchievementCompositesQueryable(userId).OrderByDescending(e => e.Percent).Where(e => !e.Unlocked).Skip(skip).Take(take).ToList();
         }
 
         public IEnumerable<AchievementComposite> GetUserGameClosestAchievements(string userId, string appId)

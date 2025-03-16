@@ -13,7 +13,7 @@ namespace Sav.Common.Services
 
         IEnumerable<AchievementComposite> GetLatestAchievements(int page = 1, int count = 100);
 
-        IEnumerable<AchievementComposite> GetClosestAchievements(int page = 1, int count = 100);
+        IEnumerable<AchievementComposite> GetClosestAchievements(string steamId, int take = 25, int skip = 0);
 
         IEnumerable<AchievementComposite> GetGameClosestAchievements(string steamId, string appid);
 

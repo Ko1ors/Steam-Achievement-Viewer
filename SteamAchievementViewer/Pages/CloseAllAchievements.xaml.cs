@@ -21,7 +21,7 @@ namespace SteamAchievementViewer.Pages
         private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             if (_steamService.IsLogged())
-                AchievementTable.ItemsSource = _gameAchievementsService.GetClosestAchievements();
+                AchievementTable.ItemsSource = _gameAchievementsService.GetClosestAchievements(_steamService.GetUserId(), 100);
         }
     }
 }
