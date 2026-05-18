@@ -60,19 +60,19 @@ namespace Sav.Common.Services
             return _userRepository.GetUserTotalAchievementsCount(_steamService.GetUserId());
         }
 
-        public IEnumerable<CompletionGameComposite> GetEasiestGamesToComplete(int page = 1, int count = 100)
+        public IEnumerable<CompletionGameComposite> GetEasiestGamesToComplete(string steamId, int page = 1, int count = 100)
         {
-            return _userRepository.GetUserEasiestGamesToComplete(_steamService.GetUserId(), page, count);
+            return _userRepository.GetUserEasiestGamesToComplete(steamId, page, count);
         }
 
-        public PagedResult<CompletionGameComposite> GetPagedEasiestGamesToComplete(int page = 1, int count = 100)
+        public PagedResult<CompletionGameComposite> GetPagedEasiestGamesToComplete(string steamId, int page = 1, int count = 100)
         {
-            return _userRepository.GetPagedUserEasiestGamesToComplete(_steamService.GetUserId(), page, count);
+            return _userRepository.GetPagedUserEasiestGamesToComplete(steamId, page, count);
         }
 
-        public Task<PagedResult<CompletionGameComposite>> GetPagedEasiestGamesToCompleteAsync(int page = 1, int count = 100)
+        public Task<PagedResult<CompletionGameComposite>> GetPagedEasiestGamesToCompleteAsync(string steamId, int page = 1, int count = 100)
         {
-            return _userRepository.GetPagedUserEasiestGamesToCompleteAsync(_steamService.GetUserId(), page, count);
+            return _userRepository.GetPagedUserEasiestGamesToCompleteAsync(steamId, page, count);
         }
 
         public async Task<PagedResult<CompletedGameComposite>> GetPagedCompletedGamesAsync(string steamId, int take = 25, int skip = 0)

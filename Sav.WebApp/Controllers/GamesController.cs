@@ -13,7 +13,6 @@ namespace Sav.WebApp.Controllers
             _gameAchievementsService = gameAchievementsService;
         }
 
-
         [HttpGet]
         public async Task<IActionResult> GetCompletedGames(string steamId, int take = 25, int skip = 0)
         {
@@ -36,6 +35,24 @@ namespace Sav.WebApp.Controllers
         public IActionResult GetClosestAchievements(string steamId, int take = 25, int skip = 0)
         {
             return Ok(_gameAchievementsService.GetClosestAchievements(steamId, take, skip));
+        }
+
+        [HttpGet()]
+        public IActionResult GetEasiestGamesToComplete([FromQuery] string steamId, [FromQuery] int page = 1, [FromQuery] int count = 100)
+        {
+            return Ok(_gameAchievementsService.GetEasiestGamesToComplete(steamId, page, count));
+        }
+
+        [HttpGet()]
+        public IActionResult GetPagedEasiestGamesToComplete([FromQuery] string steamId, [FromQuery] int page = 1, [FromQuery] int count = 100)
+        {
+            return Ok(_gameAchievementsService.GetPagedEasiestGamesToComplete(steamId, page, count));
+        }
+
+        [HttpGet()]
+        public async Task<IActionResult> GetPagedEasiestGamesToCompleteAsync([FromQuery] string steamId, [FromQuery] int page = 1, [FromQuery] int count = 100)
+        {
+            return Ok(await _gameAchievementsService.GetPagedEasiestGamesToCompleteAsync(steamId, page, count));
         }
     }
 }

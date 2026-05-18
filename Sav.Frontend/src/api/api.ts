@@ -1,5 +1,6 @@
 import { AchievementComposite } from "@/models/API/AchievementComposite";
 import { CompletedGameComposite } from "@/models/API/CompletedGameComposite";
+import { CompletionGameComposite } from "@/models/API/CompletionGameComposite";
 import { GameDto } from "@/models/API/GameDto";
 import { PagedResult } from "@/models/API/PagedResult";
 
@@ -32,6 +33,11 @@ export const getGameClosestAchievementsAsync = async function(steamId: string, g
 
 export const getClosestAchievementsAsync = async function(steamId: string, take: number = 25, skip: number = 0) : Promise<Response<AchievementComposite[]>> {
     const response = await getAsync<AchievementComposite[]>(apiUrl + "/games/GetClosestAchievements?steamId=" + steamId + "&take=" + take + "&skip=" + skip);
+    return response;
+}
+
+export const getEasiestGamesToCompleteAsync = async function(steamId: string, page: number = 1, count: number = 25) : Promise<Response<PagedResult<CompletionGameComposite>>> {
+    const response = await getAsync<PagedResult<CompletionGameComposite>>(apiUrl + "/games/easiest-games/paged/async?steamId=" + steamId + "&page=" + page + "&count=" + count);
     return response;
 }
 

@@ -17,15 +17,15 @@ import { PageTypes } from './helpers/routing';
 import CompletedGamesPage from '@/components/pages/CompletedGamesPage.vue';
 import ClosestAchievementsPage from '@/components/pages/ClosestAchievementsPage.vue';
 import AllClosestAchievementsPage from '@/components/pages/AllClosestAchievementsPage.vue';
+import EasiestGamesPage from '@/components/pages/EasiestGamesPage.vue';
 
 const routes = [
- // { path: PageTypes.Home, component: MasterPage },
   { path: PageTypes.CompletedGames, component: CompletedGamesPage },
   { path: PageTypes.ClosestAchievements, component: ClosestAchievementsPage },
   { path: PageTypes.AllClosestAchievements, component: AllClosestAchievementsPage },
+  { path: PageTypes.EasiestGames, component: EasiestGamesPage },
   { path: '/:pathMatch(.*)*', component: MasterPage },
 ]
-
 
 const router = createRouter({
   history: createWebHistory(),
