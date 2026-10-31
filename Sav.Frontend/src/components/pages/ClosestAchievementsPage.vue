@@ -2,17 +2,23 @@
     <div class="close-achievements">
         <div class="games-panel">
             <div class="search-container">
-                <InputText v-model="searchQuery" placeholder="Search games..." class="w-full search-input" />
+                <span class="pi pi-search search-icon" aria-hidden="true"></span>
+                <InputText v-model="searchQuery" placeholder="Search games..." class="search-input"
+                    aria-label="Search games" @keydown.esc="searchQuery = ''" />
+                <button v-if="searchQuery" type="button" class="search-clear" aria-label="Clear search"
+                    @click="searchQuery = ''">
+                    <span class="pi pi-times" aria-hidden="true"></span>
+                </button>
             </div>
 
             <div class="game-list-container">
                 <ListBox v-model="selectedGame" :options="filteredGames" optionLabel="name" class="game-list"
                  listStyle="height:100%"
-                    :virtualScrollerOptions="{ itemSize: 30 }" @change="loadAchievements" >
+                    :virtualScrollerOptions="{ itemSize: 26 }" @change="loadAchievements" >
                     <template #option="slotProps">
                         <div class="game-list-item p-2">
                             <img :src="slotProps.option.gameIcon" alt="Game icon" class="game-icon mr-2" />
-                            <span class="game-name">{{ slotProps.option.name }}</span>
+                            <span class="game-name" :title="slotProps.option.name">{{ slotProps.option.name }}</span>
                         </div>
                     </template>
                 </ListBox>
@@ -108,27 +114,84 @@ watch(() => currentUser.steamId, reloadForCurrentUserAsync);
 }
 
 .games-panel {
-    width: 160px;
-    background-color: black;
+    width: 200px;
+    flex-shrink: 0;
+    background-color: #171A21;
+    border-right: 1px solid #2A475E;
     display: flex;
     flex-direction: column;
 }
 
 .search-container {
-    height: 25px;
-    padding-right: 10px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 8px;
+    background-color: #1B2838;
+    border-bottom: 1px solid #2A475E;
+}
+
+.search-icon {
+    position: absolute;
+    left: 17px;
+    font-size: 12px;
+    color: #8F98A0;
+    pointer-events: none;
 }
 
 .search-input {
-    background-color: #1B2838;
-    color: white;
-    border-color: white;
-    font-family: 'Arial Black', Arial, sans-serif;
-    font-size: 14px;
-    height: 25px;
+    width: 100%;
+    min-width: 0;
+    height: 30px;
+    padding: 0 26px 0 27px;
+    background-color: #171A21;
+    color: #C7D5E0;
+    border: 1px solid #2A475E;
+    border-radius: 4px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.search-input::placeholder {
+    color: #8F98A0;
+}
+
+.search-input:enabled:hover {
+    border-color: #3D6A8F;
+}
+
+.search-input:enabled:focus {
+    border-color: #66C0F4;
+    box-shadow: 0 0 0 2px rgba(102, 192, 244, 0.25);
+}
+
+.search-clear {
+    position: absolute;
+    right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: transparent;
+    color: #8F98A0;
+    font-size: 10px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.search-clear:hover {
+    background-color: #2A475E;
+    color: #FFFFFF;
 }
 
 .game-list-container {
+    position: relative;
     flex-grow: 1;
     overflow: hidden;
 }
@@ -139,6 +202,11 @@ watch(() => currentUser.steamId, reloadForCurrentUserAsync);
     height: 100%;
 }
 
+/* nowrap option labels must not widen the virtual list past the panel */
+:deep(.p-virtualscroller-content) {
+    max-width: 100%;
+}
+
 :deep(.p-listbox-item) {
     padding: 0;
 }
@@ -146,22 +214,27 @@ watch(() => currentUser.steamId, reloadForCurrentUserAsync);
 .game-list-item {
     display: flex;
     align-items: center;
+    gap: 6px;
     padding: 5px;
+    min-width: 0;
 }
 
 .game-icon {
     width: 16px;
     height: 16px;
+    flex-shrink: 0;
     object-fit: cover;
 }
 
 .game-name {
+    flex: 1;
+    min-width: 0;
     color: white;
     font-weight: bold;
-    font-size: 10px;
-    max-width: 100px;
-    white-space: normal;
-    word-wrap: break-word;
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .achievements-panel {
