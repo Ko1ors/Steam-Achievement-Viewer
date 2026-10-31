@@ -44,12 +44,6 @@ namespace Sav.WebApp.Controllers
         }
 
         [HttpGet()]
-        public IActionResult GetPagedEasiestGamesToComplete([FromQuery] string steamId, [FromQuery] int page = 1, [FromQuery] int count = 100)
-        {
-            return Ok(_gameAchievementsService.GetPagedEasiestGamesToComplete(steamId, page, count));
-        }
-
-        [HttpGet()]
         public async Task<IActionResult> GetPagedEasiestGamesToCompleteAsync([FromQuery] string steamId, [FromQuery] int page = 1, [FromQuery] int count = 100)
         {
             return Ok(await _gameAchievementsService.GetPagedEasiestGamesToCompleteAsync(steamId, page, count));

@@ -50,9 +50,9 @@ namespace Sav.Common.Services
             return _userRepository.GetUserLatestAchievements(_steamService.GetUserId(), page, count);
         }
 
-        public IEnumerable<AchievementComposite> GetRarestAchievements(int page, int count)
+        public IEnumerable<AchievementComposite> GetRarestAchievements(int page, int count, string? steamId = null)
         {
-            return _userRepository.GetUserRarestAchievements(_steamService.GetUserId(), page, count);
+            return _userRepository.GetUserRarestAchievements(steamId ?? _steamService.GetUserId(), page, count);
         }
 
         public int GetTotalAchievementsCount()
@@ -63,11 +63,6 @@ namespace Sav.Common.Services
         public IEnumerable<CompletionGameComposite> GetEasiestGamesToComplete(string steamId, int page = 1, int count = 100)
         {
             return _userRepository.GetUserEasiestGamesToComplete(steamId, page, count);
-        }
-
-        public PagedResult<CompletionGameComposite> GetPagedEasiestGamesToComplete(string steamId, int page = 1, int count = 100)
-        {
-            return _userRepository.GetPagedUserEasiestGamesToComplete(steamId, page, count);
         }
 
         public Task<PagedResult<CompletionGameComposite>> GetPagedEasiestGamesToCompleteAsync(string steamId, int page = 1, int count = 100)

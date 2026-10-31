@@ -25,8 +25,6 @@ namespace Sav.Common.Interfaces
 
         IEnumerable<CompletionGameComposite> GetUserEasiestGamesToComplete(string userId, int page, int count);
 
-        PagedResult<CompletionGameComposite> GetPagedUserEasiestGamesToComplete(string userId, int page, int count);
-
         Task<PagedResult<CompletionGameComposite>> GetPagedUserEasiestGamesToCompleteAsync(string userId, int page, int count);
 
         Task<PagedResult<CompletedGameComposite>> GetPagedUserCompletedGamesAsync(string userId, int take, int skip);

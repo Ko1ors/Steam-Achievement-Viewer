@@ -21,6 +21,12 @@
                     @click="navigateTo(PageTypes.AllClosestAchievements)"
                 />
                 <Button 
+                    label="Rarest Achievements" 
+                    icon="pi pi-trophy"
+                    class="w-full mb-2" 
+                    @click="navigateTo(PageTypes.RarestAchievements)"
+                />
+                <Button 
                     label="Easiest Games" 
                     icon="pi pi-chart-line"
                     class="w-full mb-2" 

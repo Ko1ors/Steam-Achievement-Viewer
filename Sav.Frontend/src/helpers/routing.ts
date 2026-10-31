@@ -3,7 +3,8 @@ export enum PageTypes {
     CompletedGames = "/CompletedGames",
     ClosestAchievements = "/ClosestAchievements",
     AllClosestAchievements = "/AllClosestAchievements",
-    EasiestGames = "/EasiestGames"
+    EasiestGames = "/EasiestGames",
+    RarestAchievements = "/RarestAchievements"
 }
 
 export const redirect = (path: PageTypes) => {

@@ -9,7 +9,7 @@ namespace Sav.Common.Services
     {
         IEnumerable<AchievementComposite> GetAchievementComposites();
 
-        IEnumerable<AchievementComposite> GetRarestAchievements(int page = 1, int count = 100);
+        IEnumerable<AchievementComposite> GetRarestAchievements(int page = 1, int count = 100, string? steamId = null);
 
         IEnumerable<AchievementComposite> GetLatestAchievements(int page = 1, int count = 100);
 
@@ -18,8 +18,6 @@ namespace Sav.Common.Services
         IEnumerable<AchievementComposite> GetGameClosestAchievements(string steamId, string appid);
 
         IEnumerable<CompletionGameComposite> GetEasiestGamesToComplete(string steamId, int page = 1, int count = 100);
-
-        PagedResult<CompletionGameComposite> GetPagedEasiestGamesToComplete(string steamId, int page = 1, int count = 100);
 
         Task<PagedResult<CompletionGameComposite>> GetPagedEasiestGamesToCompleteAsync(string steamId, int page = 1, int count = 100);
 

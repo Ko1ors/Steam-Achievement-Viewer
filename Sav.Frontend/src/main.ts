@@ -18,12 +18,14 @@ import CompletedGamesPage from '@/components/pages/CompletedGamesPage.vue';
 import ClosestAchievementsPage from '@/components/pages/ClosestAchievementsPage.vue';
 import AllClosestAchievementsPage from '@/components/pages/AllClosestAchievementsPage.vue';
 import EasiestGamesPage from '@/components/pages/EasiestGamesPage.vue';
+import RareAchievementsPage from '@/components/pages/RareAchievementsPage.vue';
 
 const routes = [
   { path: PageTypes.CompletedGames, component: CompletedGamesPage },
   { path: PageTypes.ClosestAchievements, component: ClosestAchievementsPage },
   { path: PageTypes.AllClosestAchievements, component: AllClosestAchievementsPage },
   { path: PageTypes.EasiestGames, component: EasiestGamesPage },
+  { path: PageTypes.RarestAchievements, component: RareAchievementsPage },
   { path: '/:pathMatch(.*)*', component: MasterPage },
 ]
 

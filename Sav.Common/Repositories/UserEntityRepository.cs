@@ -117,8 +117,11 @@ namespace Sav.Common.Repositories
             return GetUserIncompleteGamesQueryable(userId).Select(g =>
                 new CompletionGameComposite
                 {
+                    AppID = g.AppID,
                     Name = g.Name,
                     GameIcon = g.GameIcon,
+                    StoreLink = g.StoreLink,
+                    GlobalStatsLink = g.GlobalStatsLink,
                     AverageAchievementsPercentage = g.Achievements.Average(a => a.Percent),
                     LowestAchievementPercentage = g.Achievements.Min(a => a.Percent)
                 }).OrderByDescending(cgc => cgc.LowestAchievementPercentage);
@@ -128,24 +131,6 @@ namespace Sav.Common.Repositories
         {
             Log.Logger.Information("Getting easiest games to complete for user {UserId}, {Page}, {Count}", userId, page, count);
             return GetUserEasiestGamesToCompleteQueryable(userId).Skip((page - 1) * count).Take(count).ToList();
-        }
-
-        public PagedResult<CompletionGameComposite> GetPagedUserEasiestGamesToComplete(string userId, int page, int count)
-        {
-            Log.Logger.Information("Getting paged easiest games to complete for user {UserId}, {Page}, {Count}", userId, page, count);
-            var pagedResult = new PagedResult<CompletionGameComposite>();
-            var queryable = GetUserEasiestGamesToCompleteQueryable(userId);
-            pagedResult.Page = page;
-            pagedResult.TotalCount = queryable.Count();
-            pagedResult.Items = queryable.Skip((page - 1) * count).Take(count);
-
-            // Another way to get items and total count in one query execution
-            //var queryableResult = queryable.Select(g => new { Game = g, TotalCount = queryable.Count() }).Skip((page - 1) * count).Take(count);
-            //pagedResult.TotalCount = queryableResult.FirstOrDefault()?.TotalCount ?? 0;
-            //pagedResult.Items = queryableResult.Select(g => g.Game);
-
-            pagedResult.Count = pagedResult.Items.Count();
-            return pagedResult;
         }
 
         public async Task<PagedResult<CompletionGameComposite>> GetPagedUserEasiestGamesToCompleteAsync(string userId, int page, int count)

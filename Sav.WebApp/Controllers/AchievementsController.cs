@@ -13,31 +13,31 @@ namespace Sav.WebApp.Controllers
             _gameAchievementsService = gameAchievementsService;
         }
 
-        [HttpGet("all")]
+        [HttpGet()]
         public IActionResult GetAllAchievements()
         {
             return Ok(_gameAchievementsService.GetAchievementComposites());
         }
 
-        [HttpGet("rarest")]
-        public IActionResult GetRarestAchievements([FromQuery] int page = 1, [FromQuery] int count = 100)
+        [HttpGet()]
+        public IActionResult GetRarestAchievements([FromQuery] string? steamId, [FromQuery] int page = 1, [FromQuery] int count = 100)
         {
-            return Ok(_gameAchievementsService.GetRarestAchievements(page, count));
+            return Ok(_gameAchievementsService.GetRarestAchievements(page, count, steamId));
         }
 
-        [HttpGet("latest")]
+        [HttpGet()]
         public IActionResult GetLatestAchievements([FromQuery] int page = 1, [FromQuery] int count = 100)
         {
             return Ok(_gameAchievementsService.GetLatestAchievements(page, count));
         }
 
-        [HttpGet("stats/completed")]
+        [HttpGet()]
         public IActionResult GetCompletedAchievementsCount()
         {
             return Ok(_gameAchievementsService.GetCompletedAchievementsCount());
         }
 
-        [HttpGet("stats/total")]
+        [HttpGet()]
         public IActionResult GetTotalAchievementsCount()
         {
             return Ok(_gameAchievementsService.GetTotalAchievementsCount());

@@ -37,7 +37,12 @@ export const getClosestAchievementsAsync = async function(steamId: string, take:
 }
 
 export const getEasiestGamesToCompleteAsync = async function(steamId: string, page: number = 1, count: number = 25) : Promise<Response<PagedResult<CompletionGameComposite>>> {
-    const response = await getAsync<PagedResult<CompletionGameComposite>>(apiUrl + "/games/easiest-games/paged/async?steamId=" + steamId + "&page=" + page + "&count=" + count);
+    const response = await getAsync<PagedResult<CompletionGameComposite>>(apiUrl + "/games/GetPagedEasiestGamesToComplete?steamId=" + steamId + "&page=" + page + "&count=" + count);
+    return response;
+}
+
+export const getRarestAchievementsAsync = async function(steamId: string, page: number = 1, count: number = 100) : Promise<Response<AchievementComposite[]>> {
+    const response = await getAsync<AchievementComposite[]>(apiUrl + "/achievements/GetRarestAchievements?steamId=" + steamId + "&page=" + page + "&count=" + count);
     return response;
 }
 
