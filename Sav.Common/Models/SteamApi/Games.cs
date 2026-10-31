@@ -47,12 +47,23 @@ namespace Sav.Common.Models.SteamApi
         public string StoreLink { get; set; }
 
         [XmlElement(ElementName = "hoursLast2Weeks")]
-        [JsonProperty("playtime_2weeks")]
+        [JsonIgnore]
         public string HoursLast2Weeks { get; set; }
 
         [XmlElement(ElementName = "hoursOnRecord")]
-        [JsonProperty("playtime_forever")]
+        [JsonIgnore]
         public string HoursOnRecord { get; set; }
+
+        /// <summary>
+        /// Total playtime in minutes, as returned by the Steam Web API. Unlike the XML feed,
+        /// the JSON API reports playtime in minutes, so it has to be converted to hours.
+        /// </summary>
+        [JsonProperty("playtime_forever")]
+        public int PlaytimeForeverMinutes { get; set; }
+
+        /// <summary>Playtime in minutes over the last two weeks, as returned by the Steam Web API.</summary>
+        [JsonProperty("playtime_2weeks")]
+        public int? PlaytimeTwoWeeksMinutes { get; set; }
 
         [XmlElement(ElementName = "statsLink")]
         public string StatsLink { get; set; }

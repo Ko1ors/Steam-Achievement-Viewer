@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Sav.Common.Logs;
 using Sav.Common.Models.SteamApi;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Sav.Common.Services
@@ -29,6 +30,8 @@ namespace Sav.Common.Services
 
                 foreach (var game in response.Response.Games)
                 {
+                    game.HoursOnRecord = FormatHours(game.PlaytimeForeverMinutes);
+                    game.HoursLast2Weeks = game.PlaytimeTwoWeeksMinutes is int twoWeeksMinutes ? FormatHours(twoWeeksMinutes) : null;
                     game.StoreLink = $"https://store.steampowered.com/app/{game.AppID}";
                     if (game.HasCommunityVisibleStats)
                     {
@@ -65,6 +68,7 @@ namespace Sav.Common.Services
             }
         }
 
-
+        private static string FormatHours(int minutes) =>
+            (minutes / 60d).ToString("0.#", CultureInfo.InvariantCulture);
     }
 }
