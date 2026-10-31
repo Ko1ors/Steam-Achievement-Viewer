@@ -2,13 +2,14 @@
     <div class="achievement-card">
         <div class="achievement-content">
             <div class="achievement-icon-container">
-                <img :src="achievement.iconOpen" alt="Achievement icon" class="achievement-icon"/>
+                <img :src="achievement[iconField]" alt="Achievement icon" class="achievement-icon"/>
             </div>
 
             <div class="achievement-details">
                 <h3 class="achievement-name">{{ achievement.name }}</h3>
                 <p class="achievement-description">{{ achievement.description }}</p>
                 <p class="achievement-percent">{{ achievement.percent }}%</p>
+                <p v-if="showUnlockTime" class="achievement-percent">{{ formatUnlockTime(achievement.unlockTime) }}</p>
             </div>
         </div>
     </div>
@@ -20,8 +21,25 @@ const props = defineProps({
     achievement: {
         type: Object,
         required: true
+    },
+    showUnlockTime: {
+        type: Boolean,
+        default: false
+    },
+    iconField: {
+        type: String,
+        default: 'iconOpen'
     }
 });
+
+const formatUnlockTime = (unlockTime) => {
+    if (!unlockTime) return '';
+
+    const date = new Date(unlockTime);
+    if (isNaN(date.getTime())) return '';
+
+    return date.toLocaleString('en-US');
+};
 </script>
 
 <style scoped>

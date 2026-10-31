@@ -45,9 +45,9 @@ namespace Sav.Common.Services
             return _userRepository.GetUserIncompleteGames(steamId, take, skip);
         }
 
-        public IEnumerable<AchievementComposite> GetLatestAchievements(int page, int count)
+        public IEnumerable<AchievementComposite> GetLatestAchievements(int page, int count, string? steamId = null)
         {
-            return _userRepository.GetUserLatestAchievements(_steamService.GetUserId(), page, count);
+            return _userRepository.GetUserLatestAchievements(steamId ?? _steamService.GetUserId(), page, count);
         }
 
         public IEnumerable<AchievementComposite> GetRarestAchievements(int page, int count, string? steamId = null)

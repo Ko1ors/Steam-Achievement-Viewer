@@ -32,6 +32,12 @@
                     class="w-full mb-2" 
                     @click="navigateTo(PageTypes.EasiestGames)"
                 />
+                <Button 
+                    label="Last Achieved" 
+                    icon="pi pi-clock"
+                    class="w-full mb-2" 
+                    @click="navigateTo(PageTypes.LastAchieved)"
+                />
             </div>
         </div>
         <div class="content">

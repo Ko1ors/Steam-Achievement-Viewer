@@ -11,7 +11,7 @@ namespace Sav.Common.Services
 
         IEnumerable<AchievementComposite> GetRarestAchievements(int page = 1, int count = 100, string? steamId = null);
 
-        IEnumerable<AchievementComposite> GetLatestAchievements(int page = 1, int count = 100);
+        IEnumerable<AchievementComposite> GetLatestAchievements(int page = 1, int count = 100, string? steamId = null);
 
         IEnumerable<AchievementComposite> GetClosestAchievements(string steamId, int take = 25, int skip = 0);
 

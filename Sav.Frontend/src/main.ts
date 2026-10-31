@@ -19,6 +19,7 @@ import ClosestAchievementsPage from '@/components/pages/ClosestAchievementsPage.
 import AllClosestAchievementsPage from '@/components/pages/AllClosestAchievementsPage.vue';
 import EasiestGamesPage from '@/components/pages/EasiestGamesPage.vue';
 import RareAchievementsPage from '@/components/pages/RareAchievementsPage.vue';
+import LastAchievedPage from '@/components/pages/LastAchievedPage.vue';
 
 const routes = [
   { path: PageTypes.CompletedGames, component: CompletedGamesPage },
@@ -26,6 +27,7 @@ const routes = [
   { path: PageTypes.AllClosestAchievements, component: AllClosestAchievementsPage },
   { path: PageTypes.EasiestGames, component: EasiestGamesPage },
   { path: PageTypes.RarestAchievements, component: RareAchievementsPage },
+  { path: PageTypes.LastAchieved, component: LastAchievedPage },
   { path: '/:pathMatch(.*)*', component: MasterPage },
 ]
 

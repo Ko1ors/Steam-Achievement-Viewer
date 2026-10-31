@@ -26,9 +26,9 @@ namespace Sav.WebApp.Controllers
         }
 
         [HttpGet()]
-        public IActionResult GetLatestAchievements([FromQuery] int page = 1, [FromQuery] int count = 100)
+        public IActionResult GetLatestAchievements([FromQuery] string? steamId, [FromQuery] int page = 1, [FromQuery] int count = 100)
         {
-            return Ok(_gameAchievementsService.GetLatestAchievements(page, count));
+            return Ok(_gameAchievementsService.GetLatestAchievements(page, count, steamId));
         }
 
         [HttpGet()]

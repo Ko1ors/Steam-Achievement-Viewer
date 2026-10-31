@@ -46,6 +46,11 @@ export const getRarestAchievementsAsync = async function(steamId: string, page: 
     return response;
 }
 
+export const getLatestAchievementsAsync = async function(steamId: string, page: number = 1, count: number = 100) : Promise<Response<AchievementComposite[]>> {
+    const response = await getAsync<AchievementComposite[]>(apiUrl + "/achievements/GetLatestAchievements?steamId=" + steamId + "&page=" + page + "&count=" + count);
+    return response;
+}
+
 
 
 // Shared
