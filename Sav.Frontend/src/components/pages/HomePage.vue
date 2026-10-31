@@ -1,5 +1,7 @@
 <template>
     <div class="home">
+        <SyncProgressCard />
+
         <div class="info">
             <p v-if="loading" class="loading">&gt;Loading profile data...</p>
 
@@ -31,6 +33,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useCurrentUserStore } from '@/stores/currentUser';
+import SyncProgressCard from '@/components/shared/SyncProgressCard.vue';
 
 const currentUser = useCurrentUserStore();
 

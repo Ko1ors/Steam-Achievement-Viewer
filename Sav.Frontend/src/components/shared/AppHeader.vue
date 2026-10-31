@@ -9,9 +9,9 @@
             <span v-if="displayName" class="profile-name">{{ displayName }}</span>
         </div>
 
-        <div v-if="currentUser.isLoggedIn" class="sync-status" :class="{ 'is-syncing': isSyncing }" :title="syncTitle" role="status" aria-live="polite">
+        <div v-if="currentUser.isLoggedIn && syncLabel" class="sync-status" :class="{ 'is-syncing': isSyncing }" :title="syncTitle" role="status" aria-live="polite">
             <i :class="isSyncing ? 'pi pi-spin pi-spinner' : 'pi pi-cloud-upload'" aria-hidden="true"></i>
-            <span v-if="syncLabel" class="sync-label">{{ syncLabel }}</span>
+            <span class="sync-label">{{ syncLabel }}</span>
         </div>
     </header>
 </template>
@@ -20,7 +20,7 @@
 import { computed, onMounted, onUnmounted } from 'vue';
 import { useCurrentUserStore } from '@/stores/currentUser';
 
-const SYNC_POLL_INTERVAL = 5000;
+const SYNC_POLL_INTERVAL = 2000;
 
 const currentUser = useCurrentUserStore();
 let pollHandle: ReturnType<typeof setInterval> | undefined;
@@ -28,29 +28,43 @@ let pollHandle: ReturnType<typeof setInterval> | undefined;
 const displayName = computed(() => currentUser.profile?.customURL || currentUser.profile?.steamID || currentUser.profile?.steamID64 || '');
 const avatarUrl = computed(() => currentUser.profile?.avatarFull || currentUser.profile?.avatarMedium || currentUser.profile?.avatarIcon || '');
 const frameUrl = computed(() => currentUser.profile?.avatarFrame ?? '');
-const isSyncing = computed(() => (currentUser.queueSize ?? 0) > 0);
+const isSyncing = computed(() => currentUser.isSyncing);
+const formatNumber = (value: number) => value.toLocaleString();
 const syncLabel = computed(() => {
-    if (currentUser.queueSize === null) {
-        return '';
-    }
+    const progress = currentUser.syncProgress;
 
-    return isSyncing.value
-        ? `Syncing ${currentUser.queueSize} game${currentUser.queueSize === 1 ? '' : 's'}`
-        : 'Up to date';
+    if (!progress)
+        return '';
+
+    if (!progress.isRunning)
+        return 'Up to date';
+
+    if (progress.totalGames <= 0)
+        return progress.queueSize > 0
+            ? `Syncing ${formatNumber(progress.queueSize)} game${progress.queueSize === 1 ? '' : 's'}`
+            : 'Syncing achievements';
+
+    return `Syncing ${formatNumber(progress.processedGames)}/${formatNumber(progress.totalGames)} · ${formatNumber(progress.queueSize)} left`;
 });
 const syncTitle = computed(() => {
-    if (currentUser.queueSize === null) {
+    const progress = currentUser.syncProgress;
+
+    if (!progress) {
         return 'Achievement sync status is unavailable';
     }
 
-    return isSyncing.value
-        ? 'Achievements are being updated'
-        : 'Achievement update queue is empty';
+    if (!progress.isRunning) {
+        return 'Achievement update queue is empty';
+    }
+
+    return progress.lastGameName
+        ? `Updating ${progress.lastGameName}`
+        : 'Achievements are being updated';
 });
 
 onMounted(() => {
-    currentUser.refreshQueueSizeAsync();
-    pollHandle = setInterval(() => currentUser.refreshQueueSizeAsync(), SYNC_POLL_INTERVAL);
+    currentUser.refreshSyncProgressAsync();
+    pollHandle = setInterval(() => currentUser.refreshSyncProgressAsync(), SYNC_POLL_INTERVAL);
 });
 
 onUnmounted(() => {

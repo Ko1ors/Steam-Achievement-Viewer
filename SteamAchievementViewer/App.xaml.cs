@@ -54,6 +54,7 @@ namespace SteamAchievementViewer
             services.AddSingleton<ISteamService, SteamService>();
             services.AddTransient<IGameAchievementsService, GameAchievementsService>();
             services.AddSingleton(typeof(IQueueService<>), typeof(QueueService<>));
+            services.AddSingleton<IAchievementsSyncTrackerService, AchievementsSyncTrackerService>();
             services.AddTransient<IAchievementsWorkerService, AchievementsWorkerService>();
             services.AddSingleton<IImageService, ImageService>();
 

@@ -15,6 +15,7 @@ namespace Sav.Common.Services
 
         private readonly IQueueService<UserGameEntity> _queueService;
         private readonly ISteamService _steamService;
+        private readonly IAchievementsSyncTrackerService _syncTracker;
         private readonly IEntityRepository<GameEntity> _gameRepository;
         private readonly IEntityRepository<AchievementEntity> _achievementRepository;
         private readonly IEntityRepository<UserAchievementEntity> _userAchievementRepository;
@@ -26,12 +27,13 @@ namespace Sav.Common.Services
 
         public bool IsRunning { get; set; }
 
-        public AchievementsWorkerService(IQueueService<UserGameEntity> queueService, ISteamService steamService, IGameEntityRepository gameRepository,
-            IEntityRepository<AchievementEntity> achievementRepository, IEntityRepository<UserAchievementEntity> userAchievementRepository,
-            IMapper mapper, IClientService<XmlDocument> xmlClient)
+        public AchievementsWorkerService(IQueueService<UserGameEntity> queueService, ISteamService steamService, IAchievementsSyncTrackerService syncTracker,
+            IGameEntityRepository gameRepository, IEntityRepository<AchievementEntity> achievementRepository,
+            IEntityRepository<UserAchievementEntity> userAchievementRepository, IMapper mapper, IClientService<XmlDocument> xmlClient)
         {
             _queueService = queueService;
             _steamService = steamService;
+            _syncTracker = syncTracker;
             _gameRepository = gameRepository;
             _achievementRepository = achievementRepository;
             _userAchievementRepository = userAchievementRepository;
@@ -52,30 +54,52 @@ namespace Sav.Common.Services
             IsStarted = true;
             IsRunning = true;
 
-            while (!token.IsCancellationRequested)
+            try
             {
-                await ExecuteWorkAsync();
-                await Task.Delay(1000, token);
+                while (!token.IsCancellationRequested)
+                {
+                    await ExecuteWorkAsync();
+
+                    try
+                    {
+                        await Task.Delay(1000, token);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        break;
+                    }
+                }
             }
-            Log.Logger.Warning("AchievementsWorkerService stopping");
-            IsRunning = false;
+            finally
+            {
+                IsRunning = false;
+                IsStarted = false;
+                Log.Logger.Warning("AchievementsWorkerService stopping");
+            }
         }
 
         private int GetRandomParameter() => _random.Next(0, 100000);
 
         private async Task ExecuteWorkAsync()
         {
-            UserGameEntity userGame = null;
+            if (_queueService.Size == 0)
+                return;
+
+            var userGame = _queueService.Get();
+            if (userGame is null)
+                return;
+
+            var gameName = userGame.AppID;
+            var requeued = false;
+
+            _syncTracker.OnGameProcessingStarted();
             try
             {
-                if (_queueService.Size == 0)
-                    return;
-
-                userGame = _queueService.Get();
-                if (userGame is null)
-                    return;
-
                 Log.Logger.Information("Processing user game {UserId}, {AppID}", userGame.UserId, userGame.AppID);
+
+                var gameEntity = _gameRepository.GetByKeys(userGame.AppID);
+                if (gameEntity is not null)
+                    gameName = gameEntity.Name;
 
                 var response = await _xmlClient.SendGetRequest($"{userGame.StatsLink}/?xml={GetRandomParameter()}");
                 if (response.InnerText == XmlProfileError || response.InnerText == "")
@@ -101,7 +125,6 @@ namespace Sav.Common.Services
                         return;
                     }
 
-                    var gameEntity = _gameRepository.GetByKeys(userGame.AppID);
                     userAchievements = achievementsResponse.Achievement.Where(a => a.Closed == "1").Select(a => new UserAchievementEntity()
                     {
                         UserId = userGame.UserId,
@@ -146,10 +169,25 @@ namespace Sav.Common.Services
             }
             catch (Exception e)
             {
-                Log.Logger.Error(e, "Failed to process user game {UserId}, {AppID}", userGame?.UserId, userGame?.AppID);
-                if (userGame is not null)
-                    _queueService.Add(userGame);
+                Log.Logger.Error(e, "Failed to process user game {UserId}, {AppID}", userGame.UserId, userGame.AppID);
+                _queueService.Add(userGame);
+                requeued = true;
             }
+            finally
+            {
+                if (requeued)
+                    _syncTracker.OnGameProcessingFailed();
+                else
+                    _syncTracker.OnGameProcessed(gameName);
+
+                ReportProgress();
+            }
+        }
+
+        private void ReportProgress()
+        {
+            var progress = _syncTracker.GetProgress();
+            _steamService.ReportAchievementsProgress(progress.TotalGames, progress.ProcessedGames, progress.LastGameName ?? string.Empty);
         }
 
         private async Task<Achievements> GetGlobalAchievementPercentagesAsync(string appid)

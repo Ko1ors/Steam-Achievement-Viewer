@@ -309,6 +309,11 @@ namespace Sav.Common.Services
                 _gameQueueService.Add(_userRepository.GetGamesToQueue(steamId));
         }
 
+        public void ReportAchievementsProgress(int totalGames, int currentGameCount, string lastGameName)
+        {
+            OnAchievementProgressUpdated?.Invoke(totalGames, currentGameCount, lastGameName);
+        }
+
         public void AchievementsDataChanged()
         {
             Log.Logger.Information("Achievements data changed for SteamID: {SteamID}", _currentUserService.SteamId);

@@ -23,6 +23,8 @@ namespace Sav.Common.Services
     {
         public event AchievementProgressUpdatedDelegate OnAchievementProgressUpdated;
 
+        public void ReportAchievementsProgress(int totalGames, int currentGameCount, string lastGameName);
+
         public void AchievementsDataChanged();
 
         public UserEntity GetUser(string? steamId = null);

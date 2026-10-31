@@ -6,6 +6,7 @@ import { GameDto } from "@/models/API/GameDto";
 import { PagedResult } from "@/models/API/PagedResult";
 import { ProfileUpdateResult } from "@/models/API/ProfileUpdateResult";
 import { GamesUpdateResult } from "@/models/API/GamesUpdateResult";
+import { SyncProgress } from "@/models/API/SyncProgress";
 import { UserProfile } from "@/models/API/UserProfile";
 import { notifyError } from "@/helpers/notifications";
 
@@ -78,6 +79,10 @@ export const getUserProfileAsync = async function(steamId?: string) : Promise<Re
 
 export const getQueueSizeAsync = async function() : Promise<Response<number>> {
     return await getAsync<number>(apiUrl + "/steam/queueSize", { silent: true });
+}
+
+export const getSyncProgressAsync = async function() : Promise<Response<SyncProgress>> {
+    return await getAsync<SyncProgress>(apiUrl + "/steam/syncProgress", { silent: true });
 }
 
 export const updateProfileAsync = async function(steamId: string) : Promise<Response<ProfileUpdateResult>> {

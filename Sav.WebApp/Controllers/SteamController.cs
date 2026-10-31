@@ -13,12 +13,15 @@ namespace Sav.WebApp.Controllers
         private readonly ISteamService _steamService;
         private readonly IQueueService<UserGameEntity> _queueService;
         private readonly IGameAchievementsService _gameAchievementsService;
+        private readonly IAchievementsSyncTrackerService _syncTracker;
 
-        public SteamController(ISteamService steamService, IQueueService<UserGameEntity> queueService, IGameAchievementsService gameAchievementsService)
+        public SteamController(ISteamService steamService, IQueueService<UserGameEntity> queueService,
+            IGameAchievementsService gameAchievementsService, IAchievementsSyncTrackerService syncTracker)
         {
             _steamService = steamService;
             _queueService = queueService;
             _gameAchievementsService = gameAchievementsService;
+            _syncTracker = syncTracker;
         }
 
         [HttpGet("isLogged")]
@@ -141,6 +144,12 @@ namespace Sav.WebApp.Controllers
         public IActionResult GetQueueSize()
         {
             return Ok(_queueService.Size);
+        }
+
+        [HttpGet("syncProgress")]
+        public IActionResult GetSyncProgress()
+        {
+            return Ok(_syncTracker.GetProgress());
         }
     }
 }

@@ -7,6 +7,7 @@ using Sav.Common.Mapping;
 using Sav.Common.Repositories;
 using Sav.Common.Services;
 using Sav.Infrastructure;
+using Sav.WebApp.Services;
 using Serilog;
 using System.Xml;
 
@@ -87,10 +88,14 @@ namespace Sav.WebApp
             // Services
             services.AddTransient<IClientService<XmlDocument>, XmlClientService>();
             services.AddTransient<ISteamApiClientService, SteamApiClientService>();
-            services.AddSingleton<ISteamService, SteamService>();
+            // Scoped: SteamService owns repositories with long-lived DbContexts, so a singleton
+            // instance would be shared across concurrent request threads.
+            services.AddScoped<ISteamService, SteamService>();
             services.AddTransient<IGameAchievementsService, GameAchievementsService>();
             services.AddSingleton(typeof(IQueueService<>), typeof(QueueService<>));
+            services.AddSingleton<IAchievementsSyncTrackerService, AchievementsSyncTrackerService>();
             services.AddTransient<IAchievementsWorkerService, AchievementsWorkerService>();
+            services.AddHostedService<AchievementsSyncBackgroundService>();
             services.AddSingleton<ISettingsService>(_ => new JsonSettingsService(GetSettingsFilePath()));
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
 

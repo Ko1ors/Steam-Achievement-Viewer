@@ -1,17 +1,24 @@
 import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
-import { getCurrentUserAsync, getQueueSizeAsync, updateCurrentUserAsync } from '@/api/api';
+import { getCurrentUserAsync, getSyncProgressAsync, updateCurrentUserAsync } from '@/api/api';
 import type { CurrentUser } from '@/models/API/CurrentUser';
+import type { SyncProgress } from '@/models/API/SyncProgress';
 import type { UserProfile } from '@/models/API/UserProfile';
 
 export const useCurrentUserStore = defineStore('currentUser', () => {
     const steamId = ref<string | null>(null);
     const profile = ref<UserProfile | null>(null);
     const queueSize = ref<number | null>(null);
+    const syncProgress = ref<SyncProgress | null>(null);
     const loading = ref(false);
     const loaded = ref(false);
 
     const isLoggedIn = computed(() => steamId.value !== null);
+    const isSyncing = computed(() => syncProgress.value?.isRunning ?? (queueSize.value ?? 0) > 0);
+
+    // Stop polling a progress endpoint that keeps failing (e.g. an older running backend).
+    const SYNC_PROGRESS_MAX_FAILURES = 3;
+    const syncProgressFailures = ref(0);
 
     let pendingLoad: Promise<void> | null = null;
 
@@ -49,10 +56,20 @@ export const useCurrentUserStore = defineStore('currentUser', () => {
         await loadAsync();
     };
 
-    const refreshQueueSizeAsync = async () => {
-        const response = await getQueueSizeAsync();
+    const refreshSyncProgressAsync = async () => {
+        if (syncProgressFailures.value >= SYNC_PROGRESS_MAX_FAILURES)
+            return;
 
-        queueSize.value = response.success && typeof response.data === 'number' ? response.data : null;
+        const response = await getSyncProgressAsync();
+
+        if (!response.success || !response.data) {
+            syncProgressFailures.value++;
+            return;
+        }
+
+        syncProgressFailures.value = 0;
+        syncProgress.value = response.data;
+        queueSize.value = response.data.queueSize;
     };
 
     const setCurrentUserAsync = async (id: string) => {
@@ -70,12 +87,14 @@ export const useCurrentUserStore = defineStore('currentUser', () => {
         steamId,
         profile,
         queueSize,
+        syncProgress,
         loading,
         loaded,
         isLoggedIn,
+        isSyncing,
         loadAsync,
         ensureLoadedAsync,
-        refreshQueueSizeAsync,
+        refreshSyncProgressAsync,
         setCurrentUserAsync,
     };
 });

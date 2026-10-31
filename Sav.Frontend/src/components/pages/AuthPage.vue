@@ -124,6 +124,7 @@ const signInAsync = async () => {
         }
 
         await currentUser.loadAsync();
+        await currentUser.refreshSyncProgressAsync();
         queuedGames.value = currentUser.queueSize ?? 0;
 
         setStatus(queuedGames.value > 0
