@@ -7,7 +7,7 @@
 
             <div class="game-list-container">
                 <ListBox v-model="selectedGame" :options="filteredGames" optionLabel="name" class="game-list"
-                 listStyle="height:100vh"
+                 listStyle="height:100%"
                     :virtualScrollerOptions="{ itemSize: 30 }" @change="loadAchievements" >
                     <template #option="slotProps">
                         <div class="game-list-item p-2">
@@ -94,7 +94,7 @@ onMounted(() => {
     height: 100%;
     background-color: #1B2838;
     padding: 10px;
-    max-height: 100vh;
+    box-sizing: border-box;
 }
 
 .games-panel {

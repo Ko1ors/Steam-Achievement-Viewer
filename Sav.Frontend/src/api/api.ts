@@ -3,6 +3,8 @@ import { CompletedGameComposite } from "@/models/API/CompletedGameComposite";
 import { CompletionGameComposite } from "@/models/API/CompletionGameComposite";
 import { GameDto } from "@/models/API/GameDto";
 import { PagedResult } from "@/models/API/PagedResult";
+import { SteamUser } from "@/models/API/SteamUser";
+import { notifyError } from "@/helpers/notifications";
 
 export const baseUrl = import.meta.env.VITE_SERVICE_API_URL ?? window.location.origin;
 export const apiUrl = baseUrl + "/api";
@@ -13,6 +15,12 @@ export interface Response<T> {
     status?: number;
     data: T | null;
 }
+
+/** Requests stay silent when the caller renders its own fallback state (e.g. the shell header). */
+export interface RequestOptions extends RequestInit {
+    silent?: boolean;
+}
+
 
 // Games
 
@@ -51,6 +59,16 @@ export const getLatestAchievementsAsync = async function(steamId: string, page: 
     return response;
 }
 
+// Steam
+
+export const getSteamUserAsync = async function() : Promise<Response<SteamUser>> {
+    return await getAsync<SteamUser>(apiUrl + "/steam/user", { silent: true });
+}
+
+export const getQueueSizeAsync = async function() : Promise<Response<number>> {
+    return await getAsync<number>(apiUrl + "/steam/queueSize", { silent: true });
+}
+
 
 
 // Shared
@@ -64,12 +82,13 @@ const getResponseContentAsync = async function(response: globalThis.Response) {
     }  
 }
 
-export const getAsync = async function <T>(url: string, options?: RequestInit, ignoreRedirect: boolean = false) {
+export const getAsync = async function <T>(url: string, options?: RequestOptions, ignoreRedirect: boolean = false) {
+    const { silent, ...init } = options ?? {};
     try {
         const response = await fetch(url, {
             credentials: "include",
             redirect: 'manual',
-            ...options
+            ...init
         })
         const isRedirect = response.type === "opaqueredirect";
         if (!ignoreRedirect && isRedirect) {
@@ -82,19 +101,27 @@ export const getAsync = async function <T>(url: string, options?: RequestInit, i
             return { success: false, message: "Redirect", data: null } as Response<T>;
         }
         if (!response.ok) {
-            const errorResponse: Response<T> = { success: false, message: isRedirect ? "Redirect" : await response.text(), data: null };
-            console.error(errorResponse);
+            const message = isRedirect ? "Redirect" : await response.text();
+            const errorResponse: Response<T> = { success: false, message, data: null, status: response.status };
+            if (!silent) {
+                console.error(errorResponse);
+                notifyError("Could not load data", message.slice(0, 300) || undefined);
+            }
             return errorResponse;
         }
         return { success: true, message: "", data: await getResponseContentAsync(response) } as Response<T>;
     }
     catch (error) {
-        console.error(error);
+        if (!silent) {
+            console.error(error);
+            notifyError("Could not reach the server", error instanceof Error ? error.message : String(error));
+        }
         return { success: false, message: error, data: null } as Response<T>;
     }
 }
 
-export const postAsync = async function <T>(url: string, body: any, options?: RequestInit) {
+export const postAsync = async function <T>(url: string, body: any, options?: RequestOptions) {
+    const { silent, ...init } = options ?? {};
     const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -102,17 +129,22 @@ export const postAsync = async function <T>(url: string, body: any, options?: Re
         },
         body: JSON.stringify(body),
         credentials: "include",
-        ...options
+        ...init
     });
     if (!response.ok) {
-        const errorResponse: Response<T> = { success: false, message: await response.text(), data: null, status: response.status };
-        console.error(errorResponse);
+        const message = await response.text();
+        const errorResponse: Response<T> = { success: false, message, data: null, status: response.status };
+        if (!silent) {
+            console.error(errorResponse);
+            notifyError("Could not save changes", message.slice(0, 300) || undefined);
+        }
         return errorResponse;
     }
     return { success: true, message: "", data: await getResponseContentAsync(response) };
 }
 
-export const putAsync = async function <T>(url: string, body: any, options?: RequestInit) {
+export const putAsync = async function <T>(url: string, body: any, options?: RequestOptions) {
+    const { silent, ...init } = options ?? {};
     const response = await fetch(url, {
         method: "PUT",
         headers: {
@@ -120,17 +152,22 @@ export const putAsync = async function <T>(url: string, body: any, options?: Req
         },
         body: JSON.stringify(body),
         credentials: "include",
-        ...options
+        ...init
     });
     if (!response.ok) {
-        const errorResponse: Response<T> = { success: false, message: await response.text(), data: null };
-        console.error(errorResponse);
+        const message = await response.text();
+        const errorResponse: Response<T> = { success: false, message, data: null, status: response.status };
+        if (!silent) {
+            console.error(errorResponse);
+            notifyError("Could not save changes", message.slice(0, 300) || undefined);
+        }
         return errorResponse;
     }
     return { success: true, message: "", data: await getResponseContentAsync(response) };
 }
 
-export const deleteAsync = async function <T>(url: string, body: any, options?: RequestInit) {
+export const deleteAsync = async function <T>(url: string, body: any, options?: RequestOptions) {
+    const { silent, ...init } = options ?? {};
     const response = await fetch(url, {
         method: "DELETE",
         headers: {
@@ -138,11 +175,15 @@ export const deleteAsync = async function <T>(url: string, body: any, options?: 
         },
         body: JSON.stringify(body),
         credentials: "include",
-        ...options
+        ...init
     });
     if (!response.ok) {
-        const errorResponse: Response<T> = { success: false, message: await response.text(), data: null };
-        console.error(errorResponse);
+        const message = await response.text();
+        const errorResponse: Response<T> = { success: false, message, data: null, status: response.status };
+        if (!silent) {
+            console.error(errorResponse);
+            notifyError("Could not delete", message.slice(0, 300) || undefined);
+        }
         return errorResponse;
     }
     return { success: true, message: "", data: await getResponseContentAsync(response) };
