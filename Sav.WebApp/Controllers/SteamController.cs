@@ -127,7 +127,7 @@ namespace Sav.WebApp.Controllers
         }
 
         [HttpPost("queueAchievementsUpdate")]
-        public IActionResult QueueAchievementsUpdate([FromQuery] bool onlyRecentGames = true)
+        public IActionResult QueueAchievementsUpdate([FromQuery] bool? onlyRecentGames = null)
         {
             _steamService.QueueAchievementsUpdate(onlyRecentGames);
             return Ok();

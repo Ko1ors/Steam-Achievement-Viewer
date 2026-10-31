@@ -8,6 +8,7 @@ import { ProfileUpdateResult } from "@/models/API/ProfileUpdateResult";
 import { GamesUpdateResult } from "@/models/API/GamesUpdateResult";
 import { SyncProgress } from "@/models/API/SyncProgress";
 import { UserProfile } from "@/models/API/UserProfile";
+import { UserSettings } from "@/models/API/UserSettings";
 import { notifyError } from "@/helpers/notifications";
 
 export const baseUrl = import.meta.env.VITE_SERVICE_API_URL ?? window.location.origin;
@@ -93,8 +94,20 @@ export const updateGamesAsync = async function(steamId: string) : Promise<Respon
     return await postAsync<GamesUpdateResult>(apiUrl + "/steam/updateGames", steamId, { silent: true });
 }
 
-export const queueAchievementsUpdateAsync = async function(onlyRecentGames: boolean = true) : Promise<Response<unknown>> {
+export const queueAchievementsUpdateAsync = async function(onlyRecentGames?: boolean) : Promise<Response<unknown>> {
     return await postAsync<unknown>(apiUrl + "/steam/queueAchievementsUpdate" + toQueryString({ onlyRecentGames }), {}, { silent: true });
+}
+
+
+
+// Settings
+
+export const getSettingsAsync = async function() : Promise<Response<UserSettings>> {
+    return await getAsync<UserSettings>(apiUrl + "/settings", { silent: true });
+}
+
+export const updateSettingsAsync = async function(settings: UserSettings) : Promise<Response<UserSettings>> {
+    return await putAsync<UserSettings>(apiUrl + "/settings", settings, { silent: true });
 }
 
 

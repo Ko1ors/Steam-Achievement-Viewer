@@ -294,7 +294,7 @@ namespace Sav.Common.Services
             return GetUser(steamId)?.UserGames?.Select(ug => ug.Game) ?? Enumerable.Empty<GameEntity>();
         }
 
-        public void QueueAchievementsUpdate(bool onlyRecentGames = true)
+        public void QueueAchievementsUpdate(bool? onlyRecentGames = null)
         {
             var steamId = _currentUserService.SteamId;
             Log.Logger.Information("Queueing achievements update for SteamID: {SteamID}", steamId);
@@ -303,7 +303,9 @@ namespace Sav.Common.Services
                 return;
             }
 
-            if (onlyRecentGames)
+            var useRecentGames = onlyRecentGames ?? _settingsService.Get().UpdateOnlyRecentGames;
+
+            if (useRecentGames)
                 _gameQueueService.Add(_userRepository.GetRecentGamesToQueue(steamId, AchievementsRecentUpdateInterval));
             else
                 _gameQueueService.Add(_userRepository.GetGamesToQueue(steamId));

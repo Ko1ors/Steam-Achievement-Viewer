@@ -39,6 +39,7 @@ SAV provides users with functionality like:
 - View closest achievements for a specific game.
 - View closest achievements across all games in the library.
 - View the list of completed games.
+- Configure the saved Steam ID, Steam Web API key, auto update interval and update type in Settings.
 
 ## Login
 In order to see all achievements user have to provide their Steam ID. It can be found By checking your steam account details:

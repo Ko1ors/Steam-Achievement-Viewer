@@ -32,27 +32,31 @@ import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
-import { queueAchievementsUpdateAsync, updateGamesAsync, updateProfileAsync } from '@/api/api';
-import type { GamesUpdateResult } from '@/models/API/GamesUpdateResult';
-import type { ProfileUpdateResult } from '@/models/API/ProfileUpdateResult';
 import { PageTypes } from '@/helpers/routing';
+import { GAMES_ERRORS, PROFILE_ERRORS, syncSteamIdAsync, type SteamSyncFailure, type SteamSyncStage } from '@/helpers/steamSession';
 import { useCurrentUserStore } from '@/stores/currentUser';
 
 const HELP_URL = 'https://github.com/Ko1ors/Steam-Achievement-Viewer/blob/master/README.md#login';
 const STEAM_ID64_PATTERN = /^7656\d{13}$/;
 const SUCCESS_REDIRECT_DELAY = 1200;
 
-const PROFILE_ERRORS: Record<ProfileUpdateResult, string> = {
-    Success: '',
-    NotFound: 'Steam ID not found. Check the number and try again.',
-    Private: 'Your Steam profile is private. Set your profile and game details to public, then try again.',
-    Failed: 'Failed to get profile information. Check that the Steam ID is correct and the profile is public.',
+const STAGE_MESSAGES: Record<SteamSyncStage, string> = {
+    profile: 'Retrieving profile data...',
+    games: 'Retrieving the game list...',
+    sync: 'Starting the achievement sync...',
 };
 
-const GAMES_ERRORS: Record<GamesUpdateResult, string> = {
-    Success: '',
-    MissingApiKey: 'A Steam Web API key is required to read your game list. Add your Steam Web API key in Settings and try again.',
-    Failed: 'Failed to get the game list. Make sure your profile and game details are public, then try again.',
+const UNREACHABLE_MESSAGE = 'Could not reach the server. Please try again.';
+const QUEUE_ERROR = 'Failed to start the achievement sync. Please try again.';
+
+const describeFailure = (failure: SteamSyncFailure) => {
+    if (failure.stage === 'profile')
+        return failure.result ? PROFILE_ERRORS[failure.result] : UNREACHABLE_MESSAGE;
+
+    if (failure.stage === 'games')
+        return failure.result ? GAMES_ERRORS[failure.result] : UNREACHABLE_MESSAGE;
+
+    return QUEUE_ERROR;
 };
 
 const router = useRouter();
@@ -89,37 +93,10 @@ const signInAsync = async () => {
     queuedGames.value = 0;
 
     try {
-        setStatus('Retrieving profile data...');
-        const profileResponse = await updateProfileAsync(id);
+        const failure = await syncSteamIdAsync(id, stage => setStatus(STAGE_MESSAGES[stage]));
 
-        if (!profileResponse.success) {
-            setStatus('Could not reach the server. Please try again.', true);
-            return;
-        }
-
-        if (profileResponse.data !== 'Success') {
-            setStatus(PROFILE_ERRORS[profileResponse.data ?? 'Failed'] || PROFILE_ERRORS.Failed, true);
-            return;
-        }
-
-        setStatus('Retrieving the game list...');
-        const gamesResponse = await updateGamesAsync(id);
-
-        if (!gamesResponse.success) {
-            setStatus('Could not reach the server. Please try again.', true);
-            return;
-        }
-
-        if (gamesResponse.data !== 'Success') {
-            setStatus(GAMES_ERRORS[gamesResponse.data ?? 'Failed'] || GAMES_ERRORS.Failed, true);
-            return;
-        }
-
-        setStatus('Starting the achievement sync...');
-        const queueResponse = await queueAchievementsUpdateAsync();
-
-        if (!queueResponse.success) {
-            setStatus('Failed to start the achievement sync. Please try again.', true);
+        if (failure) {
+            setStatus(describeFailure(failure), true);
             return;
         }
 

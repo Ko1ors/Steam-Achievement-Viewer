@@ -6,6 +6,7 @@ export enum PageTypes {
     EasiestGames = "/EasiestGames",
     RarestAchievements = "/RarestAchievements",
     LastAchieved = "/LastAchieved",
+    Settings = "/Settings",
     Auth = "/Auth"
 }
 

@@ -33,7 +33,7 @@ namespace Sav.Common.Services
 
         public IEnumerable<GameEntity> GetUserGames(string? steamId = null);
 
-        public void QueueAchievementsUpdate(bool onlyRecentGames = true);
+        public void QueueAchievementsUpdate(bool? onlyRecentGames = null);
 
         bool IsLogged();
 
