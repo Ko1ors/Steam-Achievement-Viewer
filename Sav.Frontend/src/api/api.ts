@@ -11,7 +11,9 @@ import { UserProfile } from "@/models/API/UserProfile";
 import { UserSettings } from "@/models/API/UserSettings";
 import { notifyError } from "@/helpers/notifications";
 
-export const baseUrl = import.meta.env.VITE_SERVICE_API_URL ?? window.location.origin;
+// VITE_SERVICE_API_URL only applies to the Vite dev server. Packaged builds are always served by
+// the API host itself, so baking a dev URL into a production bundle would point at localhost.
+export const baseUrl = (import.meta.env.DEV && import.meta.env.VITE_SERVICE_API_URL) || window.location.origin;
 export const apiUrl = baseUrl + "/api";
 
 export interface Response<T> {

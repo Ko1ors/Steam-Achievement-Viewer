@@ -7,6 +7,8 @@ export default defineConfig({
   plugins: [vue()],
   build: {
     outDir: '../Sav.WebApp/wwwroot',
+    // outDir sits outside the Vite root, so stale bundles are only removed when this is explicit
+    emptyOutDir: true,
     sourcemap: true,
   },
   css: {

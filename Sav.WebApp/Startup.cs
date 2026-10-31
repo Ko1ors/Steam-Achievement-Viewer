@@ -17,6 +17,14 @@ namespace Sav.WebApp
     {
         public async Task ConfigureAsync(string[] args)
         {
+            // v1 wrote relative to the working directory; the app directory is the only writable
+            // location a packaged (portable) build is guaranteed to have.
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.File(Path.Combine(AppContext.BaseDirectory, "logs", "log-.log"),
+                    rollingInterval: RollingInterval.Day,
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {SourceContext} {MemberName}() | {Message} {Exception}{NewLine}")
+                .CreateLogger();
+
             // Configure the HTTP request pipeline.
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddCors(o => o.AddPolicy("DefaultPolicy", builder =>

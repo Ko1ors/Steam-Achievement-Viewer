@@ -4,15 +4,20 @@
     "imageFile": ""
   },
   "name": "Sav.WebApp",
-  "author": "",
+  "description": "Keep track of your Steam achievement progress.",
+  "author": "Ko1ors",
   "singleInstance": false,
   "environment": "Production",
   "build": {
-    "appId": "com.Sav.WebApp.app",
-    "productName": "Sav.WebApp",
-    "copyright": "Copyright © 2020",
-    "buildVersion": "1.0.0",
+    "appId": "com.ko1ors.steamachievementviewer",
+    "productName": "Steam Achievement Viewer",
+    "copyright": "Copyright © 2026 Ko1ors",
+    "buildVersion": "2.0.0-alpha.1",
     "compression": "maximum",
+    "win": {
+      "target": [ "dir" ],
+      "icon": "../../../../Sav.Frontend/public/favicon.ico"
+    },
     "directories": {
       "output": "../../../bin/Desktop"
     },
@@ -29,7 +34,8 @@
         "to": "ElectronHostHook/node_modules",
         "filter": [ "**/*" ]
       },
-      "**/*"
+      "**/*",
+      "!bin/**"
     ]
   }
 }
