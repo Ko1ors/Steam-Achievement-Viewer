@@ -96,6 +96,7 @@ namespace Sav.WebApp
             services.AddSingleton<IAchievementsSyncTrackerService, AchievementsSyncTrackerService>();
             services.AddTransient<IAchievementsWorkerService, AchievementsWorkerService>();
             services.AddHostedService<AchievementsSyncBackgroundService>();
+            services.AddHostedService<AutoUpdateBackgroundService>();
             services.AddSingleton<ISettingsService>(_ => new JsonSettingsService(GetSettingsFilePath()));
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
