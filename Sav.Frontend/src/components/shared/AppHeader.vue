@@ -1,7 +1,7 @@
 <template>
     <header class="app-header">
         <div class="profile">
-            <div class="avatar">
+            <div class="avatar" :class="{ 'has-frame': !!frameUrl }">
                 <img v-if="avatarUrl" :src="avatarUrl" :alt="displayName" class="avatar-image" />
                 <i v-else class="pi pi-user avatar-fallback" aria-hidden="true"></i>
                 <img v-if="frameUrl" :src="frameUrl" alt="" class="avatar-frame" />
@@ -17,31 +17,29 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
-import { getQueueSizeAsync, getSteamUserAsync } from '@/api/api';
-import type { SteamUser } from '@/models/API/SteamUser';
+import { computed, onMounted, onUnmounted } from 'vue';
+import { useCurrentUserStore } from '@/stores/currentUser';
 
 const SYNC_POLL_INTERVAL = 5000;
 
-const user = ref<SteamUser | null>(null);
-const queueSize = ref<number | null>(null);
+const currentUser = useCurrentUserStore();
 let pollHandle: ReturnType<typeof setInterval> | undefined;
 
-const displayName = computed(() => user.value?.customURL || user.value?.steamID || user.value?.steamID64 || '');
-const avatarUrl = computed(() => user.value?.avatarFull || user.value?.avatarMedium || user.value?.avatarIcon || '');
-const frameUrl = computed(() => user.value?.avatarFrame ?? '');
-const isSyncing = computed(() => (queueSize.value ?? 0) > 0);
+const displayName = computed(() => currentUser.profile?.customURL || currentUser.profile?.steamID || currentUser.profile?.steamID64 || '');
+const avatarUrl = computed(() => currentUser.profile?.avatarFull || currentUser.profile?.avatarMedium || currentUser.profile?.avatarIcon || '');
+const frameUrl = computed(() => currentUser.profile?.avatarFrame ?? '');
+const isSyncing = computed(() => (currentUser.queueSize ?? 0) > 0);
 const syncLabel = computed(() => {
-    if (queueSize.value === null) {
+    if (currentUser.queueSize === null) {
         return '';
     }
 
     return isSyncing.value
-        ? `Syncing ${queueSize.value} game${queueSize.value === 1 ? '' : 's'}`
+        ? `Syncing ${currentUser.queueSize} game${currentUser.queueSize === 1 ? '' : 's'}`
         : 'Up to date';
 });
 const syncTitle = computed(() => {
-    if (queueSize.value === null) {
+    if (currentUser.queueSize === null) {
         return 'Achievement sync status is unavailable';
     }
 
@@ -50,26 +48,9 @@ const syncTitle = computed(() => {
         : 'Achievement update queue is empty';
 });
 
-const refreshUser = async () => {
-    const response = await getSteamUserAsync();
-
-    if (!response.success || !response.data) {
-        return;
-    }
-
-    user.value = response.data;
-};
-
-const refreshQueueSize = async () => {
-    const response = await getQueueSizeAsync();
-
-    queueSize.value = response.success && typeof response.data === 'number' ? response.data : null;
-};
-
 onMounted(() => {
-    refreshUser();
-    refreshQueueSize();
-    pollHandle = setInterval(refreshQueueSize, SYNC_POLL_INTERVAL);
+    currentUser.refreshQueueSizeAsync();
+    pollHandle = setInterval(() => currentUser.refreshQueueSizeAsync(), SYNC_POLL_INTERVAL);
 });
 
 onUnmounted(() => {
@@ -100,10 +81,13 @@ onUnmounted(() => {
 }
 
 .avatar {
+    --avatar-size: 40px;
+    /* Steam frames are authored for a 184px avatar inside a 224px canvas. */
+    --avatar-frame-scale: 1.2174;
     position: relative;
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
+    width: var(--avatar-size);
+    height: var(--avatar-size);
 }
 
 .avatar-image,
@@ -113,6 +97,10 @@ onUnmounted(() => {
     height: 100%;
     border-radius: 4px;
     object-fit: cover;
+}
+
+.avatar.has-frame .avatar-image {
+    border-radius: 0;
 }
 
 .avatar-fallback {
@@ -126,9 +114,11 @@ onUnmounted(() => {
 
 .avatar-frame {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    top: 50%;
+    left: 50%;
+    width: calc(var(--avatar-size) * var(--avatar-frame-scale));
+    height: calc(var(--avatar-size) * var(--avatar-frame-scale));
+    transform: translate(-50%, -50%);
     pointer-events: none;
 }
 

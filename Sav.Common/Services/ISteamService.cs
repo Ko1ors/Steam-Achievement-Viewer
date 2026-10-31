@@ -12,7 +12,7 @@ namespace Sav.Common.Services
 
         public UserEntity GetUser(string? steamId = null);
 
-        public string GetUserId();
+        public string? GetUserId();
 
         public IEnumerable<GameEntity> GetUserGames(string? steamId = null);
 

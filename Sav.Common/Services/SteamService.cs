@@ -36,10 +36,10 @@ namespace Sav.Common.Services
         private readonly IUserEntityRepository _userRepository;
         private readonly IEntityRepository<GameEntity> _gameRepository;
         private readonly IEntityRepository<UserGameEntity> _userGameRepository;
+        private readonly ICurrentUserService _currentUserService;
 
         public event AchievementProgressUpdatedDelegate OnAchievementProgressUpdated;
 
-        private string _steamID;
         private bool _refreshRequired;
         private HttpClient _httpClient;
 
@@ -54,7 +54,7 @@ namespace Sav.Common.Services
 
         public SteamService(IClientService<XmlDocument> xmlClient, ISteamApiClientService steamApiClientService, IQueueService<UserGameEntity> gameQueueService, IMapper mapper,
             IUserEntityRepository userRepository, IGameEntityRepository gameRepository,
-            IEntityRepository<UserGameEntity> userGameRepository)
+            IEntityRepository<UserGameEntity> userGameRepository, ICurrentUserService currentUserService)
         {
             _xmlClient = xmlClient;
             _steamApiClientService = steamApiClientService;
@@ -63,6 +63,7 @@ namespace Sav.Common.Services
             _userRepository = userRepository;
             _gameRepository = gameRepository;
             _userGameRepository = userGameRepository;
+            _currentUserService = currentUserService;
 
             _random = new Random();
             _refreshRequired = false;
@@ -91,7 +92,7 @@ namespace Sav.Common.Services
             List<GameEntity> games = null;
             List<UserGameEntity> userGames = null;
 
-            var currentUser = _userRepository.GetByKeys(_steamID);
+            var currentUser = _userRepository.GetByKeys(steamID);
             var response = await _xmlClient.SendGetRequest($"https://steamcommunity.com/profiles/{steamID}/games?tab=all&xml={GetRandomParameter()}");
             if (response.InnerText == XmlProfileError || string.IsNullOrEmpty(response.InnerText))
             {
@@ -168,7 +169,7 @@ namespace Sav.Common.Services
             }
             if (user is not null)
                 avatarModel ??= new AvatarModel() { AvatarUrl = user.AvatarFull, FrameUrl = user.AvatarFrame };
-            _steamID = steamID;
+            _currentUserService.SetCurrentUser(steamID);
             return true;
         }
 
@@ -208,13 +209,13 @@ namespace Sav.Common.Services
 
         public bool IsLogged()
         {
-            return !string.IsNullOrEmpty(_steamID);
+            return _currentUserService.IsAuthenticated;
         }
 
         public void LoadProfile(string steamID)
         {
             Log.Logger.Information("Loading profile for SteamID: {SteamID}", steamID);
-            _steamID = steamID;
+            _currentUserService.SetCurrentUser(steamID);
         }
 
         public void SaveSettingsInfo()
@@ -238,7 +239,7 @@ namespace Sav.Common.Services
         public UserEntity GetUser(string? steamId = null)
         {
             ValidateDBRefresh();
-            var userId = steamId ?? _steamID;
+            var userId = steamId ?? _currentUserService.SteamId;
             if (string.IsNullOrEmpty(userId))
                 return null;
 
@@ -253,28 +254,30 @@ namespace Sav.Common.Services
 
         public void QueueAchievementsUpdate(bool onlyRecentGames = true)
         {
-            Log.Logger.Information("Queueing achievements update for SteamID: {SteamID}", _steamID);
-            if (string.IsNullOrEmpty(_steamID))
+            var steamId = _currentUserService.SteamId;
+            Log.Logger.Information("Queueing achievements update for SteamID: {SteamID}", steamId);
+            if (string.IsNullOrEmpty(steamId))
             {
                 return;
             }
 
             if (onlyRecentGames)
-                _gameQueueService.Add(_userRepository.GetRecentGamesToQueue(_steamID, AchievementsRecentUpdateInterval));
+                _gameQueueService.Add(_userRepository.GetRecentGamesToQueue(steamId, AchievementsRecentUpdateInterval));
             else
-                _gameQueueService.Add(_userRepository.GetGamesToQueue(_steamID));
+                _gameQueueService.Add(_userRepository.GetGamesToQueue(steamId));
         }
 
         public void AchievementsDataChanged()
         {
-            Log.Logger.Information("Achievements data changed for SteamID: {SteamID}", _steamID);
+            Log.Logger.Information("Achievements data changed for SteamID: {SteamID}", _currentUserService.SteamId);
             _refreshRequired = true;
         }
 
-        public string GetUserId()
+        public string? GetUserId()
         {
-            Log.Logger.Information("Getting user ID: {SteamID}", _steamID);
-            return _steamID;
+            var steamId = _currentUserService.SteamId;
+            Log.Logger.Information("Getting user ID: {SteamID}", steamId);
+            return steamId;
         }
     }
 }

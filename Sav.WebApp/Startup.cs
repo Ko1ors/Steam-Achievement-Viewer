@@ -36,6 +36,9 @@ namespace Sav.WebApp
 
             var app = builder.Build();
 
+            var currentUser = app.Services.GetRequiredService<ICurrentUserService>();
+            Log.Information("Current user: {SteamID}", currentUser.SteamId ?? "(not configured)");
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseCors("DefaultPolicy");
@@ -70,6 +73,12 @@ namespace Sav.WebApp
             app.WaitForShutdown();
         }
 
+        private static string GetSettingsFilePath()
+        {
+            var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            return Path.Combine(localAppData, "SteamAchievementViewer", "settings.json");
+        }
+
         private void ConfigureServices(IServiceCollection services)
         {
             //Factories
@@ -82,6 +91,8 @@ namespace Sav.WebApp
             services.AddTransient<IGameAchievementsService, GameAchievementsService>();
             services.AddSingleton(typeof(IQueueService<>), typeof(QueueService<>));
             services.AddTransient<IAchievementsWorkerService, AchievementsWorkerService>();
+            services.AddSingleton<ISettingsService>(_ => new JsonSettingsService(GetSettingsFilePath()));
+            services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
             // Repositories
             services.AddSingleton(typeof(IListRepository<>), typeof(ListRepository<>));

@@ -13,17 +13,17 @@ namespace Sav.Common.Services
 
         IEnumerable<AchievementComposite> GetLatestAchievements(int page = 1, int count = 100, string? steamId = null);
 
-        IEnumerable<AchievementComposite> GetClosestAchievements(string steamId, int take = 25, int skip = 0);
+        IEnumerable<AchievementComposite> GetClosestAchievements(string? steamId, int take = 25, int skip = 0);
 
-        IEnumerable<AchievementComposite> GetGameClosestAchievements(string steamId, string appid);
+        IEnumerable<AchievementComposite> GetGameClosestAchievements(string? steamId, string appid);
 
-        IEnumerable<CompletionGameComposite> GetEasiestGamesToComplete(string steamId, int page = 1, int count = 100);
+        IEnumerable<CompletionGameComposite> GetEasiestGamesToComplete(string? steamId, int page = 1, int count = 100);
 
-        Task<PagedResult<CompletionGameComposite>> GetPagedEasiestGamesToCompleteAsync(string steamId, int page = 1, int count = 100);
+        Task<PagedResult<CompletionGameComposite>> GetPagedEasiestGamesToCompleteAsync(string? steamId, int page = 1, int count = 100);
 
-        IEnumerable<GameEntity> GetIncompleteGames(string steamId, int take = 25, int skip = 0);
+        IEnumerable<GameEntity> GetIncompleteGames(string? steamId, int take = 25, int skip = 0);
 
-        Task<PagedResult<CompletedGameComposite>> GetPagedCompletedGamesAsync(string steamId, int take = 25, int skip = 0);
+        Task<PagedResult<CompletedGameComposite>> GetPagedCompletedGamesAsync(string? steamId, int take = 25, int skip = 0);
 
         int GetCompletedAchievementsCount(string? steamId = null);
 

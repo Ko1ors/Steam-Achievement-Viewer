@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import InputText from 'primevue/inputtext';
 import ListBox from 'primevue/listbox';
 import ScrollPanel from 'primevue/scrollpanel';
@@ -39,7 +39,9 @@ import AchievementCard from '@/components/achievements/AchievementCard.vue';
 import { GameDto } from '@/models/API/GameDto';
 import { getGameClosestAchievementsAsync, getIncompleteGamesAsync } from '@/api/api';
 import { AchievementComposite } from '@/models/API/AchievementComposite';
+import { useCurrentUserStore } from '@/stores/currentUser';
 
+const currentUser = useCurrentUserStore();
 
 const games = ref<GameDto[]>([]);
 const searchQuery = ref("");
@@ -63,7 +65,7 @@ const filteredGames = computed(() => {
 
 
 const fetchGames = async () => {
-    const response = await getIncompleteGamesAsync("76561198064082850", 9999999, 0);
+    const response = await getIncompleteGamesAsync(currentUser.steamId ?? undefined, 9999999, 0);
 
     if(!response.success || !response.data)
     return;
@@ -75,7 +77,7 @@ const loadAchievements = async () => {
     if(!selectedGame.value)
         return;
 
-    const response = await getGameClosestAchievementsAsync("76561198064082850", selectedGame.value.appID);
+    const response = await getGameClosestAchievementsAsync(currentUser.steamId ?? undefined, selectedGame.value.appID);
 
     if(!response.success || !response.data)
         return;
@@ -83,9 +85,18 @@ const loadAchievements = async () => {
     closeAchievements.value = response.data;
 };
 
+const reloadForCurrentUserAsync = async () => {
+    games.value = [];
+    selectedGame.value = null;
+    closeAchievements.value = [];
+    await fetchGames();
+};
+
 onMounted(() => {
     fetchGames();
 });
+
+watch(() => currentUser.steamId, reloadForCurrentUserAsync);
 </script>
 
 <style scoped>

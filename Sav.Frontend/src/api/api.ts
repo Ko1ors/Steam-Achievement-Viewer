@@ -1,9 +1,9 @@
 import { AchievementComposite } from "@/models/API/AchievementComposite";
 import { CompletedGameComposite } from "@/models/API/CompletedGameComposite";
 import { CompletionGameComposite } from "@/models/API/CompletionGameComposite";
+import { CurrentUser } from "@/models/API/CurrentUser";
 import { GameDto } from "@/models/API/GameDto";
 import { PagedResult } from "@/models/API/PagedResult";
-import { SteamUser } from "@/models/API/SteamUser";
 import { UserProfile } from "@/models/API/UserProfile";
 import { notifyError } from "@/helpers/notifications";
 
@@ -25,49 +25,53 @@ export interface RequestOptions extends RequestInit {
 
 // Games
 
-export const getCompletedGamesAsync = async function(steamId: string, take: number = 25, skip: number = 0) : Promise<Response<PagedResult<CompletedGameComposite>>> {
-    const response = await getAsync<PagedResult<CompletedGameComposite>>(apiUrl + "/games/GetCompletedGames?steamId=" + steamId + "&take=" + take + "&skip=" + skip);
+export const getCompletedGamesAsync = async function(steamId?: string, take: number = 25, skip: number = 0) : Promise<Response<PagedResult<CompletedGameComposite>>> {
+    const response = await getAsync<PagedResult<CompletedGameComposite>>(apiUrl + "/games/GetCompletedGames" + toQueryString({ steamId, take, skip }));
     return response;
 }
 
-export const getIncompleteGamesAsync = async function(steamId: string, take: number = 25, skip: number = 0) : Promise<Response<GameDto[]>> {
-    const response = await getAsync<GameDto[]>(apiUrl + "/games/GetIncompleteGames?steamId=" + steamId + "&take=" + take + "&skip=" + skip);
+export const getIncompleteGamesAsync = async function(steamId?: string, take: number = 25, skip: number = 0) : Promise<Response<GameDto[]>> {
+    const response = await getAsync<GameDto[]>(apiUrl + "/games/GetIncompleteGames" + toQueryString({ steamId, take, skip }));
     return response;
 }
 
-export const getGameClosestAchievementsAsync = async function(steamId: string, gameId: string) : Promise<Response<AchievementComposite[]>> {
-    const response = await getAsync<AchievementComposite[]>(apiUrl + "/games/GetGameClosestAchievements?steamId=" + steamId + "&appId=" + gameId);
+export const getGameClosestAchievementsAsync = async function(steamId: string | undefined, gameId: string) : Promise<Response<AchievementComposite[]>> {
+    const response = await getAsync<AchievementComposite[]>(apiUrl + "/games/GetGameClosestAchievements" + toQueryString({ steamId, appid: gameId }));
     return response;
 }
 
-export const getClosestAchievementsAsync = async function(steamId: string, take: number = 25, skip: number = 0) : Promise<Response<AchievementComposite[]>> {
-    const response = await getAsync<AchievementComposite[]>(apiUrl + "/games/GetClosestAchievements?steamId=" + steamId + "&take=" + take + "&skip=" + skip);
+export const getClosestAchievementsAsync = async function(steamId?: string, take: number = 25, skip: number = 0) : Promise<Response<AchievementComposite[]>> {
+    const response = await getAsync<AchievementComposite[]>(apiUrl + "/games/GetClosestAchievements" + toQueryString({ steamId, take, skip }));
     return response;
 }
 
-export const getEasiestGamesToCompleteAsync = async function(steamId: string, page: number = 1, count: number = 25) : Promise<Response<PagedResult<CompletionGameComposite>>> {
-    const response = await getAsync<PagedResult<CompletionGameComposite>>(apiUrl + "/games/GetPagedEasiestGamesToComplete?steamId=" + steamId + "&page=" + page + "&count=" + count);
+export const getEasiestGamesToCompleteAsync = async function(steamId?: string, page: number = 1, count: number = 25) : Promise<Response<PagedResult<CompletionGameComposite>>> {
+    const response = await getAsync<PagedResult<CompletionGameComposite>>(apiUrl + "/games/GetPagedEasiestGamesToComplete" + toQueryString({ steamId, page, count }));
     return response;
 }
 
-export const getRarestAchievementsAsync = async function(steamId: string, page: number = 1, count: number = 100) : Promise<Response<AchievementComposite[]>> {
-    const response = await getAsync<AchievementComposite[]>(apiUrl + "/achievements/GetRarestAchievements?steamId=" + steamId + "&page=" + page + "&count=" + count);
+export const getRarestAchievementsAsync = async function(steamId?: string, page: number = 1, count: number = 100) : Promise<Response<AchievementComposite[]>> {
+    const response = await getAsync<AchievementComposite[]>(apiUrl + "/achievements/GetRarestAchievements" + toQueryString({ steamId, page, count }));
     return response;
 }
 
-export const getLatestAchievementsAsync = async function(steamId: string, page: number = 1, count: number = 100) : Promise<Response<AchievementComposite[]>> {
-    const response = await getAsync<AchievementComposite[]>(apiUrl + "/achievements/GetLatestAchievements?steamId=" + steamId + "&page=" + page + "&count=" + count);
+export const getLatestAchievementsAsync = async function(steamId?: string, page: number = 1, count: number = 100) : Promise<Response<AchievementComposite[]>> {
+    const response = await getAsync<AchievementComposite[]>(apiUrl + "/achievements/GetLatestAchievements" + toQueryString({ steamId, page, count }));
     return response;
 }
 
 // Steam
 
-export const getSteamUserAsync = async function() : Promise<Response<SteamUser>> {
-    return await getAsync<SteamUser>(apiUrl + "/steam/user", { silent: true });
+export const getCurrentUserAsync = async function() : Promise<Response<CurrentUser>> {
+    return await getAsync<CurrentUser>(apiUrl + "/steam/currentUser", { silent: true });
 }
 
-export const getUserProfileAsync = async function(steamId: string) : Promise<Response<UserProfile>> {
-    return await getAsync<UserProfile>(apiUrl + "/steam/profile?steamId=" + steamId);
+export const updateCurrentUserAsync = async function(steamId: string) : Promise<Response<CurrentUser>> {
+    return await postAsync<CurrentUser>(apiUrl + "/steam/currentUser", { steamId });
+}
+
+export const getUserProfileAsync = async function(steamId?: string) : Promise<Response<UserProfile>> {
+    return await getAsync<UserProfile>(apiUrl + "/steam/profile" + toQueryString({ steamId }));
 }
 
 export const getQueueSizeAsync = async function() : Promise<Response<number>> {
@@ -77,6 +81,16 @@ export const getQueueSizeAsync = async function() : Promise<Response<number>> {
 
 
 // Shared
+
+const toQueryString = function(params: Record<string, string | number | undefined>) {
+    const query = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+        if (value !== undefined && value !== '')
+            query.append(key, String(value));
+    });
+    const result = query.toString();
+    return result ? `?${result}` : '';
+}
 
 const getResponseContentAsync = async function(response: globalThis.Response) {
     const text = await response.text();

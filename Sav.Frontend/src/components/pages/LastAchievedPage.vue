@@ -14,12 +14,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import Button from 'primevue/button';
 import ScrollPanel from 'primevue/scrollpanel';
 import { AchievementComposite } from '@/models/API/AchievementComposite';
 import { getLatestAchievementsAsync } from '@/api/api';
 import AchievementCard from '@/components/achievements/AchievementCard.vue';
+import { useCurrentUserStore } from '@/stores/currentUser';
+
+const currentUser = useCurrentUserStore();
 
 const achievements = ref<AchievementComposite[]>([]);
 const currentPage = ref(1);
@@ -27,7 +30,7 @@ const pageSize = ref(100);
 const isMoreAchievementAvailable = ref(true);
 
 const fetchAchievements = async () => {
-    const response = await getLatestAchievementsAsync("76561198064082850", currentPage.value, pageSize.value);
+    const response = await getLatestAchievementsAsync(currentUser.steamId ?? undefined, currentPage.value, pageSize.value);
 
     if (!response.success || !response.data)
         return;
@@ -41,9 +44,18 @@ const loadMoreAchievements = async () => {
     await fetchAchievements();
 };
 
+const reloadForCurrentUserAsync = async () => {
+    achievements.value = [];
+    currentPage.value = 1;
+    isMoreAchievementAvailable.value = true;
+    await fetchAchievements();
+};
+
 onMounted(() => {
     fetchAchievements();
 });
+
+watch(() => currentUser.steamId, reloadForCurrentUserAsync);
 </script>
 
 <style scoped>

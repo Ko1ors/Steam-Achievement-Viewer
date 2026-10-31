@@ -27,6 +27,51 @@ namespace Sav.WebApp.Controllers
             return Ok(_steamService.IsLogged());
         }
 
+        [HttpGet("currentUser")]
+        public IActionResult GetCurrentUser()
+        {
+            return Ok(CreateCurrentUserDto());
+        }
+
+        [HttpPost("currentUser")]
+        public IActionResult SetCurrentUser([FromBody] SetCurrentUserRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request?.SteamId))
+                return BadRequest("Steam ID is required.");
+
+            _steamService.LoadProfile(request.SteamId);
+            return Ok(CreateCurrentUserDto());
+        }
+
+        private CurrentUserDto CreateCurrentUserDto()
+        {
+            var steamId = _steamService.GetUserId();
+
+            return new CurrentUserDto
+            {
+                IsLoggedIn = _steamService.IsLogged(),
+                SteamId = steamId,
+                Profile = BuildProfile(steamId),
+                QueueSize = _queueService.Size,
+            };
+        }
+
+        private UserProfileDto? BuildProfile(string? steamId)
+        {
+            if (string.IsNullOrEmpty(steamId))
+                return null;
+
+            var user = _steamService.GetUser(steamId);
+            if (user is null)
+                return null;
+
+            return new UserProfileDto(
+                user,
+                _steamService.GetUserGames(steamId).Count(),
+                _gameAchievementsService.GetTotalAchievementsCount(steamId),
+                _gameAchievementsService.GetCompletedAchievementsCount(steamId));
+        }
+
         [HttpGet("user")]
         public IActionResult GetUser()
         {
@@ -34,17 +79,9 @@ namespace Sav.WebApp.Controllers
         }
 
         [HttpGet("profile")]
-        public IActionResult GetProfile([FromQuery] string steamId)
+        public IActionResult GetProfile([FromQuery] string? steamId)
         {
-            var user = _steamService.GetUser(steamId);
-            if (user is null)
-                return Ok(null);
-
-            return Ok(new UserProfileDto(
-                user,
-                _steamService.GetUserGames(steamId).Count(),
-                _gameAchievementsService.GetTotalAchievementsCount(steamId),
-                _gameAchievementsService.GetCompletedAchievementsCount(steamId)));
+            return Ok(BuildProfile(steamId ?? _steamService.GetUserId()));
         }
 
         [HttpGet("userId")]

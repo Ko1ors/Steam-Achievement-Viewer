@@ -14,11 +14,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import Button from 'primevue/button';
 import GameCard from '../games/CompletedGameCard.vue';
 import { getCompletedGamesAsync } from '@/api/api';
 import { CompletedGameComposite } from '@/models/API/CompletedGameComposite';
+import { useCurrentUserStore } from '@/stores/currentUser';
+
+const currentUser = useCurrentUserStore();
 
 // State
 const completedGames = ref<CompletedGameComposite[]>([]);
@@ -28,7 +31,7 @@ const take = ref(25);
 
 // Fetch completed games from the API
 const fetchCompletedGamesAsync = async () => {
-  const response = await getCompletedGamesAsync("76561198064082850", take.value, skip.value);
+  const response = await getCompletedGamesAsync(currentUser.steamId ?? undefined, take.value, skip.value);
 
   if(!response.success || !response.data)
     return;
@@ -43,10 +46,19 @@ const loadMoreGames = async () => {
   await fetchCompletedGamesAsync();
 };
 
+const reloadForCurrentUserAsync = async () => {
+  completedGames.value = [];
+  skip.value = 0;
+  isMoreGameAvailable.value = true;
+  await fetchCompletedGamesAsync();
+};
+
 // Lifecycle hooks
 onMounted(() => {
   fetchCompletedGamesAsync();
 });
+
+watch(() => currentUser.steamId, reloadForCurrentUserAsync);
 </script>
 
 <style scoped lang="scss">

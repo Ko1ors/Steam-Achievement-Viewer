@@ -13,11 +13,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import Button from 'primevue/button';
 import CompletionGameCard from '../games/CompletionGameCard.vue';
 import { getEasiestGamesToCompleteAsync } from '@/api/api';
 import { CompletionGameComposite } from '@/models/API/CompletionGameComposite';
+import { useCurrentUserStore } from '@/stores/currentUser';
+
+const currentUser = useCurrentUserStore();
 
 // State
 const completionGames = ref<CompletionGameComposite[]>([]);
@@ -28,7 +31,7 @@ const pageSize = ref(25);
 // Fetch games from the API
 const fetchGamesAsync = async () => {
   console.log('Fetching games...');
-  const response = await getEasiestGamesToCompleteAsync("76561198064082850", currentPage.value, pageSize.value);
+  const response = await getEasiestGamesToCompleteAsync(currentUser.steamId ?? undefined, currentPage.value, pageSize.value);
   console.log('API response:', response);
 
   if(!response.success || !response.data) {
@@ -47,10 +50,19 @@ const loadMoreGames = async () => {
   await fetchGamesAsync();
 };
 
+const reloadForCurrentUserAsync = async () => {
+  completionGames.value = [];
+  currentPage.value = 1;
+  isMoreGameAvailable.value = true;
+  await fetchGamesAsync();
+};
+
 // Lifecycle hooks
 onMounted(() => {
   fetchGamesAsync();
 });
+
+watch(() => currentUser.steamId, reloadForCurrentUserAsync);
 </script>
 
 <style scoped lang="scss">

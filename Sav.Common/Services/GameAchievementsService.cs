@@ -22,57 +22,59 @@ namespace Sav.Common.Services
 
         public IEnumerable<AchievementComposite> GetAchievementComposites()
         {
-            return _userRepository.GetUserAchievementComposites(_steamService.GetUserId());
+            return _userRepository.GetUserAchievementComposites(_steamService.GetUserId() ?? string.Empty);
         }
 
-        public IEnumerable<AchievementComposite> GetClosestAchievements(string steamId, int take = 25, int skip = 0)
+        public IEnumerable<AchievementComposite> GetClosestAchievements(string? steamId, int take = 25, int skip = 0)
         {
-            return _userRepository.GetUserClosestAchievements(steamId, take, skip);
+            return _userRepository.GetUserClosestAchievements(ResolveSteamId(steamId), take, skip);
         }
 
-        public IEnumerable<AchievementComposite> GetGameClosestAchievements(string steamId, string appid)
+        public IEnumerable<AchievementComposite> GetGameClosestAchievements(string? steamId, string appid)
         {
-            return _userRepository.GetUserGameClosestAchievements(steamId, appid);
+            return _userRepository.GetUserGameClosestAchievements(ResolveSteamId(steamId), appid);
         }
 
         public int GetCompletedAchievementsCount(string? steamId = null)
         {
-            return _userRepository.GetUserCompletedAchievementsCount(steamId ?? _steamService.GetUserId());
+            return _userRepository.GetUserCompletedAchievementsCount(ResolveSteamId(steamId));
         }
 
-        public IEnumerable<GameEntity> GetIncompleteGames(string steamId, int take = 25, int skip = 0)
+        public IEnumerable<GameEntity> GetIncompleteGames(string? steamId, int take = 25, int skip = 0)
         {
-            return _userRepository.GetUserIncompleteGames(steamId, take, skip);
+            return _userRepository.GetUserIncompleteGames(ResolveSteamId(steamId), take, skip);
         }
 
         public IEnumerable<AchievementComposite> GetLatestAchievements(int page, int count, string? steamId = null)
         {
-            return _userRepository.GetUserLatestAchievements(steamId ?? _steamService.GetUserId(), page, count);
+            return _userRepository.GetUserLatestAchievements(ResolveSteamId(steamId), page, count);
         }
 
         public IEnumerable<AchievementComposite> GetRarestAchievements(int page, int count, string? steamId = null)
         {
-            return _userRepository.GetUserRarestAchievements(steamId ?? _steamService.GetUserId(), page, count);
+            return _userRepository.GetUserRarestAchievements(ResolveSteamId(steamId), page, count);
         }
 
         public int GetTotalAchievementsCount(string? steamId = null)
         {
-            return _userRepository.GetUserTotalAchievementsCount(steamId ?? _steamService.GetUserId());
+            return _userRepository.GetUserTotalAchievementsCount(ResolveSteamId(steamId));
         }
 
-        public IEnumerable<CompletionGameComposite> GetEasiestGamesToComplete(string steamId, int page = 1, int count = 100)
+        public IEnumerable<CompletionGameComposite> GetEasiestGamesToComplete(string? steamId, int page = 1, int count = 100)
         {
-            return _userRepository.GetUserEasiestGamesToComplete(steamId, page, count);
+            return _userRepository.GetUserEasiestGamesToComplete(ResolveSteamId(steamId), page, count);
         }
 
-        public Task<PagedResult<CompletionGameComposite>> GetPagedEasiestGamesToCompleteAsync(string steamId, int page = 1, int count = 100)
+        public Task<PagedResult<CompletionGameComposite>> GetPagedEasiestGamesToCompleteAsync(string? steamId, int page = 1, int count = 100)
         {
-            return _userRepository.GetPagedUserEasiestGamesToCompleteAsync(steamId, page, count);
+            return _userRepository.GetPagedUserEasiestGamesToCompleteAsync(ResolveSteamId(steamId), page, count);
         }
 
-        public async Task<PagedResult<CompletedGameComposite>> GetPagedCompletedGamesAsync(string steamId, int take = 25, int skip = 0)
+        public async Task<PagedResult<CompletedGameComposite>> GetPagedCompletedGamesAsync(string? steamId, int take = 25, int skip = 0)
         {
-            return await _userRepository.GetPagedUserCompletedGamesAsync(steamId, take, skip);
+            return await _userRepository.GetPagedUserCompletedGamesAsync(ResolveSteamId(steamId), take, skip);
         }
+
+        private string ResolveSteamId(string? steamId) => steamId ?? _steamService.GetUserId() ?? string.Empty;
     }
 }

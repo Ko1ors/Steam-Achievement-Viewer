@@ -29,15 +29,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { getUserProfileAsync } from '@/api/api';
-import type { UserProfile } from '@/models/API/UserProfile';
+import { computed } from 'vue';
+import { useCurrentUserStore } from '@/stores/currentUser';
 
-const steamId = "76561198064082850";
+const currentUser = useCurrentUserStore();
 
-const profile = ref<UserProfile | null>(null);
-const loading = ref(true);
-
+const profile = computed(() => currentUser.profile);
+const loading = computed(() => currentUser.loading);
 const profileName = computed(() => profile.value?.steamID ?? '');
 const gamesCount = computed(() => profile.value?.gamesCount ?? 0);
 const totalAchievementsCount = computed(() => profile.value?.totalAchievementsCount ?? 0);
@@ -49,19 +47,6 @@ const achievementPercentage = computed(() => {
     return Math.floor(completedAchievementsCount.value / totalAchievementsCount.value * 100);
 });
 const radialStyle = computed(() => ({ '--percentage': `${achievementPercentage.value}` }));
-
-const fetchProfileAsync = async () => {
-    const response = await getUserProfileAsync(steamId);
-
-    if (response.success && response.data)
-        profile.value = response.data;
-
-    loading.value = false;
-};
-
-onMounted(() => {
-    fetchProfileAsync();
-});
 </script>
 
 <style scoped>
