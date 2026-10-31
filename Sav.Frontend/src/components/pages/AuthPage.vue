@@ -96,6 +96,9 @@ const signInAsync = async () => {
         const failure = await syncSteamIdAsync(id, stage => setStatus(STAGE_MESSAGES[stage]));
 
         if (failure) {
+            // The profile step may already have saved the Steam ID, so refresh the shell state
+            // before reporting a later failure (e.g. the missing API key) and pointing at Settings.
+            await currentUser.loadAsync();
             setStatus(describeFailure(failure), true);
             return;
         }

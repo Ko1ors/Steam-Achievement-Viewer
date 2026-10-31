@@ -6,6 +6,10 @@
             </div>
 
             <div class="achievement-details">
+                <div v-if="showGame && achievement.gameName" class="achievement-game">
+                    <img v-if="achievement.gameIcon" :src="achievement.gameIcon" alt="" class="game-icon" />
+                    <span class="game-name">{{ achievement.gameName }}</span>
+                </div>
                 <h3 class="achievement-name">{{ achievement.name }}</h3>
                 <p class="achievement-description">{{ achievement.description }}</p>
                 <p class="achievement-percent">{{ achievement.percent }}%</p>
@@ -29,6 +33,10 @@ const props = defineProps({
     iconField: {
         type: String,
         default: 'iconOpen'
+    },
+    showGame: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -74,6 +82,29 @@ const formatUnlockTime = (unlockTime) => {
 .achievement-details {
     margin: 5px;
     max-width: 480px;
+}
+
+.achievement-game {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 5px;
+    color: #8f98a0;
+    font-size: 11px;
+}
+
+.achievement-game .game-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.achievement-game .game-name {
+    overflow: hidden;
+    max-width: 400px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .achievement-name {

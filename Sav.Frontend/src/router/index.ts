@@ -25,8 +25,10 @@ router.beforeEach(async to => {
     const currentUser = useCurrentUserStore();
     await currentUser.ensureLoadedAsync();
 
-    // Only the login page is available until a Steam ID is configured (v1 behavior)
-    if (!currentUser.isLoggedIn && to.path !== PageTypes.Auth)
+    // v1 kept Settings reachable while no user was loaded (the Steam Web API key lives there)
+    const isAlwaysAvailable = to.path === PageTypes.Auth || to.path === PageTypes.Settings;
+
+    if (!currentUser.isLoggedIn && !isAlwaysAvailable)
         return { path: PageTypes.Auth };
 
     return true;

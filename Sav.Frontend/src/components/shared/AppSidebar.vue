@@ -27,8 +27,10 @@ import { useCurrentUserStore } from '@/stores/currentUser';
 
 const currentUser = useCurrentUserStore();
 
-// v1 behavior: only the login page is reachable until a Steam ID is configured
-const isDisabled = (page: AppPage) => !currentUser.isLoggedIn && page.path !== PageTypes.Auth;
+// v1 kept Login and Settings reachable while no user was loaded; the API key is added in Settings
+const ALWAYS_AVAILABLE: PageTypes[] = [PageTypes.Auth, PageTypes.Settings];
+
+const isDisabled = (page: AppPage) => !currentUser.isLoggedIn && !ALWAYS_AVAILABLE.includes(page.path);
 
 const preventNavigation = (event: MouseEvent, page: AppPage) => {
     if (isDisabled(page))

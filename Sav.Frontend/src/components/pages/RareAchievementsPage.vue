@@ -1,14 +1,14 @@
 <template>
     <div class="rare-achievements">
-        <ScrollPanel class="achievements-scroll">
+        <div class="achievements-scroll">
             <div class="achievements-list">
                 <AchievementCard v-for="achievement in achievements" :key="`${achievement.appID}-${achievement.apiname}`"
-                    :achievement="achievement" />
+                    :achievement="achievement" show-game />
             </div>
-        </ScrollPanel>
+        </div>
 
-        <div class="load-more-container flex justify-content-center p-3" v-if="isMoreAchievementAvailable">
-            <Button label="Load more" class="w-full max-w-sm" size="large" @click="loadMoreAchievements" />
+        <div class="load-more-container" v-if="isMoreAchievementAvailable">
+            <Button label="Load more" class="load-more" size="large" @click="loadMoreAchievements" />
         </div>
     </div>
 </template>
@@ -16,7 +16,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
 import Button from 'primevue/button';
-import ScrollPanel from 'primevue/scrollpanel';
 import { AchievementComposite } from '@/models/API/AchievementComposite';
 import { getRarestAchievementsAsync } from '@/api/api';
 import AchievementCard from '@/components/achievements/AchievementCard.vue';
@@ -68,7 +67,9 @@ watch(() => currentUser.steamId, reloadForCurrentUserAsync);
 
 .achievements-scroll {
     flex: 1;
+    min-height: 0;
     width: 100%;
+    overflow-y: auto;
 }
 
 .achievements-list {
@@ -78,7 +79,17 @@ watch(() => currentUser.steamId, reloadForCurrentUserAsync);
 }
 
 .load-more-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
     height: 60px;
     background-color: #171A21;
+}
+
+.load-more {
+    width: 200px;
+    height: 40px;
+    font-size: 16px;
 }
 </style>
