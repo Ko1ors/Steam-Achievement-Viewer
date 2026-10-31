@@ -20,12 +20,12 @@
         </div>
 
         <div class="achievements-panel">
-            <ScrollPanel class="achievements-scroll">
+            <div class="achievements-scroll">
                 <div class="achievements-grid">
                     <AchievementCard v-for="achievement in closeAchievements" :key="achievement.apiname"
                         :achievement="achievement" />
                 </div>
-            </ScrollPanel>
+            </div>
         </div>
     </div>
 </template>
@@ -34,7 +34,6 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import InputText from 'primevue/inputtext';
 import ListBox from 'primevue/listbox';
-import ScrollPanel from 'primevue/scrollpanel';
 import AchievementCard from '@/components/achievements/AchievementCard.vue';
 import { GameDto } from '@/models/API/GameDto';
 import { getGameClosestAchievementsAsync, getIncompleteGamesAsync } from '@/api/api';
@@ -174,6 +173,7 @@ watch(() => currentUser.steamId, reloadForCurrentUserAsync);
 .achievements-scroll {
     width: 100%;
     height: 100%;
+    overflow-y: auto;
 }
 
 .achievements-grid {
