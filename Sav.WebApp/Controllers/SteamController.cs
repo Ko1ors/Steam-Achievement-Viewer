@@ -106,15 +106,21 @@ namespace Sav.WebApp.Controllers
         [HttpPost("updateProfile")]
         public async Task<IActionResult> UpdateProfile([FromBody] string steamId)
         {
-            var result = await _steamService.UpdateProfileAsync(steamId);
-            return Ok(result);
+            if (string.IsNullOrWhiteSpace(steamId))
+                return BadRequest("Steam ID is required.");
+
+            var result = await _steamService.TryUpdateProfileAsync(steamId.Trim());
+            return Ok(result.ToString());
         }
 
         [HttpPost("updateGames")]
         public async Task<IActionResult> UpdateGames([FromBody] string steamId)
         {
-            var result = await _steamService.UpdateGamesAsync(steamId);
-            return Ok(result);
+            if (string.IsNullOrWhiteSpace(steamId))
+                return BadRequest("Steam ID is required.");
+
+            var result = await _steamService.TryUpdateGamesAsync(steamId.Trim());
+            return Ok(result.ToString());
         }
 
         [HttpPost("queueAchievementsUpdate")]

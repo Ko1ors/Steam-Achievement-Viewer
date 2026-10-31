@@ -7,6 +7,7 @@ import AllClosestAchievementsPage from '@/components/pages/AllClosestAchievement
 import EasiestGamesPage from '@/components/pages/EasiestGamesPage.vue';
 import RareAchievementsPage from '@/components/pages/RareAchievementsPage.vue';
 import LastAchievedPage from '@/components/pages/LastAchievedPage.vue';
+import AuthPage from '@/components/pages/AuthPage.vue';
 
 export interface AppPage {
     path: PageTypes;
@@ -21,6 +22,12 @@ export const appPages: AppPage[] = [
         label: 'Home',
         icon: 'pi pi-home',
         component: HomePage
+    },
+    {
+        path: PageTypes.Auth,
+        label: 'Login',
+        icon: 'pi pi-sign-in',
+        component: AuthPage
     },
     {
         path: PageTypes.CompletedGames,

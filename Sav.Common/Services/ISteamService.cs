@@ -4,6 +4,21 @@ namespace Sav.Common.Services
 {
     public delegate void AchievementProgressUpdatedDelegate(int totalGames, int currentGameCount, string lastGameName);
 
+    public enum ProfileUpdateResult
+    {
+        Success,
+        NotFound,
+        Private,
+        Failed
+    }
+
+    public enum GamesUpdateResult
+    {
+        Success,
+        MissingApiKey,
+        Failed
+    }
+
     public interface ISteamService
     {
         public event AchievementProgressUpdatedDelegate OnAchievementProgressUpdated;
@@ -22,7 +37,11 @@ namespace Sav.Common.Services
 
         Task<bool> UpdateProfileAsync(string steamID);
 
+        Task<ProfileUpdateResult> TryUpdateProfileAsync(string steamID);
+
         Task<bool> UpdateGamesAsync(string steamID);
+
+        Task<GamesUpdateResult> TryUpdateGamesAsync(string steamID);
 
         void LoadProfile(string steamID);
 

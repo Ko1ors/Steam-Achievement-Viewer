@@ -5,7 +5,14 @@
             <span class="brand-title">Steam Achievement Viewer</span>
         </div>
         <nav class="nav" aria-label="Main navigation">
-            <RouterLink v-for="page in appPages" :key="page.path" :to="page.path" class="nav-item">
+            <RouterLink
+                v-for="page in appPages"
+                :key="page.path"
+                :to="page.path"
+                class="nav-item"
+                :class="{ 'is-disabled': isDisabled(page) }"
+                :aria-disabled="isDisabled(page)"
+                @click="preventNavigation($event, page)">
                 <i :class="page.icon" aria-hidden="true"></i>
                 <span class="nav-label">{{ page.label }}</span>
             </RouterLink>
@@ -14,7 +21,19 @@
 </template>
 
 <script setup lang="ts">
-import { appPages } from '@/router/pages';
+import { appPages, type AppPage } from '@/router/pages';
+import { PageTypes } from '@/helpers/routing';
+import { useCurrentUserStore } from '@/stores/currentUser';
+
+const currentUser = useCurrentUserStore();
+
+// v1 behavior: only the login page is reachable until a Steam ID is configured
+const isDisabled = (page: AppPage) => !currentUser.isLoggedIn && page.path !== PageTypes.Auth;
+
+const preventNavigation = (event: MouseEvent, page: AppPage) => {
+    if (isDisabled(page))
+        event.preventDefault();
+};
 </script>
 
 <style scoped lang="scss">
@@ -79,6 +98,11 @@ import { appPages } from '@/router/pages';
         background-color: #2a475e;
         color: #ffffff;
         box-shadow: inset 3px 0 0 #66c0f4;
+    }
+
+    &.is-disabled {
+        opacity: 0.45;
+        pointer-events: none;
     }
 }
 </style>

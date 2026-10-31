@@ -9,7 +9,7 @@
             <span v-if="displayName" class="profile-name">{{ displayName }}</span>
         </div>
 
-        <div class="sync-status" :class="{ 'is-syncing': isSyncing }" :title="syncTitle" role="status" aria-live="polite">
+        <div v-if="currentUser.isLoggedIn" class="sync-status" :class="{ 'is-syncing': isSyncing }" :title="syncTitle" role="status" aria-live="polite">
             <i :class="isSyncing ? 'pi pi-spin pi-spinner' : 'pi pi-cloud-upload'" aria-hidden="true"></i>
             <span v-if="syncLabel" class="sync-label">{{ syncLabel }}</span>
         </div>

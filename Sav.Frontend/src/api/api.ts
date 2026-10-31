@@ -4,6 +4,8 @@ import { CompletionGameComposite } from "@/models/API/CompletionGameComposite";
 import { CurrentUser } from "@/models/API/CurrentUser";
 import { GameDto } from "@/models/API/GameDto";
 import { PagedResult } from "@/models/API/PagedResult";
+import { ProfileUpdateResult } from "@/models/API/ProfileUpdateResult";
+import { GamesUpdateResult } from "@/models/API/GamesUpdateResult";
 import { UserProfile } from "@/models/API/UserProfile";
 import { notifyError } from "@/helpers/notifications";
 
@@ -78,11 +80,23 @@ export const getQueueSizeAsync = async function() : Promise<Response<number>> {
     return await getAsync<number>(apiUrl + "/steam/queueSize", { silent: true });
 }
 
+export const updateProfileAsync = async function(steamId: string) : Promise<Response<ProfileUpdateResult>> {
+    return await postAsync<ProfileUpdateResult>(apiUrl + "/steam/updateProfile", steamId, { silent: true });
+}
+
+export const updateGamesAsync = async function(steamId: string) : Promise<Response<GamesUpdateResult>> {
+    return await postAsync<GamesUpdateResult>(apiUrl + "/steam/updateGames", steamId, { silent: true });
+}
+
+export const queueAchievementsUpdateAsync = async function(onlyRecentGames: boolean = true) : Promise<Response<unknown>> {
+    return await postAsync<unknown>(apiUrl + "/steam/queueAchievementsUpdate" + toQueryString({ onlyRecentGames }), {}, { silent: true });
+}
+
 
 
 // Shared
 
-const toQueryString = function(params: Record<string, string | number | undefined>) {
+const toQueryString = function(params: Record<string, string | number | boolean | undefined>) {
     const query = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
         if (value !== undefined && value !== '')

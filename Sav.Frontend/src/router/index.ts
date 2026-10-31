@@ -21,9 +21,15 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach(async () => {
+router.beforeEach(async to => {
     const currentUser = useCurrentUserStore();
     await currentUser.ensureLoadedAsync();
+
+    // Only the login page is available until a Steam ID is configured (v1 behavior)
+    if (!currentUser.isLoggedIn && to.path !== PageTypes.Auth)
+        return { path: PageTypes.Auth };
+
+    return true;
 });
 
 export default router;
