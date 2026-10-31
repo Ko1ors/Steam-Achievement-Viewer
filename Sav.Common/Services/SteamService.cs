@@ -235,16 +235,20 @@ namespace Sav.Common.Services
             }
         }
 
-        public UserEntity GetUser()
+        public UserEntity GetUser(string? steamId = null)
         {
             ValidateDBRefresh();
-            return _userRepository.GetByKeys(_steamID);
+            var userId = steamId ?? _steamID;
+            if (string.IsNullOrEmpty(userId))
+                return null;
+
+            return _userRepository.GetByKeys(userId);
         }
 
-        public IEnumerable<GameEntity> GetUserGames()
+        public IEnumerable<GameEntity> GetUserGames(string? steamId = null)
         {
             Log.Logger.Information("Getting user games");
-            return GetUser()?.UserGames?.Select(ug => ug.Game) ?? Enumerable.Empty<GameEntity>();
+            return GetUser(steamId)?.UserGames?.Select(ug => ug.Game) ?? Enumerable.Empty<GameEntity>();
         }
 
         public void QueueAchievementsUpdate(bool onlyRecentGames = true)

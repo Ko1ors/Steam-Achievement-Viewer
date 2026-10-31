@@ -25,8 +25,8 @@ namespace Sav.Common.Services
 
         Task<PagedResult<CompletedGameComposite>> GetPagedCompletedGamesAsync(string steamId, int take = 25, int skip = 0);
 
-        int GetCompletedAchievementsCount();
+        int GetCompletedAchievementsCount(string? steamId = null);
 
-        int GetTotalAchievementsCount();
+        int GetTotalAchievementsCount(string? steamId = null);
     }
 }

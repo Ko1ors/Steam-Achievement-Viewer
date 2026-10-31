@@ -32,15 +32,15 @@ namespace Sav.WebApp.Controllers
         }
 
         [HttpGet()]
-        public IActionResult GetCompletedAchievementsCount()
+        public IActionResult GetCompletedAchievementsCount([FromQuery] string? steamId)
         {
-            return Ok(_gameAchievementsService.GetCompletedAchievementsCount());
+            return Ok(_gameAchievementsService.GetCompletedAchievementsCount(steamId));
         }
 
         [HttpGet()]
-        public IActionResult GetTotalAchievementsCount()
+        public IActionResult GetTotalAchievementsCount([FromQuery] string? steamId)
         {
-            return Ok(_gameAchievementsService.GetTotalAchievementsCount());
+            return Ok(_gameAchievementsService.GetTotalAchievementsCount(steamId));
         }
     }
 }

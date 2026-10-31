@@ -10,11 +10,11 @@ namespace Sav.Common.Services
 
         public void AchievementsDataChanged();
 
-        public UserEntity GetUser();
+        public UserEntity GetUser(string? steamId = null);
 
         public string GetUserId();
 
-        public IEnumerable<GameEntity> GetUserGames();
+        public IEnumerable<GameEntity> GetUserGames(string? steamId = null);
 
         public void QueueAchievementsUpdate(bool onlyRecentGames = true);
 

@@ -4,6 +4,7 @@ import { CompletionGameComposite } from "@/models/API/CompletionGameComposite";
 import { GameDto } from "@/models/API/GameDto";
 import { PagedResult } from "@/models/API/PagedResult";
 import { SteamUser } from "@/models/API/SteamUser";
+import { UserProfile } from "@/models/API/UserProfile";
 import { notifyError } from "@/helpers/notifications";
 
 export const baseUrl = import.meta.env.VITE_SERVICE_API_URL ?? window.location.origin;
@@ -63,6 +64,10 @@ export const getLatestAchievementsAsync = async function(steamId: string, page: 
 
 export const getSteamUserAsync = async function() : Promise<Response<SteamUser>> {
     return await getAsync<SteamUser>(apiUrl + "/steam/user", { silent: true });
+}
+
+export const getUserProfileAsync = async function(steamId: string) : Promise<Response<UserProfile>> {
+    return await getAsync<UserProfile>(apiUrl + "/steam/profile?steamId=" + steamId);
 }
 
 export const getQueueSizeAsync = async function() : Promise<Response<number>> {

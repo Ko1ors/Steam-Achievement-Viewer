@@ -1,5 +1,6 @@
 import type { RouteComponent } from 'vue-router';
 import { PageTypes } from '@/helpers/routing';
+import HomePage from '@/components/pages/HomePage.vue';
 import CompletedGamesPage from '@/components/pages/CompletedGamesPage.vue';
 import ClosestAchievementsPage from '@/components/pages/ClosestAchievementsPage.vue';
 import AllClosestAchievementsPage from '@/components/pages/AllClosestAchievementsPage.vue';
@@ -15,6 +16,12 @@ export interface AppPage {
 }
 
 export const appPages: AppPage[] = [
+    {
+        path: PageTypes.Home,
+        label: 'Home',
+        icon: 'pi pi-home',
+        component: HomePage
+    },
     {
         path: PageTypes.CompletedGames,
         label: 'Completed Games',
@@ -52,5 +59,3 @@ export const appPages: AppPage[] = [
         component: LastAchievedPage
     }
 ];
-
-export const LandingPage = PageTypes.LastAchieved;

@@ -35,9 +35,9 @@ namespace Sav.Common.Services
             return _userRepository.GetUserGameClosestAchievements(steamId, appid);
         }
 
-        public int GetCompletedAchievementsCount()
+        public int GetCompletedAchievementsCount(string? steamId = null)
         {
-            return _userRepository.GetUserCompletedAchievementsCount(_steamService.GetUserId());
+            return _userRepository.GetUserCompletedAchievementsCount(steamId ?? _steamService.GetUserId());
         }
 
         public IEnumerable<GameEntity> GetIncompleteGames(string steamId, int take = 25, int skip = 0)
@@ -55,9 +55,9 @@ namespace Sav.Common.Services
             return _userRepository.GetUserRarestAchievements(steamId ?? _steamService.GetUserId(), page, count);
         }
 
-        public int GetTotalAchievementsCount()
+        public int GetTotalAchievementsCount(string? steamId = null)
         {
-            return _userRepository.GetUserTotalAchievementsCount(_steamService.GetUserId());
+            return _userRepository.GetUserTotalAchievementsCount(steamId ?? _steamService.GetUserId());
         }
 
         public IEnumerable<CompletionGameComposite> GetEasiestGamesToComplete(string steamId, int page = 1, int count = 100)

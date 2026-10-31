@@ -1,20 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
 using Sav.Common.Interfaces;
 using Sav.Common.Models;
+using Sav.Common.Models.DTOs;
 using Sav.Common.Services;
 using Sav.Infrastructure.Entities;
 
 namespace Sav.WebApp.Controllers
 {
+    [Route("api/[controller]")]
     public class SteamController : ExtendedControllerBase
     {
         private readonly ISteamService _steamService;
         private readonly IQueueService<UserGameEntity> _queueService;
+        private readonly IGameAchievementsService _gameAchievementsService;
 
-        public SteamController(ISteamService steamService, IQueueService<UserGameEntity> queueService)
+        public SteamController(ISteamService steamService, IQueueService<UserGameEntity> queueService, IGameAchievementsService gameAchievementsService)
         {
             _steamService = steamService;
             _queueService = queueService;
+            _gameAchievementsService = gameAchievementsService;
         }
 
         [HttpGet("isLogged")]
@@ -27,6 +31,20 @@ namespace Sav.WebApp.Controllers
         public IActionResult GetUser()
         {
             return Ok(_steamService.GetUser());
+        }
+
+        [HttpGet("profile")]
+        public IActionResult GetProfile([FromQuery] string steamId)
+        {
+            var user = _steamService.GetUser(steamId);
+            if (user is null)
+                return Ok(null);
+
+            return Ok(new UserProfileDto(
+                user,
+                _steamService.GetUserGames(steamId).Count(),
+                _gameAchievementsService.GetTotalAchievementsCount(steamId),
+                _gameAchievementsService.GetCompletedAchievementsCount(steamId)));
         }
 
         [HttpGet("userId")]

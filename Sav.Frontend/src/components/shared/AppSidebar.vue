@@ -75,7 +75,7 @@ import { appPages } from '@/router/pages';
         color: #ffffff;
     }
 
-    &.router-link-active {
+    &.router-link-exact-active {
         background-color: #2a475e;
         color: #ffffff;
         box-shadow: inset 3px 0 0 #66c0f4;
