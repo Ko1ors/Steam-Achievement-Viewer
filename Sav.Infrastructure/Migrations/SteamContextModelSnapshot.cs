@@ -16,7 +16,7 @@ namespace Sav.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.4")
+                .HasAnnotation("ProductVersion", "8.0.7")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true);
@@ -226,8 +226,17 @@ namespace Sav.Infrastructure.Migrations
                     b.Property<DateTime>("Inserted")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("LastSyncError")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastSyncedAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("StatsLink")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("SyncStatus")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Updated")
                         .HasColumnType("TEXT");

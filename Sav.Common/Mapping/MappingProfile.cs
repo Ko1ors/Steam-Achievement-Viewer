@@ -57,6 +57,9 @@ namespace Sav.Common.Mapping
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.Game, opt => opt.Ignore())
                 .ForMember(dest => dest.UserAchievements, opt => opt.Ignore())
+                .ForMember(dest => dest.SyncStatus, opt => opt.Ignore())
+                .ForMember(dest => dest.LastSyncedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.LastSyncError, opt => opt.Ignore())
                 .ForSourceMember(src => src.AvatarFrame, opt => opt.DoNotValidate())
                 .ReverseMap();
 
@@ -71,6 +74,9 @@ namespace Sav.Common.Mapping
                 .ForMember(dest => dest.Inserted, opt => opt.Ignore())
                 .ForMember(dest => dest.Updated, opt => opt.Ignore())
                 .ForMember(dest => dest.UserAchievements, opt => opt.Ignore())
+                .ForMember(dest => dest.SyncStatus, opt => opt.Ignore())
+                .ForMember(dest => dest.LastSyncedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.LastSyncError, opt => opt.Ignore())
                 .ForSourceMember(src => src.Achievements, opt => opt.DoNotValidate())
                 .ReverseMap();
 

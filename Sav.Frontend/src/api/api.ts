@@ -6,6 +6,7 @@ import { GameDto } from "@/models/API/GameDto";
 import { PagedResult } from "@/models/API/PagedResult";
 import { ProfileUpdateResult } from "@/models/API/ProfileUpdateResult";
 import { GamesUpdateResult } from "@/models/API/GamesUpdateResult";
+import { GameSyncStatusPage } from "@/models/API/GameSyncStatus";
 import { SyncProgress } from "@/models/API/SyncProgress";
 import { UserProfile } from "@/models/API/UserProfile";
 import { UserSettings } from "@/models/API/UserSettings";
@@ -86,6 +87,10 @@ export const getQueueSizeAsync = async function() : Promise<Response<number>> {
 
 export const getSyncProgressAsync = async function() : Promise<Response<SyncProgress>> {
     return await getAsync<SyncProgress>(apiUrl + "/steam/syncProgress", { silent: true });
+}
+
+export const getGameSyncStatusAsync = async function(page: number = 1, count: number = 25, search?: string, status?: string) : Promise<Response<GameSyncStatusPage>> {
+    return await getAsync<GameSyncStatusPage>(apiUrl + "/steam/gameSyncStatus" + toQueryString({ page, count, search, status }), { silent: true });
 }
 
 export const updateProfileAsync = async function(steamId: string) : Promise<Response<ProfileUpdateResult>> {

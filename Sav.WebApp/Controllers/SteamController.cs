@@ -14,14 +14,17 @@ namespace Sav.WebApp.Controllers
         private readonly IQueueService<UserGameEntity> _queueService;
         private readonly IGameAchievementsService _gameAchievementsService;
         private readonly IAchievementsSyncTrackerService _syncTracker;
+        private readonly IUserEntityRepository _userRepository;
 
         public SteamController(ISteamService steamService, IQueueService<UserGameEntity> queueService,
-            IGameAchievementsService gameAchievementsService, IAchievementsSyncTrackerService syncTracker)
+            IGameAchievementsService gameAchievementsService, IAchievementsSyncTrackerService syncTracker,
+            IUserEntityRepository userRepository)
         {
             _steamService = steamService;
             _queueService = queueService;
             _gameAchievementsService = gameAchievementsService;
             _syncTracker = syncTracker;
+            _userRepository = userRepository;
         }
 
         [HttpGet("isLogged")]
@@ -150,6 +153,23 @@ namespace Sav.WebApp.Controllers
         public IActionResult GetSyncProgress()
         {
             return Ok(_syncTracker.GetProgress());
+        }
+
+        [HttpGet("gameSyncStatus")]
+        public async Task<IActionResult> GetGameSyncStatus([FromQuery] int page = 1, [FromQuery] int count = 25,
+            [FromQuery] string? search = null, [FromQuery] string? status = null)
+        {
+            var steamId = _steamService.GetUserId();
+            if (string.IsNullOrEmpty(steamId))
+                return Ok(new GameSyncStatusPageDto());
+
+            var result = await _userRepository.GetGameSyncStatusAsync(steamId, page, count, search, status);
+
+            var progress = _syncTracker.GetProgress();
+            result.IsRunning = progress.IsRunning;
+            result.QueueSize = progress.QueueSize;
+
+            return Ok(result);
         }
     }
 }

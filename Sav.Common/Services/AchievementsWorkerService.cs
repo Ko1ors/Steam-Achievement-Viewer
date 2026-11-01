@@ -16,6 +16,7 @@ namespace Sav.Common.Services
         private readonly IQueueService<UserGameEntity> _queueService;
         private readonly ISteamService _steamService;
         private readonly IAchievementsSyncTrackerService _syncTracker;
+        private readonly IUserEntityRepository _userRepository;
         private readonly IEntityRepository<GameEntity> _gameRepository;
         private readonly IEntityRepository<AchievementEntity> _achievementRepository;
         private readonly IEntityRepository<UserAchievementEntity> _userAchievementRepository;
@@ -28,12 +29,13 @@ namespace Sav.Common.Services
         public bool IsRunning { get; set; }
 
         public AchievementsWorkerService(IQueueService<UserGameEntity> queueService, ISteamService steamService, IAchievementsSyncTrackerService syncTracker,
-            IGameEntityRepository gameRepository, IEntityRepository<AchievementEntity> achievementRepository,
+            IUserEntityRepository userRepository, IGameEntityRepository gameRepository, IEntityRepository<AchievementEntity> achievementRepository,
             IEntityRepository<UserAchievementEntity> userAchievementRepository, IMapper mapper, IClientService<XmlDocument> xmlClient)
         {
             _queueService = queueService;
             _steamService = steamService;
             _syncTracker = syncTracker;
+            _userRepository = userRepository;
             _gameRepository = gameRepository;
             _achievementRepository = achievementRepository;
             _userAchievementRepository = userAchievementRepository;
@@ -91,8 +93,10 @@ namespace Sav.Common.Services
 
             var gameName = userGame.AppID;
             var requeued = false;
+            string? syncError = null;
 
             _syncTracker.OnGameProcessingStarted();
+            SaveSyncStatus(userGame, GameSyncStatus.Syncing, null);
             try
             {
                 Log.Logger.Information("Processing user game {UserId}, {AppID}", userGame.UserId, userGame.AppID);
@@ -105,6 +109,7 @@ namespace Sav.Common.Services
                 if (response.InnerText == XmlProfileError || response.InnerText == "")
                 {
                     Log.Logger.Warning("Failed to get achievements for {UserId}, {AppID}", userGame.UserId, userGame.AppID);
+                    syncError = "Steam did not return achievement data for this game.";
                     return;
                 }
 
@@ -122,6 +127,7 @@ namespace Sav.Common.Services
                     if (achievementsResponse is null)
                     {
                         Log.Logger.Warning("Failed to deserialize achievements for {UserId}, {AppID}", userGame.UserId, userGame.AppID);
+                        syncError = "Achievements could not be read from the Steam response.";
                         return;
                     }
 
@@ -140,7 +146,10 @@ namespace Sav.Common.Services
                     Log.Logger.Information("Game {AppID} updated, achievements count: {Count}", userGame.AppID, achievements.Count);
                 }
                 if (achievements == null)
+                {
+                    syncError = "Achievements could not be read from the Steam response.";
                     return;
+                }
 
                 // TODO: move GetGlobalAchievementPercentages to separate worker service
                 achievementsResponse = await GetGlobalAchievementPercentagesAsync(userGame.AppID);
@@ -172,6 +181,7 @@ namespace Sav.Common.Services
                 Log.Logger.Error(e, "Failed to process user game {UserId}, {AppID}", userGame.UserId, userGame.AppID);
                 _queueService.Add(userGame);
                 requeued = true;
+                syncError = e.Message;
             }
             finally
             {
@@ -180,9 +190,27 @@ namespace Sav.Common.Services
                 else
                     _syncTracker.OnGameProcessed(gameName);
 
+                SaveSyncStatus(userGame,
+                    syncError is null ? GameSyncStatus.Synced : GameSyncStatus.Failed,
+                    syncError is null ? null : Shorten(syncError));
+
                 ReportProgress();
             }
         }
+
+        private void SaveSyncStatus(UserGameEntity userGame, GameSyncStatus status, string? error)
+        {
+            try
+            {
+                _userRepository.SetGameSyncStatus(userGame.UserId, userGame.AppID, status, error);
+            }
+            catch (Exception e)
+            {
+                Log.Logger.Error(e, "Failed to save the sync status of user game {UserId}, {AppID}", userGame.UserId, userGame.AppID);
+            }
+        }
+
+        private static string Shorten(string message) => message.Length <= 500 ? message : message[..500];
 
         private void ReportProgress()
         {

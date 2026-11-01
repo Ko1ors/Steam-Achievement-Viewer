@@ -1,4 +1,5 @@
 ﻿using Sav.Common.Models;
+using Sav.Common.Models.DTOs;
 using Sav.Infrastructure.Entities;
 
 namespace Sav.Common.Interfaces
@@ -6,6 +7,12 @@ namespace Sav.Common.Interfaces
     public interface IUserEntityRepository : IEntityRepository<UserEntity>
     {
         IEnumerable<UserGameEntity> GetGamesToQueue(string userId);
+
+        Task<GameSyncStatusPageDto> GetGameSyncStatusAsync(string userId, int page, int count, string? search, string? status);
+
+        void SetGameSyncStatus(string userId, string appId, GameSyncStatus status, string? error);
+
+        void ResetInterruptedSyncs();
 
         IEnumerable<UserGameEntity> GetRecentGamesToQueue(string userId, TimeSpan updateInterval);
 

@@ -20,6 +20,8 @@ namespace Sav.WebApp.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            MarkInterruptedSyncsAsFailed();
+
             var workerCount = Math.Max(1, _configuration.GetValue("AchievementsSync:WorkerCount", DefaultWorkerCount));
             _logger.LogInformation("Starting {WorkerCount} achievements sync workers", workerCount);
 
@@ -27,6 +29,19 @@ namespace Sav.WebApp.Services
             await Task.WhenAll(workers);
 
             _logger.LogInformation("Achievements sync workers stopped");
+        }
+
+        private void MarkInterruptedSyncsAsFailed()
+        {
+            try
+            {
+                using var scope = _scopeFactory.CreateScope();
+                scope.ServiceProvider.GetRequiredService<IUserEntityRepository>().ResetInterruptedSyncs();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Failed to reset interrupted achievements syncs");
+            }
         }
 
         private async Task RunWorkerAsync(int index, CancellationToken stoppingToken)
