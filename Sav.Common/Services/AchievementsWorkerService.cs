@@ -165,14 +165,8 @@ namespace Sav.Common.Services
                         }).ToList();
                 }
 
-                foreach (var achievement in achievements)
-                {
-                    await _achievementRepository.AddOrUpdateAsync(achievement);
-                }
-                foreach (var userAchievement in userAchievements)
-                {
-                    await _userAchievementRepository.AddOrUpdateAsync(userAchievement);
-                }
+                await _achievementRepository.AddOrUpdateRangeAsync(achievements);
+                await _userAchievementRepository.AddOrUpdateRangeAsync(userAchievements);
                 _steamService.AchievementsDataChanged();
                 Log.Logger.Information("User game {UserId}, {AppID} processed", userGame.UserId, userGame.AppID);
             }

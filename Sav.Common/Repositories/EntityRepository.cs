@@ -8,6 +8,8 @@ namespace Sav.Common.Repositories
 {
     public class EntityRepository<TEntity> : IEntityRepository<TEntity> where TEntity : BaseEntity
     {
+        private const int SaveBatchSize = 500;
+
         protected readonly SteamContext _context;
 
         public EntityRepository()
@@ -56,6 +58,39 @@ namespace Sav.Common.Repositories
                 await UpdateAsync(existingEntity);
             }
         }
+
+        public async Task AddOrUpdateRangeAsync(IEnumerable<TEntity> entities)
+        {
+            var pendingChanges = 0;
+
+            foreach (var entity in entities)
+            {
+                var existingEntity = _context.Set<TEntity>().Find(entity.GetKeys());
+
+                if (existingEntity == null)
+                {
+                    entity.Inserted = DateTime.Now;
+                    entity.Updated = entity.Inserted;
+                    await _context.Set<TEntity>().AddAsync(entity);
+                }
+                else
+                {
+                    _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+                    existingEntity.Updated = DateTime.Now;
+                }
+
+                if (++pendingChanges >= SaveBatchSize)
+                {
+                    await _context.SaveChangesAsync();
+                    pendingChanges = 0;
+                }
+            }
+
+            if (pendingChanges > 0)
+                await _context.SaveChangesAsync();
+        }
+
+        public Task<int> SaveChangesAsync() => _context.SaveChangesAsync();
 
         public TEntity? GetByKeys(params object[] keys)
         {

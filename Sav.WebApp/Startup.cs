@@ -7,6 +7,7 @@ using Sav.Common.Mapping;
 using Sav.Common.Repositories;
 using Sav.Common.Services;
 using Sav.Infrastructure;
+using Sav.Infrastructure.Entities;
 using Sav.WebApp.Services;
 using Serilog;
 using System.Xml;
@@ -101,6 +102,8 @@ namespace Sav.WebApp
             services.AddScoped<ISteamService, SteamService>();
             services.AddTransient<IGameAchievementsService, GameAchievementsService>();
             services.AddSingleton(typeof(IQueueService<>), typeof(QueueService<>));
+            services.AddSingleton<IQueueService<UserGameEntity>>(_ =>
+                new QueueService<UserGameEntity>(userGame => $"{userGame.UserId}:{userGame.AppID}"));
             services.AddSingleton<IAchievementsSyncTrackerService, AchievementsSyncTrackerService>();
             services.AddTransient<IAchievementsWorkerService, AchievementsWorkerService>();
             services.AddHostedService<AchievementsSyncBackgroundService>();

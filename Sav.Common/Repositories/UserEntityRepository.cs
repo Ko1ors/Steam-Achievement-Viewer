@@ -30,6 +30,7 @@ namespace Sav.Common.Repositories
             // keeps a game from being queued again while its previous attempt is still recent.
             var userGames = _context.UserGames
                 .Where(ug => ug.UserId == userId && !string.IsNullOrEmpty(ug.StatsLink))
+                .Where(ug => ug.SyncStatus != GameSyncStatus.Syncing)
                 .Where(ug => ug.LastSyncAttemptedAt == null || ug.LastSyncAttemptedAt < retryCutoff);
 
             return userGames

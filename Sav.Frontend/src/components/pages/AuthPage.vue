@@ -21,8 +21,6 @@
             </div>
 
             <p class="status" :class="{ 'is-error': statusError }" role="status" aria-live="polite">{{ status }}</p>
-
-            <p v-if="queuedGames > 0" class="queue">Games in queue: {{ queuedGames }}</p>
         </form>
     </div>
 </template>
@@ -66,7 +64,6 @@ const steamId = ref(currentUser.steamId ?? '');
 const busy = ref(false);
 const status = ref('');
 const statusError = ref(false);
-const queuedGames = ref(0);
 
 watch(() => currentUser.steamId, value => {
     steamId.value = value ?? '';
@@ -90,7 +87,6 @@ const signInAsync = async () => {
     }
 
     busy.value = true;
-    queuedGames.value = 0;
 
     try {
         const failure = await syncSteamIdAsync(id, stage => setStatus(STAGE_MESSAGES[stage]));
@@ -105,10 +101,10 @@ const signInAsync = async () => {
 
         await currentUser.loadAsync();
         await currentUser.refreshSyncProgressAsync();
-        queuedGames.value = currentUser.queueSize ?? 0;
 
-        setStatus(queuedGames.value > 0
-            ? `Achievements are syncing for ${queuedGames.value} game${queuedGames.value === 1 ? '' : 's'}. Redirecting...`
+        const queuedGames = currentUser.queueSize ?? 0;
+        setStatus(queuedGames > 0
+            ? `Achievements are syncing for ${queuedGames} game${queuedGames === 1 ? '' : 's'}. Redirecting...`
             : 'Achievements are syncing. Redirecting...');
 
         await new Promise(resolve => setTimeout(resolve, SUCCESS_REDIRECT_DELAY));
@@ -189,12 +185,5 @@ const signInAsync = async () => {
     &.is-error {
         color: #ff8080;
     }
-}
-
-.queue {
-    margin: 8px 0 0;
-    color: #8f98a0;
-    font-size: 13px;
-    text-align: right;
 }
 </style>

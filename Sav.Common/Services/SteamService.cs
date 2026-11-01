@@ -140,14 +140,8 @@ namespace Sav.Common.Services
                 //    await new EntityRepository<UserGameEntity>().AddOrUpdateAsync(userGame);
                 //});
 
-                foreach (var game in games)
-                {
-                    await _gameRepository.AddOrUpdateAsync(game);
-                }
-                foreach (var userGame in userGames)
-                {
-                    await AddOrUpdateUserGameAsync(userGame);
-                }
+                await _gameRepository.AddOrUpdateRangeAsync(games);
+                await AddOrUpdateUserGamesAsync(steamID, userGames);
 
                 if (games.Count == 0)
                 {
@@ -164,21 +158,28 @@ namespace Sav.Common.Services
             }
         }
 
-        private async Task AddOrUpdateUserGameAsync(UserGameEntity refreshed)
+        private async Task AddOrUpdateUserGamesAsync(string steamId, IReadOnlyList<UserGameEntity> refreshedGames)
         {
-            var existing = await _userGameRepository.GetByKeysAsync(refreshed.GetKeys());
-            if (existing is null)
+            var existingGames = _userGameRepository.Get(ug => ug.UserId == steamId).ToDictionary(ug => ug.AppID);
+            var newGames = new List<UserGameEntity>();
+
+            foreach (var refreshed in refreshedGames)
             {
-                await _userGameRepository.AddAsync(refreshed);
-                return;
+                if (!existingGames.TryGetValue(refreshed.AppID, out var existing))
+                {
+                    newGames.Add(refreshed);
+                    continue;
+                }
+
+                existing.StatsLink = refreshed.StatsLink;
+                existing.HoursOnRecord = refreshed.HoursOnRecord;
+                existing.HoursLast2Weeks = refreshed.HoursLast2Weeks;
+                existing.LastPlayedAt = refreshed.LastPlayedAt ?? existing.LastPlayedAt;
+                existing.Updated = DateTime.Now;
             }
 
-            existing.StatsLink = refreshed.StatsLink;
-            existing.HoursOnRecord = refreshed.HoursOnRecord;
-            existing.HoursLast2Weeks = refreshed.HoursLast2Weeks;
-            existing.LastPlayedAt = refreshed.LastPlayedAt ?? existing.LastPlayedAt;
-
-            await _userGameRepository.UpdateAsync(existing);
+            await _userGameRepository.AddOrUpdateRangeAsync(newGames);
+            await _userGameRepository.SaveChangesAsync();
         }
 
         public async Task<bool> UpdateProfileAsync(string steamID)
@@ -311,16 +312,19 @@ namespace Sav.Common.Services
             return GetUser(steamId)?.UserGames?.Select(ug => ug.Game) ?? Enumerable.Empty<GameEntity>();
         }
 
-        public void QueueAchievementsUpdate()
+        public void QueueAchievementsUpdate(bool force = false)
         {
             var steamId = _currentUserService.SteamId;
-            Log.Logger.Information("Queueing achievements update for SteamID: {SteamID}", steamId);
+            Log.Logger.Information("Queueing achievements update for SteamID: {SteamID}, forced: {Forced}", steamId, force);
             if (string.IsNullOrEmpty(steamId))
             {
                 return;
             }
 
-            _gameQueueService.Add(_userRepository.GetGamesToQueue(steamId, AchievementsResyncInterval, FailedSyncRetryInterval));
+            var resyncInterval = force ? TimeSpan.Zero : AchievementsResyncInterval;
+            var retryInterval = force ? TimeSpan.Zero : FailedSyncRetryInterval;
+
+            _gameQueueService.Add(_userRepository.GetGamesToQueue(steamId, resyncInterval, retryInterval));
         }
 
         public void ReportAchievementsProgress(int totalGames, int currentGameCount, string lastGameName)

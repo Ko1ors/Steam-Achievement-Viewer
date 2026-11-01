@@ -27,6 +27,28 @@ export const GAMES_ERRORS: Record<GamesUpdateResult, string> = {
  * Loads the profile and game list for a Steam ID and queues the achievement sync.
  * Returns the failed stage, or null once the sync is running.
  */
+const syncGamesAndQueueAsync = async (
+    steamId: string,
+    onStage?: (stage: SteamSyncStage) => void,
+): Promise<SteamSyncFailure | null> => {
+    onStage?.('games');
+    const gamesResponse = await updateGamesAsync(steamId);
+
+    if (!gamesResponse.success)
+        return { stage: 'games', result: null };
+
+    if (gamesResponse.data !== 'Success')
+        return { stage: 'games', result: gamesResponse.data ?? 'Failed' };
+
+    onStage?.('sync');
+    const queueResponse = await queueAchievementsUpdateAsync(true);
+
+    if (!queueResponse.success)
+        return { stage: 'sync' };
+
+    return null;
+};
+
 export const syncSteamIdAsync = async (
     steamId: string,
     onStage?: (stage: SteamSyncStage) => void,
@@ -40,20 +62,5 @@ export const syncSteamIdAsync = async (
     if (profileResponse.data !== 'Success')
         return { stage: 'profile', result: profileResponse.data ?? 'Failed' };
 
-    onStage?.('games');
-    const gamesResponse = await updateGamesAsync(steamId);
-
-    if (!gamesResponse.success)
-        return { stage: 'games', result: null };
-
-    if (gamesResponse.data !== 'Success')
-        return { stage: 'games', result: gamesResponse.data ?? 'Failed' };
-
-    onStage?.('sync');
-    const queueResponse = await queueAchievementsUpdateAsync();
-
-    if (!queueResponse.success)
-        return { stage: 'sync' };
-
-    return null;
+    return await syncGamesAndQueueAsync(steamId, onStage);
 };

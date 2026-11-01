@@ -14,6 +14,10 @@ namespace Sav.Common.Interfaces
 
         Task AddOrUpdateAsync(TEntity entity);
 
+        Task AddOrUpdateRangeAsync(IEnumerable<TEntity> entities);
+
+        Task<int> SaveChangesAsync();
+
         TEntity? GetByKeys(params object[] keys);
 
         IEnumerable<TEntity> Get(Expression<Func<TEntity, bool>> predicate);

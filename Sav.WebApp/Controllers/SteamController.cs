@@ -130,9 +130,9 @@ namespace Sav.WebApp.Controllers
         }
 
         [HttpPost("queueAchievementsUpdate")]
-        public IActionResult QueueAchievementsUpdate()
+        public IActionResult QueueAchievementsUpdate([FromQuery] bool force = false)
         {
-            _steamService.QueueAchievementsUpdate();
+            _steamService.QueueAchievementsUpdate(force);
             return Ok();
         }
 
