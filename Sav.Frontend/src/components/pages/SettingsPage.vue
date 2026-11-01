@@ -44,18 +44,6 @@
                             </div>
                             <small class="field-hint">Intervals below one minute are saved as 1 hour.</small>
                         </div>
-
-                        <div class="field">
-                            <label class="field-label" for="update-type">Update Type</label>
-                            <Dropdown
-                                v-model="updateOnlyRecentGames"
-                                class="control"
-                                inputId="update-type"
-                                :options="updateTypeOptions"
-                                optionLabel="label"
-                                optionValue="value"
-                                :disabled="saving" />
-                        </div>
                     </section>
 
                     <section class="column">
@@ -178,7 +166,6 @@ const steamId = ref('');
 const steamApiKey = ref('');
 const intervalHours = ref<number | null>(0);
 const intervalMinutes = ref<number | null>(0);
-const updateOnlyRecentGames = ref(false);
 const saved = ref<UserSettings | null>(null);
 
 const syncResult = ref<GameSyncStatusPage | null>(null);
@@ -189,11 +176,6 @@ const syncFilter = ref('All');
 
 let syncPollHandle: number | undefined;
 let syncSearchHandle: number | undefined;
-
-const updateTypeOptions = [
-    { label: 'Full Update', value: false },
-    { label: 'Only Recently Played Games', value: true },
-];
 
 const syncFilterOptions = [
     { label: 'All statuses', value: 'All' },
@@ -223,7 +205,6 @@ const applySettings = (settings: UserSettings) => {
     steamApiKey.value = settings.steamApiKey ?? '';
     intervalHours.value = Math.floor(settings.autoUpdateIntervalMinutes / 60);
     intervalMinutes.value = settings.autoUpdateIntervalMinutes % 60;
-    updateOnlyRecentGames.value = settings.updateOnlyRecentGames;
 };
 
 const hasChanges = computed(() => {
@@ -232,8 +213,7 @@ const hasChanges = computed(() => {
 
     return steamId.value.trim() !== (saved.value.steamId ?? '')
         || steamApiKey.value.trim() !== (saved.value.steamApiKey ?? '')
-        || intervalTotalMinutes.value !== saved.value.autoUpdateIntervalMinutes
-        || updateOnlyRecentGames.value !== saved.value.updateOnlyRecentGames;
+        || intervalTotalMinutes.value !== saved.value.autoUpdateIntervalMinutes;
 });
 
 const canSave = computed(() => !loading.value && !saving.value && hasChanges.value);
@@ -340,7 +320,6 @@ const saveAsync = async () => {
             steamId: id || null,
             steamApiKey: steamApiKey.value.trim() || null,
             autoUpdateIntervalMinutes: intervalTotalMinutes.value,
-            updateOnlyRecentGames: updateOnlyRecentGames.value,
         });
 
         if (!response.success || !response.data) {

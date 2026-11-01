@@ -59,7 +59,9 @@ namespace Sav.Common.Mapping
                 .ForMember(dest => dest.UserAchievements, opt => opt.Ignore())
                 .ForMember(dest => dest.SyncStatus, opt => opt.Ignore())
                 .ForMember(dest => dest.LastSyncedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.LastSyncAttemptedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.LastSyncError, opt => opt.Ignore())
+                .ForMember(dest => dest.LastPlayedAt, opt => opt.Ignore())
                 .ForSourceMember(src => src.AvatarFrame, opt => opt.DoNotValidate())
                 .ReverseMap();
 
@@ -68,6 +70,7 @@ namespace Sav.Common.Mapping
                 .ForMember(dest => dest.StatsLink, opt => opt.MapFrom(src => src.StatsLink))
                 .ForMember(dest => dest.HoursLast2Weeks, opt => opt.MapFrom(src => src.HoursLast2Weeks))
                 .ForMember(dest => dest.HoursOnRecord, opt => opt.MapFrom(src => src.HoursOnRecord))
+                .ForMember(dest => dest.LastPlayedAt, opt => opt.MapFrom(src => src.LastPlayedAt))
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.Game, opt => opt.Ignore())
                 .ForMember(dest => dest.UserId, opt => opt.Ignore())
@@ -76,8 +79,10 @@ namespace Sav.Common.Mapping
                 .ForMember(dest => dest.UserAchievements, opt => opt.Ignore())
                 .ForMember(dest => dest.SyncStatus, opt => opt.Ignore())
                 .ForMember(dest => dest.LastSyncedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.LastSyncAttemptedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.LastSyncError, opt => opt.Ignore())
                 .ForSourceMember(src => src.Achievements, opt => opt.DoNotValidate())
+                .ForSourceMember(src => src.LastPlayedUnixTime, opt => opt.DoNotValidate())
                 .ReverseMap();
 
             CreateMap<UserEntity, List<UserGameEntity>>()

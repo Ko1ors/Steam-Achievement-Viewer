@@ -101,8 +101,8 @@ export const updateGamesAsync = async function(steamId: string) : Promise<Respon
     return await postAsync<GamesUpdateResult>(apiUrl + "/steam/updateGames", steamId, { silent: true });
 }
 
-export const queueAchievementsUpdateAsync = async function(onlyRecentGames?: boolean) : Promise<Response<unknown>> {
-    return await postAsync<unknown>(apiUrl + "/steam/queueAchievementsUpdate" + toQueryString({ onlyRecentGames }), {}, { silent: true });
+export const queueAchievementsUpdateAsync = async function() : Promise<Response<unknown>> {
+    return await postAsync<unknown>(apiUrl + "/steam/queueAchievementsUpdate", {}, { silent: true });
 }
 
 

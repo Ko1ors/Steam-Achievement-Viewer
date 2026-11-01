@@ -24,8 +24,8 @@ namespace Sav.Common.Services
     public class SteamService : ISteamService
     {
         private const string XmlProfileError = "The specified profile could not be found.";
-        private static readonly TimeSpan AchievementsUpdateInterval = TimeSpan.FromHours(24);
-        private static readonly TimeSpan AchievementsRecentUpdateInterval = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan AchievementsResyncInterval = TimeSpan.FromDays(1);
+        private static readonly TimeSpan FailedSyncRetryInterval = TimeSpan.FromHours(1);
 
         private readonly Random _random;
         private readonly IClientService<XmlDocument> _xmlClient;
@@ -146,7 +146,7 @@ namespace Sav.Common.Services
                 }
                 foreach (var userGame in userGames)
                 {
-                    await _userGameRepository.AddOrUpdateAsync(userGame);
+                    await AddOrUpdateUserGameAsync(userGame);
                 }
 
                 if (games.Count == 0)
@@ -162,6 +162,23 @@ namespace Sav.Common.Services
                 Log.Logger.Error(e, "Failed to update the game list for {SteamId}", steamID);
                 return GamesUpdateResult.Failed;
             }
+        }
+
+        private async Task AddOrUpdateUserGameAsync(UserGameEntity refreshed)
+        {
+            var existing = await _userGameRepository.GetByKeysAsync(refreshed.GetKeys());
+            if (existing is null)
+            {
+                await _userGameRepository.AddAsync(refreshed);
+                return;
+            }
+
+            existing.StatsLink = refreshed.StatsLink;
+            existing.HoursOnRecord = refreshed.HoursOnRecord;
+            existing.HoursLast2Weeks = refreshed.HoursLast2Weeks;
+            existing.LastPlayedAt = refreshed.LastPlayedAt ?? existing.LastPlayedAt;
+
+            await _userGameRepository.UpdateAsync(existing);
         }
 
         public async Task<bool> UpdateProfileAsync(string steamID)
@@ -294,7 +311,7 @@ namespace Sav.Common.Services
             return GetUser(steamId)?.UserGames?.Select(ug => ug.Game) ?? Enumerable.Empty<GameEntity>();
         }
 
-        public void QueueAchievementsUpdate(bool? onlyRecentGames = null)
+        public void QueueAchievementsUpdate()
         {
             var steamId = _currentUserService.SteamId;
             Log.Logger.Information("Queueing achievements update for SteamID: {SteamID}", steamId);
@@ -303,12 +320,7 @@ namespace Sav.Common.Services
                 return;
             }
 
-            var useRecentGames = onlyRecentGames ?? _settingsService.Get().UpdateOnlyRecentGames;
-
-            if (useRecentGames)
-                _gameQueueService.Add(_userRepository.GetRecentGamesToQueue(steamId, AchievementsRecentUpdateInterval));
-            else
-                _gameQueueService.Add(_userRepository.GetGamesToQueue(steamId));
+            _gameQueueService.Add(_userRepository.GetGamesToQueue(steamId, AchievementsResyncInterval, FailedSyncRetryInterval));
         }
 
         public void ReportAchievementsProgress(int totalGames, int currentGameCount, string lastGameName)

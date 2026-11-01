@@ -7,7 +7,5 @@ namespace Sav.Common.Models.DTOs
         public string? SteamApiKey { get; set; }
 
         public int AutoUpdateIntervalMinutes { get; set; }
-
-        public bool UpdateOnlyRecentGames { get; set; }
     }
 }

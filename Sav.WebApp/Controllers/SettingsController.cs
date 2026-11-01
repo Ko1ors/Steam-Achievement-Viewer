@@ -43,7 +43,6 @@ namespace Sav.WebApp.Controllers
             settings.SteamID = string.IsNullOrEmpty(steamId) ? null : steamId;
             settings.SteamApiKey = string.IsNullOrEmpty(steamApiKey) ? null : steamApiKey;
             settings.AutoUpdateIntervalMinutes = NormalizeInterval(request.AutoUpdateIntervalMinutes);
-            settings.UpdateOnlyRecentGames = request.UpdateOnlyRecentGames;
 
             _settingsService.Save(settings);
 
@@ -65,7 +64,6 @@ namespace Sav.WebApp.Controllers
                 SteamId = settings.SteamID,
                 SteamApiKey = settings.SteamApiKey,
                 AutoUpdateIntervalMinutes = settings.AutoUpdateIntervalMinutes,
-                UpdateOnlyRecentGames = settings.UpdateOnlyRecentGames,
             };
         }
     }

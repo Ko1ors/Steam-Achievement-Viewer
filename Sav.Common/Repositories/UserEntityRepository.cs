@@ -18,18 +18,26 @@ namespace Sav.Common.Repositories
             _mapper = mapper;
         }
 
-        public IEnumerable<UserGameEntity> GetGamesToQueue(string userId)
+        public IEnumerable<UserGameEntity> GetGamesToQueue(string userId, TimeSpan resyncInterval, TimeSpan failedSyncRetryInterval)
         {
-            Log.Logger.Information("Getting games to queue for user {UserId}", userId);
-            return _context.UserGames.Where(ug => ug.UserId == userId && !string.IsNullOrEmpty(ug.StatsLink)).AsEnumerable();
-        }
+            var resyncCutoff = DateTime.Now - resyncInterval;
+            var retryCutoff = DateTime.Now - failedSyncRetryInterval;
 
-        public IEnumerable<UserGameEntity> GetRecentGamesToQueue(string userId, TimeSpan updateInterval)
-        {
-            var updateTime = DateTime.Now - updateInterval;
-            Log.Logger.Information("Getting recent games to queue for user {UserId}", userId);
-            return _context.UserGames.Where(ug => ug.UserId == userId && !string.IsNullOrEmpty(ug.StatsLink) &&
-            (!ug.Game.Achievements.Any() || (!string.IsNullOrEmpty(ug.HoursLast2Weeks) && ug.Game.Achievements.Any(a => a.Updated <= updateTime)))).AsEnumerable();
+            Log.Logger.Information("Getting games to queue for user {UserId}", userId);
+
+            // A game is queued when it was never synced, when the last attempt failed, or when it was played
+            // after the last successful sync - the latter at most once per resync interval. The retry cutoff
+            // keeps a game from being queued again while its previous attempt is still recent.
+            var userGames = _context.UserGames
+                .Where(ug => ug.UserId == userId && !string.IsNullOrEmpty(ug.StatsLink))
+                .Where(ug => ug.LastSyncAttemptedAt == null || ug.LastSyncAttemptedAt < retryCutoff);
+
+            return userGames
+                .Where(ug => ug.LastSyncedAt == null
+                    || ug.SyncStatus == GameSyncStatus.Failed
+                    || (ug.LastSyncedAt < resyncCutoff && ug.LastPlayedAt != null && ug.LastPlayedAt > ug.LastSyncedAt))
+                .OrderByDescending(ug => ug.LastPlayedAt)
+                .AsEnumerable();
         }
 
         public async Task<GameSyncStatusPageDto> GetGameSyncStatusAsync(string userId, int page, int count, string? search, string? status)
@@ -94,6 +102,7 @@ namespace Sav.Common.Repositories
             userGame.SyncStatus = status;
             userGame.LastSyncError = error;
             userGame.Updated = DateTime.Now;
+            userGame.LastSyncAttemptedAt = userGame.Updated;
 
             if (status == GameSyncStatus.Synced)
                 userGame.LastSyncedAt = userGame.Updated;

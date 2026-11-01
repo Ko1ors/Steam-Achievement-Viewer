@@ -65,6 +65,14 @@ namespace Sav.Common.Models.SteamApi
         [JsonProperty("playtime_2weeks")]
         public int? PlaytimeTwoWeeksMinutes { get; set; }
 
+        [JsonProperty("rtime_last_played")]
+        [XmlIgnore]
+        public long LastPlayedUnixTime { get; set; }
+
+        [JsonIgnore]
+        [XmlIgnore]
+        public DateTime? LastPlayedAt { get; set; }
+
         [XmlElement(ElementName = "statsLink")]
         public string StatsLink { get; set; }
 

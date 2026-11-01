@@ -226,6 +226,12 @@ namespace Sav.Infrastructure.Migrations
                     b.Property<DateTime>("Inserted")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("LastPlayedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastSyncAttemptedAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("LastSyncError")
                         .HasColumnType("TEXT");
 

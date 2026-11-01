@@ -15,9 +15,13 @@ namespace Sav.Infrastructure.Entities
 
         public string? HoursOnRecord { get; set; }
 
+        public DateTime? LastPlayedAt { get; set; }
+
         public GameSyncStatus SyncStatus { get; set; }
 
         public DateTime? LastSyncedAt { get; set; }
+
+        public DateTime? LastSyncAttemptedAt { get; set; }
 
         public string? LastSyncError { get; set; }
 

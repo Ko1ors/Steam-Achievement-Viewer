@@ -6,15 +6,13 @@ namespace Sav.Common.Interfaces
 {
     public interface IUserEntityRepository : IEntityRepository<UserEntity>
     {
-        IEnumerable<UserGameEntity> GetGamesToQueue(string userId);
+        IEnumerable<UserGameEntity> GetGamesToQueue(string userId, TimeSpan resyncInterval, TimeSpan failedSyncRetryInterval);
 
         Task<GameSyncStatusPageDto> GetGameSyncStatusAsync(string userId, int page, int count, string? search, string? status);
 
         void SetGameSyncStatus(string userId, string appId, GameSyncStatus status, string? error);
 
         void ResetInterruptedSyncs();
-
-        IEnumerable<UserGameEntity> GetRecentGamesToQueue(string userId, TimeSpan updateInterval);
 
         IEnumerable<AchievementComposite> GetUserAchievementComposites(string userId);
 

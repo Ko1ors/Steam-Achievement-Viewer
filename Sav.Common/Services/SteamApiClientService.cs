@@ -32,6 +32,7 @@ namespace Sav.Common.Services
                 {
                     game.HoursOnRecord = FormatHours(game.PlaytimeForeverMinutes);
                     game.HoursLast2Weeks = game.PlaytimeTwoWeeksMinutes is int twoWeeksMinutes ? FormatHours(twoWeeksMinutes) : null;
+                    game.LastPlayedAt = game.LastPlayedUnixTime > 0 ? DateTimeOffset.FromUnixTimeSeconds(game.LastPlayedUnixTime).LocalDateTime : null;
                     game.StoreLink = $"https://store.steampowered.com/app/{game.AppID}";
                     if (game.HasCommunityVisibleStats)
                     {
