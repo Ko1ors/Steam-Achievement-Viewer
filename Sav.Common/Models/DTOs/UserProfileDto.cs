@@ -18,6 +18,16 @@ namespace Sav.Common.Models.DTOs
 
         public string? AvatarFrame { get; set; }
 
+        public string? OnlineState { get; set; }
+
+        public string? Headline { get; set; }
+
+        public string? RealName { get; set; }
+
+        public string? Location { get; set; }
+
+        public DateTime? MemberSince { get; set; }
+
         public int GamesCount { get; set; }
 
         public int TotalAchievementsCount { get; set; }
@@ -33,6 +43,11 @@ namespace Sav.Common.Models.DTOs
             AvatarMedium = user.AvatarMedium;
             AvatarFull = user.AvatarFull;
             AvatarFrame = user.AvatarFrame;
+            OnlineState = user.OnlineState;
+            Headline = string.IsNullOrWhiteSpace(user.Headline) ? null : user.Headline;
+            RealName = string.IsNullOrWhiteSpace(user.Realname) ? null : user.Realname;
+            Location = string.IsNullOrWhiteSpace(user.Location) ? null : user.Location;
+            MemberSince = user.MemberSince == default ? null : user.MemberSince;
             GamesCount = gamesCount;
             TotalAchievementsCount = totalAchievementsCount;
             CompletedAchievementsCount = completedAchievementsCount;
