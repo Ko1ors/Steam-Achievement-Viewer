@@ -104,13 +104,19 @@ onMounted(() => {
 watch(() => currentUser.steamId, reloadForCurrentUserAsync);
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .close-achievements {
     display: flex;
     height: 100%;
     background-color: #1B2838;
     padding: 10px;
     box-sizing: border-box;
+
+    @include media-breakpoint-down(md) {
+        flex-direction: column;
+        gap: 8px;
+        padding: 8px;
+    }
 }
 
 .games-panel {
@@ -120,6 +126,13 @@ watch(() => currentUser.steamId, reloadForCurrentUserAsync);
     border-right: 1px solid #2A475E;
     display: flex;
     flex-direction: column;
+
+    @include media-breakpoint-down(md) {
+        width: 100%;
+        height: 180px;
+        border-right: none;
+        border-bottom: 1px solid #2A475E;
+    }
 }
 
 .search-container {
@@ -239,6 +252,7 @@ watch(() => currentUser.steamId, reloadForCurrentUserAsync);
 
 .achievements-panel {
     flex-grow: 1;
+    min-height: 0;
     overflow: hidden;
     background-color: #171A21;
 }

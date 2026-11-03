@@ -164,10 +164,12 @@ const signInAsync = async () => {
     display: flex;
     align-items: stretch;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .steam-id {
     flex: 1;
+    min-width: 0;
     background-color: #171a21;
     border-color: #2a475e;
     color: #ffffff;
@@ -184,6 +186,24 @@ const signInAsync = async () => {
 
     &.is-error {
         color: #ff8080;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .auth {
+        padding: 16px;
+    }
+
+    .auth-panel {
+        padding: 24px 20px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .controls {
+        flex-direction: column;
     }
 }
 </style>

@@ -136,13 +136,30 @@
     height: 140px;
     max-width: 936px;
     padding: 10px;
+
+    @include media-breakpoint-down(md) {
+      grid-template-columns: minmax(0, 1fr);
+      height: auto;
+      gap: 10px;
+    }
   }
-  
+
   .game-image {
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    @include media-breakpoint-down(md) {
+      height: auto;
+      justify-content: flex-start;
+
+      img {
+        width: 100%;
+        max-width: 320px;
+        height: auto;
+      }
+    }
   }
   
   .game-logo-fallback {
@@ -163,20 +180,35 @@
   .game-details {
     display: flex;
     flex-direction: column;
+    min-width: 0;
     padding-left: 10px;
+
+    @include media-breakpoint-down(md) {
+      padding-left: 0;
+    }
   }
-  
+
   .game-title {
     color: white;
     font-size: 20px;
     margin: 0 0 10px 0;
+    overflow-wrap: anywhere;
+
+    @include media-breakpoint-down(md) {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
   }
-  
+
   .stats-grid {
     display: grid;
     grid-template-columns: auto auto auto;
     gap: 10px;
     margin-bottom: 10px;
+
+    @include media-breakpoint-down(md) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
   
   .stat-label {

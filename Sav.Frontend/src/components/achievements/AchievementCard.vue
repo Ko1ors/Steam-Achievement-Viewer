@@ -50,9 +50,9 @@ const formatUnlockTime = (unlockTime) => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .achievement-card {
-    width: 630px;
+    width: min(630px, calc(100% - 20px));
     background-color: #1B2838;
     margin: 10px;
 }
@@ -61,6 +61,7 @@ const formatUnlockTime = (unlockTime) => {
     margin: 10px;
     display: flex;
     align-items: center;
+    min-width: 0;
 }
 
 .achievement-icon-container {
@@ -80,6 +81,8 @@ const formatUnlockTime = (unlockTime) => {
 }
 
 .achievement-details {
+    flex: 1;
+    min-width: 0;
     margin: 5px;
     max-width: 480px;
 }
@@ -129,5 +132,39 @@ const formatUnlockTime = (unlockTime) => {
     font-size: 15px;
     font-family: 'Arial Black', Arial, sans-serif;
     margin: 0;
+}
+
+@include media-breakpoint-down(sm) {
+    .achievement-card {
+        width: calc(100% - 12px);
+        margin: 6px;
+    }
+
+    .achievement-content {
+        margin: 8px;
+    }
+
+    .achievement-icon-container {
+        width: 48px;
+        height: 48px;
+        margin: 0 8px 0 0;
+    }
+
+    .achievement-details {
+        margin: 4px;
+        max-width: none;
+    }
+
+    .achievement-name {
+        font-size: 16px;
+    }
+
+    .achievement-description {
+        font-size: 12px;
+    }
+
+    .achievement-percent {
+        font-size: 13px;
+    }
 }
 </style>

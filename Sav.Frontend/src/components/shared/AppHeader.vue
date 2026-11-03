@@ -1,12 +1,25 @@
 <template>
     <header class="app-header">
-        <div class="profile">
-            <div class="avatar" :class="{ 'has-frame': !!frameUrl }">
-                <img v-if="avatarUrl" :src="avatarUrl" :alt="displayName" class="avatar-image" />
-                <i v-else class="pi pi-user avatar-fallback" aria-hidden="true"></i>
-                <img v-if="frameUrl" :src="frameUrl" alt="" class="avatar-frame" />
+        <div class="header-start">
+            <button
+                v-if="isMobile"
+                ref="menuButton"
+                type="button"
+                class="menu-button"
+                aria-label="Open navigation"
+                aria-controls="app-sidebar"
+                :aria-expanded="isSidebarOpen"
+                @click="emit('toggleSidebar')">
+                <i class="pi pi-bars" aria-hidden="true"></i>
+            </button>
+            <div class="profile">
+                <div class="avatar" :class="{ 'has-frame': !!frameUrl }">
+                    <img v-if="avatarUrl" :src="avatarUrl" :alt="displayName" class="avatar-image" />
+                    <i v-else class="pi pi-user avatar-fallback" aria-hidden="true"></i>
+                    <img v-if="frameUrl" :src="frameUrl" alt="" class="avatar-frame" />
+                </div>
+                <span v-if="displayName" class="profile-name">{{ displayName }}</span>
             </div>
-            <span v-if="displayName" class="profile-name">{{ displayName }}</span>
         </div>
 
         <div v-if="currentUser.isLoggedIn && syncLabel" class="sync-status" :class="{ 'is-syncing': isSyncing }" :title="syncTitle" role="status" aria-live="polite">
@@ -17,12 +30,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { useCurrentUserStore } from '@/stores/currentUser';
+
+defineProps<{
+    isMobile: boolean;
+    isSidebarOpen: boolean;
+}>();
+
+const emit = defineEmits<{
+    toggleSidebar: [];
+}>();
 
 const SYNC_POLL_INTERVAL = 2000;
 
 const currentUser = useCurrentUserStore();
+const menuButton = ref<HTMLButtonElement | null>(null);
 let pollHandle: ReturnType<typeof setInterval> | undefined;
 
 const displayName = computed(() => currentUser.profile?.customURL || currentUser.profile?.steamID || currentUser.profile?.steamID64 || '');
@@ -72,6 +95,10 @@ onUnmounted(() => {
         clearInterval(pollHandle);
     }
 });
+
+defineExpose({
+    focusMenuButton: () => menuButton.value?.focus(),
+});
 </script>
 
 <style scoped lang="scss">
@@ -85,6 +112,39 @@ onUnmounted(() => {
     padding: 0 20px;
     background-color: #1b2838;
     border-bottom: 1px solid #2a475e;
+}
+
+.header-start {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.menu-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    background-color: transparent;
+    color: #c6d4df;
+    font-size: 18px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #2a475e;
+        color: #ffffff;
+    }
+
+    &:focus-visible {
+        outline: 2px solid #66c0f4;
+        outline-offset: 2px;
+    }
 }
 
 .profile {
@@ -149,12 +209,35 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     gap: 8px;
-    flex-shrink: 0;
+    min-width: 0;
     color: #8f98a0;
     font-size: 13px;
 
     &.is-syncing {
         color: #66c0f4;
+    }
+}
+
+.sync-label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+@include media-breakpoint-down(lg) {
+    .app-header {
+        gap: 10px;
+        padding: 0 12px;
+    }
+
+    .header-start {
+        gap: 8px;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .profile-name {
+        display: none;
     }
 }
 </style>

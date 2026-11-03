@@ -472,6 +472,18 @@ onUnmounted(() => {
     color: #ffffff;
 }
 
+:deep(.p-password) {
+    width: 100%;
+}
+
+:deep(.p-password-input) {
+    width: 100%;
+    min-width: 0;
+    background-color: #171a21;
+    border-color: #2a475e;
+    color: #ffffff;
+}
+
 .interval {
     display: flex;
     align-items: center;
@@ -640,5 +652,78 @@ onUnmounted(() => {
     margin-top: 12px;
     color: #8f98a0;
     font-size: 12px;
+}
+
+@include media-breakpoint-down(sm) {
+    .settings {
+        padding: 12px;
+    }
+
+    .settings-panel,
+    .sync-panel {
+        padding: 20px 16px;
+    }
+
+    .title {
+        font-size: 20px;
+        margin-bottom: 16px;
+    }
+
+    .actions {
+        flex-wrap: wrap;
+    }
+
+    .sync-head {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .sync-filters {
+        flex-direction: column;
+    }
+
+    .sync-filter {
+        width: 100%;
+    }
+
+    /* Rows become stacked blocks; four fixed columns are unreadable at phone widths. */
+    .sync-table,
+    .sync-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .sync-table thead {
+        display: none;
+    }
+
+    .sync-table tbody tr {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(42, 71, 94, 0.55);
+    }
+
+    .sync-table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .sync-table td {
+        display: block;
+        width: auto;
+        padding: 0;
+        border-bottom: none;
+        overflow: visible;
+        white-space: normal;
+    }
+
+    .sync-table td.game-name {
+        flex: 1 1 100%;
+        color: #ffffff;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
 }
 </style>
