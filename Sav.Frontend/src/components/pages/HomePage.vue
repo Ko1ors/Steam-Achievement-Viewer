@@ -187,11 +187,15 @@
                         <RouterLink v-for="game in completedGames" :key="`${game.game.appID}-${game.completedAt}`"
                             :to="PageTypes.CompletedGames" class="completed-card">
                             <div class="completed-cover">
-                                <img v-if="completedCoverUrl(game) && !isCoverFailed(game)" :src="completedCoverUrl(game)"
-                                    :alt="game.game.name" loading="lazy" @error="markCoverFailed(game)" />
-                                <span v-else class="completed-fallback">
-                                    <i class="pi pi-desktop" aria-hidden="true"></i>
-                                </span>
+                                <GameCoverImage
+                                    :sources="[game.logoUrl, game.game.gameLogoSmall, game.game.gameIcon]"
+                                    :alt="game.game.name">
+                                    <template #fallback>
+                                        <span class="completed-fallback">
+                                            <i class="pi pi-desktop" aria-hidden="true"></i>
+                                        </span>
+                                    </template>
+                                </GameCoverImage>
                                 <span class="completed-badge">
                                     <i class="pi pi-check" aria-hidden="true"></i>100%
                                 </span>
@@ -245,6 +249,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useCurrentUserStore } from '@/stores/currentUser';
 import SyncProgressCard from '@/components/shared/SyncProgressCard.vue';
+import GameCoverImage from '@/components/shared/GameCoverImage.vue';
 import {
     getClosestAchievementsAsync,
     getCompletedGamesAsync,
@@ -394,15 +399,6 @@ const highlightsLoading = ref(true);
 const highlightsLoaded = ref(false);
 let loadToken = 0;
 
-const completedCoverUrl = (game: CompletedGameComposite) =>
-    game.logoUrl || game.game.gameLogoSmall || game.game.gameIcon || '';
-
-const failedCovers = ref(new Set<string>());
-const isCoverFailed = (game: CompletedGameComposite) => failedCovers.value.has(game.game.appID);
-const markCoverFailed = (game: CompletedGameComposite) => {
-    failedCovers.value = new Set(failedCovers.value).add(game.game.appID);
-};
-
 const hideBrokenImage = (event: Event) => {
     const image = event.target as HTMLImageElement | null;
     if (image)
@@ -457,7 +453,6 @@ const reloadAsync = async () => {
     rarestAchievements.value = [];
     completedGames.value = [];
     completedGamesTotal.value = null;
-    failedCovers.value = new Set();
     highlightsLoaded.value = false;
     await loadHighlightsAsync();
 };

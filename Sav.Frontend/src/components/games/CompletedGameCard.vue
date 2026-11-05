@@ -4,14 +4,14 @@
         <template #content>
           <div class="game-container">
             <div class="game-image">
-              <img
-                v-if="!logoFailed"
-                :src="logoSource"
+              <GameCoverImage
+                :sources="[game.logoUrl, game.game?.gameLogoSmall, game.game?.gameIcon]"
                 alt="Game logo"
-                class="w-full h-full object-contain"
-                @error="handleLogoError"
-              />
-              <div v-else class="game-logo-fallback">{{ game.game.name }}</div>
+                img-class="w-full h-full object-contain">
+                <template #fallback>
+                  <div class="game-logo-fallback">{{ game.game.name }}</div>
+                </template>
+              </GameCoverImage>
             </div>
             
             <div class="game-details">
@@ -55,9 +55,10 @@
   </template>
   
   <script setup lang="ts">
-  import { computed, ref, watch } from 'vue';
+  import { computed } from 'vue';
   import Card from 'primevue/card';
   import ProgressBar from 'primevue/progressbar';
+  import GameCoverImage from '@/components/shared/GameCoverImage.vue';
   
   // Props
   const props = defineProps({
@@ -70,38 +71,6 @@
   // Computed properties
   const previewAchievements = computed(() => {
     return props.game.previewAchievements || [];
-  });
-
-  // Newer Steam apps only publish their header artwork under hashed store_item_assets paths,
-  // so the constructed ".../steam/apps/{appId}/header.jpg" URL can 404. Walk through the
-  // store assets we already have until one loads.
-  const logoCandidates = computed<string[]>(() =>
-    [props.game.logoUrl, props.game.game?.gameLogoSmall, props.game.game?.gameIcon]
-      .filter((src): src is string => typeof src === 'string' && src.trim().length > 0)
-      .map(src => src.trim())
-  );
-
-  const logoIndex = ref(0);
-  const logoFailed = ref(false);
-  const logoSource = computed(() => logoCandidates.value[logoIndex.value] ?? '');
-
-  const handleLogoError = () => {
-    const failedSource = logoSource.value;
-    let next = logoIndex.value + 1;
-
-    while (next < logoCandidates.value.length && logoCandidates.value[next] === failedSource)
-      next++;
-
-    if (next < logoCandidates.value.length)
-      logoIndex.value = next;
-    else
-      logoFailed.value = true;
-  };
-
-  // Cards are keyed by position in the list, so a different game can reuse this component.
-  watch(() => props.game, () => {
-    logoIndex.value = 0;
-    logoFailed.value = false;
   });
   
 

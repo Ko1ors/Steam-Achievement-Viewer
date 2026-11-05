@@ -7,10 +7,13 @@
       rel="noopener noreferrer"
       tabindex="-1"
       :aria-label="`${game.name} on Steam`">
-      <img v-if="coverAvailable" :src="coverSource" :alt="game.name" loading="lazy" @error="onCoverError" />
-      <span v-else class="game-cover-fallback" aria-hidden="true">
-        <i class="pi pi-desktop"></i>
-      </span>
+      <GameCoverImage :sources="[coverUrl, game.gameLogoSmall, game.gameIcon]" :alt="game.name">
+        <template #fallback>
+          <span class="game-cover-fallback" aria-hidden="true">
+            <i class="pi pi-desktop"></i>
+          </span>
+        </template>
+      </GameCoverImage>
     </a>
 
     <div class="game-info">
@@ -55,8 +58,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import Button from 'primevue/button';
+import GameCoverImage from '@/components/shared/GameCoverImage.vue';
 import type { CompletionGameComposite } from '@/models/API/CompletionGameComposite';
 
 const HEADER_IMAGE_URL = 'https://cdn.cloudflare.steamstatic.com/steam/apps';
@@ -65,16 +69,7 @@ const props = defineProps<{
   game: CompletionGameComposite
 }>();
 
-const coverFailed = ref(false);
-const coverSource = computed(() =>
-  coverFailed.value && props.game.gameIcon
-    ? props.game.gameIcon
-    : `${HEADER_IMAGE_URL}/${props.game.appID}/header.jpg`);
-const coverAvailable = computed(() => !coverFailed.value || !!props.game.gameIcon);
-
-const onCoverError = () => {
-  coverFailed.value = true;
-};
+const coverUrl = computed(() => `${HEADER_IMAGE_URL}/${props.game.appID}/header.jpg`);
 
 const formatPercent = (value: number | null | undefined) => `${(value ?? 0).toFixed(1)}%`;
 
